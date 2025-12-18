@@ -1,0 +1,2240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smit Bracket Design Calculator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1e3a5f;
+            --primary-light: #2a5298;
+            --primary-dark: #0f1f35;
+            --accent: #4a90e2;
+            --success: #27ae60;
+            --success-light: #e8f5e9;
+            --danger: #e74c3c;
+            --danger-light: #ffebee;
+            --warning: #f39c12;
+            --warning-light: #fff3e0;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a5568;
+            --text-muted: #718096;
+            --border: #e2e8f0;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f7fafc;
+            --bg-tertiary: #edf2f7;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.12);
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 14px;
+            --radius-xl: 18px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 50%, #f0f4f9 100%);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            line-height: 1.7;
+            min-height: 100vh;
+            padding: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        .container {
+            max-width: 1650px;
+            width: 100%;
+            background: var(--bg-primary);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-xl);
+            overflow: hidden;
+            position: relative;
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 50%, var(--primary-light) 100%);
+            color: white;
+            padding: 40px 35px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: pulse 8s ease-in-out infinite;
+        }
+        
+        header::after {
+            content: "";
+            position: absolute;
+            bottom: -30%;
+            left: -5%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(74, 144, 226, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: pulse 10s ease-in-out infinite reverse;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        h1 {
+            font-size: 2.75rem;
+            margin-bottom: 12px;
+            font-weight: 700;
+            letter-spacing: -0.8px;
+            line-height: 1.2;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .subtitle {
+            font-size: 1.15rem;
+            opacity: 0.95;
+            font-weight: 400;
+            letter-spacing: 0.2px;
+        }
+        
+        .credit {
+            position: absolute;
+            top: 30px;
+            right: 35px;
+            background: rgba(255, 255, 255, 0.18);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            z-index: 2;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .credit:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+        
+        .tabs {
+            display: flex;
+            background: var(--bg-tertiary);
+            border-bottom: 2px solid var(--border);
+            flex-wrap: wrap;
+            padding: 0 8px;
+        }
+        
+        .tab {
+            padding: 20px 28px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 180px;
+            position: relative;
+            letter-spacing: 0.3px;
+        }
+        
+        .tab::before {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-light), var(--accent));
+            transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .tab:hover {
+            color: var(--primary-light);
+            background: rgba(42, 82, 152, 0.05);
+        }
+        
+        .tab i {
+            margin-right: 10px;
+            font-size: 1.1rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .tab:hover i {
+            transform: scale(1.1);
+        }
+        
+        .tab.active {
+            color: var(--primary-light);
+            background: var(--bg-primary);
+            border-bottom-color: transparent;
+        }
+        
+        .tab.active::before {
+            width: 100%;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 40px 35px;
+            animation: fadeIn 0.4s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 32px;
+        }
+        
+        .input-section, .output-section {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+        
+        .input-section:hover, .output-section:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+        
+        .section-title {
+            font-size: 1.4rem;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--border);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+        
+        .section-title i {
+            margin-right: 12px;
+            font-size: 1.3rem;
+            color: var(--accent);
+        }
+        
+        .input-group {
+            margin-bottom: 22px;
+            position: relative;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            font-size: 0.95rem;
+            letter-spacing: 0.2px;
+        }
+        
+        label i {
+            margin-right: 10px;
+            color: var(--accent);
+            width: 22px;
+            text-align: center;
+            font-size: 1rem;
+        }
+        
+        input[type="number"], select {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+        }
+        
+        input[type="number"]:hover, select:hover {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.08);
+        }
+        
+        input[type="number"]:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 4px rgba(42, 82, 152, 0.12);
+            transform: translateY(-1px);
+        }
+        
+        .unit {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            margin-left: 6px;
+            font-weight: 400;
+        }
+        
+        .result-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 12px;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 28px;
+            background: var(--bg-primary);
+        }
+        
+        .result-table th, .result-table td {
+            padding: 16px 18px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            transition: background-color 0.2s ease;
+        }
+        
+        .result-table th {
+            background: linear-gradient(135deg, var(--bg-tertiary) 0%, #e8ecf1 100%);
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 0.9rem;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+        
+        .result-table td {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+        
+        .result-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .result-table tbody tr {
+            transition: all 0.2s ease;
+        }
+        
+        .result-table tbody tr:hover {
+            background-color: rgba(74, 144, 226, 0.04);
+            transform: scale(1.01);
+        }
+        
+        .status {
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.8rem;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
+        }
+        
+        .status-ok {
+            background: linear-gradient(135deg, var(--success-light) 0%, #c8e6c9 100%);
+            color: var(--success);
+            border: 1px solid rgba(39, 174, 96, 0.2);
+        }
+        
+        .status-not-safe {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            color: #c62828;
+            border: 2px solid rgba(198, 40, 40, 0.4);
+            font-weight: 700;
+            box-shadow: 0 2px 4px rgba(198, 40, 40, 0.2);
+        }
+        
+        .status:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        /* Highlight failed table rows */
+        .result-table tbody tr.row-failed {
+            background-color: rgba(198, 40, 40, 0.12) !important;
+            border-left: 4px solid #c62828;
+        }
+        
+        .result-table tbody tr.row-failed:hover {
+            background-color: rgba(198, 40, 40, 0.18) !important;
+        }
+        
+        /* Make failed values red */
+        .result-table tbody tr.row-failed td:nth-child(2) {
+            color: #c62828;
+            font-weight: 700;
+        }
+        
+        /* Highlight failed status cells more prominently */
+        .result-table tbody tr.row-failed td:last-child {
+            font-weight: 700;
+        }
+        
+        /* Also highlight rows with "Exceeded" or "HIGH" status */
+        .result-table tbody tr:has(.status-not-safe) {
+            background-color: rgba(198, 40, 40, 0.12) !important;
+            border-left: 4px solid #c62828;
+        }
+        
+        .result-table tbody tr:has(.status-not-safe):hover {
+            background-color: rgba(198, 40, 40, 0.18) !important;
+        }
+        
+        .result-table tbody tr:has(.status-not-safe) td:nth-child(2) {
+            color: #c62828;
+            font-weight: 700;
+        }
+        
+        .check-title {
+            display: flex;
+            align-items: center;
+            margin: 28px 0 18px 0;
+            color: var(--primary);
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: -0.2px;
+        }
+        
+        .check-title i {
+            margin-right: 12px;
+            font-size: 1.15rem;
+            color: var(--accent);
+        }
+        
+        .calc-button {
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 30px auto 0;
+            width: 220px;
+            box-shadow: var(--shadow-md);
+            letter-spacing: 0.3px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .calc-button::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .calc-button:hover::before {
+            left: 100%;
+        }
+        
+        .calc-button:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+            background: linear-gradient(135deg, var(--accent) 0%, var(--primary-light) 100%);
+        }
+        
+        .calc-button:active {
+            transform: translateY(-1px);
+        }
+        
+        .calc-button i {
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .input-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+        }
+        
+        @media (max-width: 1200px) {
+            .content-grid {
+                grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 16px;
+            }
+            
+            .container {
+                border-radius: var(--radius-lg);
+            }
+            
+            header {
+                padding: 30px 24px;
+                text-align: center;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .credit {
+                position: relative;
+                top: auto;
+                right: auto;
+                margin-top: 20px;
+                display: inline-block;
+            }
+            
+            .tabs {
+                flex-direction: column;
+                padding: 0;
+            }
+            
+            .tab {
+                min-width: 100%;
+                padding: 18px 24px;
+                justify-content: flex-start;
+                border-bottom: 1px solid var(--border);
+            }
+            
+            .tab.active::before {
+                width: 4px;
+                height: 100%;
+                left: 0;
+                top: 0;
+            }
+            
+            .tab-content {
+                padding: 24px 20px;
+            }
+            
+            .content-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            
+            .input-section, .output-section {
+                padding: 24px;
+            }
+            
+            .results-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .input-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .section-title {
+                font-size: 1.2rem;
+            }
+            
+            .calc-button {
+                width: 100%;
+            }
+        }
+        
+        .results-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-top: 24px;
+        }
+        
+        .result-card {
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+        
+        .result-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+            border-color: var(--accent);
+        }
+        
+        .result-card-title {
+            font-weight: 600;
+            margin-bottom: 18px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 12px;
+            font-size: 1.1rem;
+            letter-spacing: -0.2px;
+        }
+        
+        .result-card-title i {
+            margin-right: 12px;
+            color: var(--accent);
+            font-size: 1.15rem;
+        }
+        
+        .result-item {
+            margin-bottom: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            transition: all 0.2s ease;
+        }
+        
+        .result-item:hover {
+            padding-left: 8px;
+        }
+        
+        .result-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .result-label {
+            font-weight: 500;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+        
+        .result-value {
+            font-weight: 700;
+            color: var(--text-primary);
+            font-size: 1rem;
+            letter-spacing: 0.2px;
+        }
+        
+        .overall-status {
+            text-align: center;
+            padding: 28px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            margin-top: 32px;
+            border: 2px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+        
+        .overall-status:hover {
+            box-shadow: var(--shadow-md);
+        }
+        
+        .overall-status h3 {
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
+        
+        .input-group-check {
+            margin-bottom: 14px;
+            padding: 16px;
+            background: var(--bg-primary);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            transition: all 0.2s ease;
+        }
+        
+        .input-group-check:hover {
+            border-color: var(--accent);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .input-group-check label {
+            margin-bottom: 6px;
+            color: var(--text-primary);
+        }
+        
+        .formula-note {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-style: italic;
+            margin-top: 6px;
+            padding-left: 32px;
+            line-height: 1.5;
+        }
+        
+        .diagram {
+            text-align: center;
+            margin: 28px 0;
+            padding: 24px;
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+        
+        .diagram:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+        
+        .diagram-title {
+            font-weight: 600;
+            margin-bottom: 18px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            letter-spacing: -0.2px;
+        }
+        
+        .diagram-title i {
+            margin-right: 12px;
+            color: var(--accent);
+        }
+        
+        .smit-diagram {
+            width: 100%;
+            max-width: 400px;
+            height: 250px;
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+            border-radius: var(--radius-md);
+            margin: 0 auto;
+            position: relative;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .smit-diagram:hover {
+            border-color: var(--accent);
+            box-shadow: inset 0 0 20px rgba(74, 144, 226, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1>Smit Bracket Design Calculator</h1>
+                <p class="subtitle">Based on AISC ASD 9th Edition & API RP 2A WSD 2010 Standards</p>
+            </div>
+            <div class="credit">Developed by Hrithin</div>
+        </header>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="inputs">
+                <i class="fas fa-sliders-h"></i> Input Parameters
+            </div>
+            <div class="tab" data-tab="stresses">
+                <i class="fas fa-tachometer-alt"></i> Allowable Stresses
+            </div>
+            <div class="tab" data-tab="pinhole">
+                <i class="fas fa-link"></i> Pinhole Checks
+            </div>
+            <div class="tab" data-tab="base">
+                <i class="fas fa-cube"></i> Base Plate Checks
+            </div>
+            <div class="tab" data-tab="welds">
+                <i class="fas fa-wrench"></i> Weld Checks
+            </div>
+        </div>
+        
+        <!-- Input Parameters Tab Content -->
+        <div id="inputs-tab" class="tab-content active">
+            <div class="content-grid">
+                <div class="input-section">
+                    <h2 class="section-title"><i class="fas fa-cube"></i> Material Properties</h2>
+                    
+                    <div class="input-group">
+                        <label for="steel-yield"><i class="fas fa-gem"></i> Material yield stress, sy <span class="unit">(MPa)</span></label>
+                        <input type="number" id="steel-yield" value="235" step="0.1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="weld-tensile"><i class="fas fa-fire"></i> Weld electrode tensile strength, sU <span class="unit">(MPa)</span></label>
+                        <input type="number" id="weld-tensile" value="480" step="0.1">
+                    </div>
+                    
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label for="modulus"><i class="fas fa-ruler"></i> Modulus of elasticity, E <span class="unit">(MPa)</span></label>
+                            <input type="number" id="modulus" value="200000" step="1000">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="poisson"><i class="fas fa-compress-alt"></i> Poisson's ratio, v</label>
+                            <input type="number" id="poisson" value="0.3" step="0.01">
+                        </div>
+                    </div>
+                    
+                    <h2 class="section-title"><i class="fas fa-ruler-combined"></i> Smit Bracket Geometry</h2>
+                    
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label for="radius"><i class="fas fa-circle"></i> Radius of main plate, R <span class="unit">(mm)</span></label>
+                            <input type="number" id="radius" value="170" step="0.1">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="thickness"><i class="fas fa-square"></i> Thickness of main plate, t <span class="unit">(mm)</span></label>
+                            <input type="number" id="thickness" value="36" step="0.1">
+                        </div>
+                    </div>
+                    
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label for="hole-diameter"><i class="fas fa-circle-notch"></i> Diameter of eye pin hole, De <span class="unit">(mm)</span></label>
+                            <input type="number" id="hole-diameter" value="140" step="0.1">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="cheek-diameter"><i class="fas fa-circle"></i> Diameter of cheek plate, DC <span class="unit">(mm)</span></label>
+                            <input type="number" id="cheek-diameter" value="280" step="0.1">
+                        </div>
+                    </div>
+                    
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label for="cheek-thickness"><i class="fas fa-square"></i> Thickness of cheek plate, tC <span class="unit">(mm)</span></label>
+                            <input type="number" id="cheek-thickness" value="28" step="0.1">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="height"><i class="fas fa-arrows-alt-v"></i> Total height of smit bracket, H <span class="unit">(mm)</span></label>
+                            <input type="number" id="height" value="405" step="0.1">
+                        </div>
+                    </div>
+                    
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label for="base-length"><i class="fas fa-arrows-alt-h"></i> Length of base plate, L <span class="unit">(mm)</span></label>
+                            <input type="number" id="base-length" value="760" step="0.1">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="base-weld"><i class="fas fa-wrench"></i> Base weld leg size, tW <span class="unit">(mm)</span></label>
+                            <input type="number" id="base-weld" value="10" step="0.1">
+                        </div>
+                    </div>
+                    
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label for="cheek-weld"><i class="fas fa-wrench"></i> Cheek plate weld size, tWC <span class="unit">(mm)</span></label>
+                            <input type="number" id="cheek-weld" value="10" step="0.1">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="pin-length"><i class="fas fa-link"></i> Pin length, Lpin <span class="unit">(mm)</span></label>
+                            <input type="number" id="pin-length" value="100" step="0.1">
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="pin-diameter"><i class="fas fa-dot-circle"></i> Pin diameter, DP <span class="unit">(mm)</span></label>
+                        <input type="number" id="pin-diameter" value="135" step="0.1">
+                    </div>
+                </div>
+                
+                <div class="input-section">
+                    <h2 class="section-title"><i class="fas fa-weight-hanging"></i> Smit Bracket Load</h2>
+                    
+                    <div class="input-group">
+                        <label for="load"><i class="fas fa-weight"></i> Load on smit bracket, PS <span class="unit">(MT)</span></label>
+                        <input type="number" id="load" value="80" step="0.1">
+                    </div>
+                    
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label for="angle"><i class="fas fa-angle-right"></i> Angle of load with vertical, θ <span class="unit">(deg)</span></label>
+                            <input type="number" id="angle" value="90" step="0.1">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="out-plane"><i class="fas fa-angle-double-right"></i> Out of plane angle, φ <span class="unit">(deg)</span></label>
+                            <input type="number" id="out-plane" value="5" step="0.1">
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="dlf"><i class="fas fa-bolt"></i> Dynamic load factor, DLF</label>
+                        <input type="number" id="dlf" value="1.25" step="0.01">
+                    </div>
+                    
+                    <div class="diagram">
+                        <div class="diagram-title">
+                            <i class="fas fa-project-diagram"></i> Smit Bracket Diagram
+                        </div>
+                        <div class="smit-diagram">
+                            <i class="fas fa-industry" style="font-size: 3rem; color: #a0b4d0;"></i>
+                            <div style="position: absolute; bottom: 10px; color: #7a8ca5; font-size: 0.9rem;">
+                                Smit Bracket Schematic
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="calc-button" id="calculate-all">
+                        <i class="fas fa-calculator"></i> Calculate All
+                    </button>
+                </div>
+                
+                <div class="output-section">
+                    <h2 class="section-title"><i class="fas fa-info-circle"></i> Design Summary</h2>
+                    
+                    <div class="results-container">
+                        <div class="result-card">
+                            <div class="result-card-title">
+                                <i class="fas fa-tachometer-alt"></i> Load Distribution
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Total load (PS):</span>
+                                <span class="result-value" id="summary-load">80 MT</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Load per side (P):</span>
+                                <span class="result-value" id="summary-load-side">40 MT</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Design load (Pd):</span>
+                                <span class="result-value" id="summary-design-load">100 MT</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Vertical load (PZ):</span>
+                                <span class="result-value" id="summary-vertical">0 MT</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Horizontal load (Py):</span>
+                                <span class="result-value" id="summary-horizontal">39.85 MT</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Lateral load (Px):</span>
+                                <span class="result-value" id="summary-lateral">3.49 MT</span>
+                            </div>
+                        </div>
+                        
+                        <div class="result-card">
+                            <div class="result-card-title">
+                                <i class="fas fa-clipboard-check"></i> Critical Stresses
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Max bearing stress:</span>
+                                <span class="result-value" id="summary-bearing">154.7 MPa</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Max shear stress:</span>
+                                <span class="result-value" id="summary-shear">69.0 MPa</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Max tensile stress:</span>
+                                <span class="result-value" id="summary-tensile">81.2 MPa</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Max Von Mises:</span>
+                                <span class="result-value" id="summary-von-mises">199.8 MPa</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Base weld stress:</span>
+                                <span class="result-value" id="summary-weld-base">156.8 MPa</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label">Cheek weld stress:</span>
+                                <span class="result-value" id="summary-weld-cheek">82.3 MPa</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="overall-status">
+                        <h3 id="overall-status-title" style="color: var(--danger);">Design Review Required</h3>
+                        <p id="overall-status-desc" style="color: var(--text-secondary); margin-bottom: 0;">Some stress checks exceed allowable limits</p>
+                        <div style="margin-top: 20px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+                            <span id="status-pinhole" class="status status-ok">Pinhole OK</span>
+                            <span id="status-base" class="status status-not-safe">Base FAIL</span>
+                            <span id="status-weld" class="status status-ok">Weld OK</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Allowable Stresses Tab Content -->
+        <div id="stresses-tab" class="tab-content">
+            <div class="content-grid">
+                <div class="input-section">
+                    <h2 class="section-title"><i class="fas fa-calculator"></i> Allowable Stresses Calculation</h2>
+                    
+                    <div class="input-group-check">
+                        <label><i class="fas fa-gem"></i> Material yield stress, sy = <span id="mat-yield-value">235</span> MPa</label>
+                        <div class="formula-note">Base value for all calculations</div>
+                    </div>
+                    
+                    <div class="input-group-check">
+                        <label><i class="fas fa-fire"></i> Weld electrode tensile strength, sU = <span id="weld-tensile-value">480</span> MPa</label>
+                        <div class="formula-note">For weld stress calculations only</div>
+                    </div>
+                    
+                    <h3 class="check-title"><i class="fas fa-percentage"></i> Stress Factors</h3>
+                    
+                    <table class="result-table">
+                        <tr>
+                            <th>Stress Type</th>
+                            <th>Factor</th>
+                            <th>Formula</th>
+                        </tr>
+                        <tr>
+                            <td>Bearing stress</td>
+                            <td>0.90</td>
+                            <td>0.9 × sy</td>
+                        </tr>
+                        <tr>
+                            <td>Bending (In-plane)</td>
+                            <td>0.60</td>
+                            <td>0.6 × sy</td>
+                        </tr>
+                        <tr>
+                            <td>Bending (Out of plane)</td>
+                            <td>0.75</td>
+                            <td>0.75 × sy</td>
+                        </tr>
+                        <tr>
+                            <td>Tensile stress</td>
+                            <td>0.60</td>
+                            <td>0.6 × sy</td>
+                        </tr>
+                        <tr>
+                            <td>Tensile at pinhole</td>
+                            <td>0.45</td>
+                            <td>0.45 × sy</td>
+                        </tr>
+                        <tr>
+                            <td>Shear stress</td>
+                            <td>0.40</td>
+                            <td>0.4 × sy</td>
+                        </tr>
+                        <tr>
+                            <td>Von Mises stress</td>
+                            <td>0.75</td>
+                            <td>0.75 × sy</td>
+                        </tr>
+                        <tr>
+                            <td>Hertz stress</td>
+                            <td>2.50</td>
+                            <td>2.5 × sy</td>
+                        </tr>
+                        <tr>
+                            <td>Weld stress</td>
+                            <td>0.30</td>
+                            <td>0.3 × sU</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="output-section">
+                    <h2 class="section-title"><i class="fas fa-tachometer-alt"></i> Calculated Allowable Stresses</h2>
+                    
+                    <table class="result-table">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Value</th>
+                            <th>Unit</th>
+                        </tr>
+                        <tr>
+                            <td>Allowable bearing stress, sbe(allow)</td>
+                            <td id="allow-bearing">211.5</td>
+                            <td>MPa</td>
+                        </tr>
+                        <tr>
+                            <td>Allowable bending stress (In-plane), sbd(allow)</td>
+                            <td id="allow-bending-in">141.0</td>
+                            <td>MPa</td>
+                        </tr>
+                        <tr>
+                            <td>Allowable bending stress (Out of plane), sbdo(allow)</td>
+                            <td id="allow-bending-out">176.3</td>
+                            <td>MPa</td>
+                        </tr>
+                        <tr>
+                            <td>Allowable tensile stress, st(allow)</td>
+                            <td id="allow-tensile">141.0</td>
+                            <td>MPa</td>
+                        </tr>
+                        <tr>
+                            <td>Allowable tensile stress at pinhole, stp(allow)</td>
+                            <td id="allow-tensile-pin">105.8</td>
+                            <td>MPa</td>
+                        </tr>
+                        <tr>
+                            <td>Allowable shear stress, tS(allow)</td>
+                            <td id="allow-shear">94.0</td>
+                            <td>MPa</td>
+                        </tr>
+                        <tr>
+                            <td>Allowable Von Mises stress, sV(allow)</td>
+                            <td id="allow-von-mises">176.3</td>
+                            <td>MPa</td>
+                        </tr>
+                        <tr>
+                            <td>Allowable Hertz stress, sH(allow)</td>
+                            <td id="allow-hertz">587.5</td>
+                            <td>MPa</td>
+                        </tr>
+                        <tr>
+                            <td>Allowable weld stress, sW(allow)</td>
+                            <td id="allow-weld">144.0</td>
+                            <td>MPa</td>
+                        </tr>
+                    </table>
+                    
+                    <div style="margin-top: 32px; padding: 24px; background: linear-gradient(135deg, var(--success-light) 0%, #c8e6c9 100%); border-radius: var(--radius-md); border-left: 4px solid var(--success); box-shadow: var(--shadow-sm);">
+                        <h3 style="color: var(--success); margin-bottom: 12px; font-weight: 600; font-size: 1.15rem; letter-spacing: -0.2px;"><i class="fas fa-check-circle"></i> Allowable Stresses Summary</h3>
+                        <p style="color: var(--text-secondary); line-height: 1.7;">All allowable stresses are calculated based on material yield strength and applicable safety factors as per AISC ASD standards.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Pinhole Checks Tab Content -->
+        <div id="pinhole-tab" class="tab-content">
+            <div class="content-grid">
+                <div class="input-section">
+                    <h2 class="section-title"><i class="fas fa-link"></i> Pinhole Geometry & Loads</h2>
+                    
+                    <div class="input-group-check">
+                        <label><i class="fas fa-weight"></i> Design bearing load, Pd = <span id="pinhole-load">100</span> MT</label>
+                        <div class="formula-note">Total design load on pinhole</div>
+                    </div>
+                    
+                    <div class="input-group-check">
+                        <label><i class="fas fa-circle"></i> Pin diameter, DP = <span id="pinhole-pin-dia">135</span> mm</label>
+                        <div class="formula-note">Diameter of the pin</div>
+                    </div>
+                    
+                    <div class="input-group-check">
+                        <label><i class="fas fa-square"></i> Main plate thickness, t = <span id="pinhole-main-thick">36</span> mm</label>
+                        <div class="formula-note">Thickness of main plate</div>
+                    </div>
+                    
+                    <div class="input-group-check">
+                        <label><i class="fas fa-square"></i> Cheek plate thickness, tC = <span id="pinhole-cheek-thick">28</span> mm</label>
+                        <div class="formula-note">Thickness of cheek plate</div>
+                    </div>
+                    
+                    <div class="input-group-check">
+                        <label><i class="fas fa-circle-notch"></i> Pin hole diameter, De = <span id="pinhole-hole-dia">140</span> mm</label>
+                        <div class="formula-note">Diameter of pin hole in eye</div>
+                    </div>
+                    
+                    <div class="input-group-check">
+                        <label><i class="fas fa-circle"></i> Radius of main plate, R = <span id="pinhole-radius">170</span> mm</label>
+                        <div class="formula-note">Radius from center to edge</div>
+                    </div>
+                    
+                    <div class="input-group-check">
+                        <label><i class="fas fa-circle"></i> Radius of cheek plate, RC = <span id="pinhole-cheek-radius">140</span> mm</label>
+                        <div class="formula-note">Half of cheek plate diameter</div>
+                    </div>
+                    
+                    <h3 class="check-title"><i class="fas fa-calculator"></i> Calculated Areas</h3>
+                    
+                    <table class="result-table">
+                        <tr>
+                            <th>Area Type</th>
+                            <th>Value</th>
+                            <th>Unit</th>
+                            <th>Formula</th>
+                        </tr>
+                        <tr>
+                            <td>Bearing area, Abe</td>
+                            <td id="pinhole-bearing-area">7068.6</td>
+                            <td>mm²</td>
+                            <td>π/4 × DP × (t + tC)</td>
+                        </tr>
+                        <tr>
+                            <td>Shear area, ASD</td>
+                            <td id="pinhole-shear-area">15480.0</td>
+                            <td>mm²</td>
+                            <td>2 × [(R - De/2)×t + (RC - De/2)×tC]</td>
+                        </tr>
+                        <tr>
+                            <td>Tensile area A-A, At1p</td>
+                            <td id="pinhole-tensile-area-aa">15480.0</td>
+                            <td>mm²</td>
+                            <td>2 × [(R - De/2)×t + (RC - De/2)×tC]</td>
+                        </tr>
+                        <tr>
+                            <td>Tensile area B-B, At2p</td>
+                            <td id="pinhole-tensile-area-bb">33264.0</td>
+                            <td>mm²</td>
+                            <td>(2R + π×RC/2) × t</td>
+                        </tr>
+                        <tr>
+                            <td>Pin section area, Apin</td>
+                            <td id="pinhole-pin-area">14313.7</td>
+                            <td>mm²</td>
+                            <td>π/4 × DP²</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="output-section">
+                    <h2 class="section-title"><i class="fas fa-clipboard-check"></i> Pinhole Stress Checks</h2>
+                    
+                    <h3 class="check-title"><i class="fas fa-compress-alt"></i> Bearing Stress Check</h3>
+                    <table class="result-table">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Value</th>
+                            <th>Unit</th>
+                            <th>Status</th>
+                        </tr>
+                        <tr>
+                            <td>Bearing stress, sbe</td>
+                            <td id="pinhole-bearing-stress">154.7</td>
+                            <td>MPa</td>
+                            <td><span id="pinhole-bearing-status" class="status status-ok">OK</span></td>
+                        </tr>
+                        <tr>
+                            <td>Allowable bearing stress</td>
+                            <td id="pinhole-allow-bearing">211.5</td>
+                            <td>MPa</td>
+                            <td></td>
+                        </tr>
+                    </table>
+                    
+                    <h3 class="check-title"><i class="fas fa-cut"></i> Shear Stress Check</h3>
+                    <table class="result-table">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Value</th>
+                            <th>Unit</th>
+                            <th>Status</th>
+                        </tr>
+                        <tr>
+                            <td>Shear stress at pinhole, ssp</td>
+                            <td id="pinhole-shear-stress">63.4</td>
+                            <td>MPa</td>
+                            <td><span id="pinhole-shear-status" class="status status-ok">OK</span></td>
+                        </tr>
+                        <tr>
+                            <td>Allowable shear stress</td>
+                            <td id="pinhole-allow-shear">94.0</td>
+                            <td>MPa</td>
+                            <td></td>
+                        </tr>
+                    </table>
+                    
+                    <h3 class="check-title"><i class="fas fa-expand-alt"></i> Tensile Stress Check</h3>
+                    <table class="result-table">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Value</th>
+                            <th>Unit</th>
+                            <th>Status</th>
+                        </tr>
+                        <tr>
+                            <td>Tensile stress A-A, stp</td>
+                            <td id="pinhole-tensile-stress-aa">81.2</td>
+                            <td>MPa</td>
+                            <td><span id="pinhole-tensile-status-aa" class="status status-ok">OK</span></td>
+                        </tr>
+                        <tr>
+                            <td>Tensile stress B-B, stp</td>
+                            <td id="pinhole-tensile-stress-bb">37.8</td>
+                            <td>MPa</td>
+                            <td><span id="pinhole-tensile-status-bb" class="status status-ok">OK</span></td>
+                        </tr>
+                        <tr>
+                            <td>Allowable tensile stress</td>
+                            <td id="pinhole-allow-tensile-pin">105.8</td>
+                            <td>MPa</td>
+                            <td></td>
+                        </tr>
+                    </table>
+                    
+                    <h3 class="check-title"><i class="fas fa-dot-circle"></i> Hertz Contact Stress Check</h3>
+                    <table class="result-table">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Value</th>
+                            <th>Unit</th>
+                            <th>Status</th>
+                        </tr>
+                        <tr>
+                            <td>Hertz stress at pin hole, sH</td>
+                            <td id="pinhole-hertz-stress">314.5</td>
+                            <td>MPa</td>
+                            <td><span id="pinhole-hertz-status" class="status status-ok">OK</span></td>
+                        </tr>
+                        <tr>
+                            <td>Allowable Hertz stress</td>
+                            <td id="pinhole-allow-hertz">587.5</td>
+                            <td>MPa</td>
+                            <td></td>
+                        </tr>
+                    </table>
+                    
+                    <h3 class="check-title"><i class="fas fa-link"></i> Pin Shear Stress Check</h3>
+                    <table class="result-table">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Value</th>
+                            <th>Unit</th>
+                            <th>Status</th>
+                        </tr>
+                        <tr>
+                            <td>Shear stress at pin, tspin</td>
+                            <td id="pinhole-pin-shear">69.0</td>
+                            <td>MPa</td>
+                            <td><span id="pinhole-pin-shear-status" class="status status-ok">OK</span></td>
+                        </tr>
+                        <tr>
+                            <td>Allowable shear stress</td>
+                            <td id="pinhole-allow-pin-shear">94.0</td>
+                            <td>MPa</td>
+                            <td></td>
+                        </tr>
+                    </table>
+                    
+                    <div class="overall-status" style="margin-top: 24px;">
+                        <h3 id="pinhole-overall-status">Pinhole Stress Checks</h3>
+                        <p style="color: var(--text-secondary);">Checking pinhole stress values...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Base Plate Checks Tab Content -->
+        <div id="base-tab" class="tab-content">
+            <div class="content-grid">
+                <div class="input-section">
+                    <h2 class="section-title"><i class="fas fa-cube"></i> Base Plate Geometry & Loads</h2>
+                    
+                    <div class="input-group-check">
+                        <label><i class="fas fa-arrows-alt-h"></i> Base length, L = <span id="base-length-value">760</span> mm</label>
+                        <div class="formula-note">Length of base plate</div>
+                    </div>
+                    
+                    <div class="input-group-check">
+                        <label><i class="fas fa-square"></i> Base thickness, t = <span id="base-thickness-value">36</span> mm</label>
+                        <div class="formula-note">Thickness of base plate</div>
+                    </div>
+                    
+                    <div class="input-group-check">
+                        <label><i class="fas fa-arrows-alt-v"></i> Moment lever (horizontal), h = <span id="base-lever-h">235</span> mm</label>
+                        <div class="formula-note">H - R = 405 - 170</div>
+                    </div>
+                    
+                    <div class="input-group-check">
+                        <label><i class="fas fa-arrows-alt-h"></i> Moment lever (vertical), e = <span id="base-lever-e">210</span> mm</label>
+                        <div class="formula-note">L/2 - R = 380 - 170</div>
+                    </div>
+                    
+                    <h3 class="check-title"><i class="fas fa-weight"></i> Design Loads at Base</h3>
+                    
+                    <table class="result-table">
+                        <tr>
+                            <th>Load Type</th>
+                            <th>Value</th>
+                            <th>Unit</th>
+                        </tr>
+                        <tr>
+                            <td>Design tensile force, Pt</td>
+                            <td id="base-tensile-force">0</td>
+                            <td>MT</td>
+                        </tr>
+                        <tr>
+                            <td>Design horizontal load, Pyd</td>
+                            <td id="base-horizontal-load">49.81</td>
+                            <td>MT</td>
+                        </tr>
+                        <tr>
+                            <td>Design vertical load, Pzd</td>
+                            <td id="base-vertical-load">0</td>
+                            <td>MT</td>
+                        </tr>
+                        <tr>
+                            <td>Design lateral load, Pxd</td>
+                            <td id="base-lateral-load">4.37</td>
+                            <td>MT</td>
+                        </tr>
+                    </table>
+                    
+                    <h3 class="check-title"><i class="fas fa-calculator"></i> Calculated Properties</h3>
+                    
+                    <table class="result-table">
+                        <tr>
+                            <th>Property</th>
+                            <th>Value</th>
+                            <th>Unit</th>
+                            <th>Formula</th>
+                        </tr>
+                        <tr>
+                            <td>Tensile area, Atb</td>
+                            <td id="base-tensile-area">27360</td>
+                            <td>mm²</td>
+                            <td>L × t</td>
+                        </tr>
+                        <tr>
+                            <td>Shear area, Asb</td>
+                            <td id="base-shear-area">27360</td>
+                            <td>mm²</td>
+                            <td>L × t</td>
+                        </tr>
+                        <tr>
+                            <td>Section modulus (x-axis), Zbxx</td>
+                            <td id="base-modulus-x">3.46E6</td>
+                            <td>mm³</td>
+                            <td>t × L² / 6</td>
+                        </tr>
+                        <tr>
+                            <td>Section modulus (y-axis), Zbyy</td>
+                            <td id="base-modulus-y">164160</td>
+                            <td>mm³</td>
+                            <td>L × t² / 6</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="output-section">
+                    <h2 class="section-title"><i class="fas fa-clipboard-check"></i> Base Plate Stress Checks</h2>
+                    
+                    <h3 class="check-title"><i class="fas fa-expand-alt"></i> Tensile Stress Check</h3>
+                    <table class="result-table">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Value</th>
+                            <th>Unit</th>
+                            <th>Status</th>
+                        </tr>
+                        <tr>
+                            <td>Tensile stress at base, stb</td>
+                            <td id="base-tensile-stress">0.0</td>
+                            <td>MPa</td>
+                            <td><span id="base-tensile-status" class="status status-ok">OK</span></td>
+                        </tr>
+                        <tr>
+                            <td>Allowable tensile stress</td>
+                            <td id="base-allow-tensile">141.0</td>
+                            <td>MPa</td>
+                            <td></td>
+                        </tr>
+                    </table>
+                    
+                    <h3 class="check-title"><i class="fas fa-bending"></i> Bending Stress Check</h3>
+                    <table class="result-table">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Value</th>
+                            <th>Unit</th>
+                            <th>Status</th>
+                        </tr>
+                        <tr>
+                            <td>Bending stress (x-axis), sbbx</td>
+                            <td id="base-bending-stress-x">119.3</td>
+                            <td>MPa</td>
+                            <td><span id="base-bending-status-x" class="status status-ok">OK</span></td>
+                        </tr>
+                        <tr>
+                            <td>Allowable bending (in-plane)</td>
+                            <td id="base-allow-bending-in">141.0</td>
+                            <td>MPa</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Bending stress (y-axis), sbby</td>
+                            <td id="base-bending-stress-y">80.6</td>
+                            <td>MPa</td>
+                            <td><span id="base-bending-status-y" class="status status-ok">OK</span></td>
+                        </tr>
+                        <tr>
+                            <td>Allowable bending (out of plane)</td>
+                            <td id="base-allow-bending-out">176.3</td>
+                            <td>MPa</td>
+                            <td></td>
+                        </tr>
+                    </table>
+                    
+                    <h3 class="check-title"><i class="fas fa-cut"></i> Shear Stress Check</h3>
+                    <table class="result-table">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Value</th>
+                            <th>Unit</th>
+                            <th>Status</th>
+                        </tr>
+                        <tr>
+                            <td>Shear stress (y direction), tsby</td>
+                            <td id="base-shear-stress-y">17.0</td>
+                            <td>MPa</td>
+                            <td><span id="base-shear-status-y" class="status status-ok">OK</span></td>
+                        </tr>
+                        <tr>
+                            <td>Shear stress (x direction), tsbx</td>
+                            <td id="base-shear-stress-x">1.5</td>
+                            <td>MPa</td>
+                            <td><span id="base-shear-status-x" class="status status-ok">OK</span></td>
+                        </tr>
+                        <tr>
+                            <td>Allowable shear stress</td>
+                            <td id="base-allow-shear">94.0</td>
+                            <td>MPa</td>
+                            <td></td>
+                        </tr>
+                    </table>
+                    
+                    <h3 class="check-title"><i class="fas fa-sigma"></i> Combined Stress Checks</h3>
+                    <table class="result-table">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Value</th>
+                            <th>Unit/Limit</th>
+                            <th>Status</th>
+                        </tr>
+                        <tr>
+                            <td>Von Mises stress, svb</td>
+                            <td id="base-von-mises-stress">199.8</td>
+                            <td>MPa</td>
+                            <td><span id="base-von-mises-status" class="status status-not-safe">FAIL</span></td>
+                        </tr>
+                        <tr>
+                            <td>Allowable Von Mises</td>
+                            <td id="base-allow-von-mises">176.3</td>
+                            <td>MPa</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Combined stress ratio</td>
+                            <td id="base-combined-ratio">1.42</td>
+                            <td>(≤ 1.0)</td>
+                            <td><span id="base-combined-status" class="status status-not-safe">FAIL</span></td>
+                        </tr>
+                        <tr>
+                            <td>AISC H2-1 check</td>
+                            <td colspan="2">fa/st(allow) + fbx/sbd(allow) + fby/sbdo(allow)</td>
+                            <td><span id="base-aisc-status" class="status status-not-safe">FAIL</span></td>
+                        </tr>
+                    </table>
+                    
+                    <div class="overall-status" style="margin-top: 24px;">
+                        <h3 id="base-overall-status">Base Plate Checks</h3>
+                        <p style="color: var(--text-secondary);">Checking base plate stress values...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Weld Checks Tab Content -->
+        <div id="welds-tab" class="tab-content">
+            <div class="content-grid">
+                <div class="input-section">
+                    <h2 class="section-title"><i class="fas fa-wrench"></i> Weld Geometry</h2>
+                    
+                    <div class="input-group-check">
+                        <label><i class="fas fa-ruler"></i> Base weld leg size, tw = <span id="weld-base-size">10</span> mm</label>
+                        <div class="formula-note">Leg size of base weld</div>
+                    </div>
+                    
+                    <div class="input-group-check">
+                        <label><i class="fas fa-ruler"></i> Cheek weld leg size, twc = <span id="weld-cheek-size">10</span> mm</label>
+                        <div class="formula-note">Leg size of cheek plate weld</div>
+                    </div>
+                    
+                    <div class="input-group-check">
+                        <label><i class="fas fa-arrows-alt-h"></i> Base length, d = <span id="weld-base-length">760</span> mm</label>
+                        <div class="formula-note">Length of base weld</div>
+                    </div>
+                    
+                    <div class="input-group-check">
+                        <label><i class="fas fa-arrows-alt-v"></i> Base width, b = <span id="weld-base-width">36</span> mm</label>
+                        <div class="formula-note">Width of base weld</div>
+                    </div>
+                    
+                    <div class="input-group-check">
+                        <label><i class="fas fa-circle"></i> Cheek plate diameter, Dc = <span id="weld-cheek-dia">280</span> mm</label>
+                        <div class="formula-note">Diameter of cheek plate</div>
+                    </div>
+                    
+                    <h3 class="check-title"><i class="fas fa-calculator"></i> Calculated Weld Properties</h3>
+                    
+                    <table class="result-table">
+                        <tr>
+                            <th>Property</th>
+                            <th>Value</th>
+                            <th>Unit</th>
+                            <th>Formula</th>
+                        </tr>
+                        <tr>
+                            <td>Base weld throat, twt</td>
+                            <td id="weld-base-throat">7.07</td>
+                            <td>mm</td>
+                            <td>tw / √2</td>
+                        </tr>
+                        <tr>
+                            <td>Total base weld length, Lw</td>
+                            <td id="weld-base-total-length">1592</td>
+                            <td>mm</td>
+                            <td>2 × (d + b)</td>
+                        </tr>
+                        <tr>
+                            <td>Base weld area, Asbw</td>
+                            <td id="weld-base-area">11257.1</td>
+                            <td>mm²</td>
+                            <td>twt × Lw</td>
+                        </tr>
+                        <tr>
+                            <td>Base weld modulus (x-axis), Zwbxx</td>
+                            <td id="weld-base-modulus-x">1.94E6</td>
+                            <td>mm³</td>
+                            <td>(b×d + d²/3) × tw</td>
+                        </tr>
+                        <tr>
+                            <td>Base weld modulus (y-axis), Zwbyy</td>
+                            <td id="weld-base-modulus-y">2.76E5</td>
+                            <td>mm³</td>
+                            <td>(b×d + b²/3) × tw</td>
+                        </tr>
+                        <tr>
+                            <td>Cheek weld throat, twtc</td>
+                            <td id="weld-cheek-throat">7.07</td>
+                            <td>mm</td>
+                            <td>twc / √2</td>
+                        </tr>
+                        <tr>
+                            <td>Cheek weld length, Lwc</td>
+                            <td id="weld-cheek-length">439.8</td>
+                            <td>mm</td>
+                            <td>π × Dc / 2</td>
+                        </tr>
+                        <tr>
+                            <td>Cheek weld area, Awc</td>
+                            <td id="weld-cheek-area">3110.2</td>
+                            <td>mm²</td>
+                            <td>twtc × Lwc</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="output-section">
+                    <h2 class="section-title"><i class="fas fa-clipboard-check"></i> Weld Stress Checks</h2>
+                    
+                    <h3 class="check-title"><i class="fas fa-cube"></i> Base Weld Check</h3>
+                    <table class="result-table">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Value</th>
+                            <th>Unit</th>
+                            <th>Status</th>
+                        </tr>
+                        <tr>
+                            <td>Shear stress (y direction), tsbwy</td>
+                            <td id="weld-base-shear-y">43.4</td>
+                            <td>MPa</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Shear stress (x direction), tsbwx</td>
+                            <td id="weld-base-shear-x">3.8</td>
+                            <td>MPa</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Tensile stress, stbw</td>
+                            <td id="weld-base-tensile">0.0</td>
+                            <td>MPa</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Bending stress (x-axis), sbbwx</td>
+                            <td id="weld-base-bending-x">214.6</td>
+                            <td>MPa</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Bending stress (y-axis), sbbwy</td>
+                            <td id="weld-base-bending-y">155.0</td>
+                            <td>MPa</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Total stress, scbw</td>
+                            <td id="weld-base-total">156.8</td>
+                            <td>MPa</td>
+                            <td><span id="weld-base-status" class="status status-not-safe">FAIL</span></td>
+                        </tr>
+                        <tr>
+                            <td>Allowable weld stress</td>
+                            <td id="weld-allowable">144.0</td>
+                            <td>MPa</td>
+                            <td></td>
+                        </tr>
+                    </table>
+                    
+                    <h3 class="check-title"><i class="fas fa-circle"></i> Cheek Plate Weld Check</h3>
+                    <table class="result-table">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Value</th>
+                            <th>Unit</th>
+                            <th>Status</th>
+                        </tr>
+                        <tr>
+                            <td>Design load on cheek plate, Pdc</td>
+                            <td id="weld-cheek-load">43.75</td>
+                            <td>MT</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Weld stress at cheek weld, swc</td>
+                            <td id="weld-cheek-stress">82.3</td>
+                            <td>MPa</td>
+                            <td><span id="weld-cheek-status" class="status status-ok">OK</span></td>
+                        </tr>
+                        <tr>
+                            <td>Allowable weld stress</td>
+                            <td id="weld-cheek-allowable">144.0</td>
+                            <td>MPa</td>
+                            <td></td>
+                        </tr>
+                    </table>
+                    
+                    <div class="overall-status" style="margin-top: 24px;">
+                        <h3 id="weld-overall-status">Weld Checks</h3>
+                        <p style="color: var(--text-secondary);">Checking weld stress values...</p>
+                    </div>
+                    
+                    <div style="margin-top: 32px; padding: 24px; background: linear-gradient(135deg, var(--success-light) 0%, #c8e6c9 100%); border-radius: var(--radius-md); border-left: 4px solid var(--success); box-shadow: var(--shadow-sm);">
+                        <h3 style="color: var(--success); margin-bottom: 14px; font-weight: 600; font-size: 1.15rem; letter-spacing: -0.2px;"><i class="fas fa-lightbulb"></i> Design Recommendations</h3>
+                        <ul style="padding-left: 24px; color: var(--text-secondary); line-height: 1.8;">
+                            <li style="margin-bottom: 8px;">Increase base weld leg size from 10mm to 12mm or more</li>
+                            <li style="margin-bottom: 8px;">Consider increasing base plate thickness to reduce bending stresses</li>
+                            <li style="margin-bottom: 8px;">Review load distribution or add additional support</li>
+                            <li>Verify material properties and safety factors</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs and content
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab
+                tab.classList.add('active');
+                
+                // Show corresponding content
+                const tabId = tab.getAttribute('data-tab');
+                document.getElementById(`${tabId}-tab`).classList.add('active');
+            });
+        });
+        
+        // Calculate All button
+        document.getElementById('calculate-all').addEventListener('click', calculateAll);
+        
+        // Add event listeners to all inputs
+        document.querySelectorAll('#inputs-tab input[type="number"]').forEach(input => {
+            input.addEventListener('input', calculateAll);
+        });
+        
+        // Initial calculation
+        calculateAll();
+        
+        function calculateAll() {
+            // Get input values
+            const steelYield = parseFloat(document.getElementById('steel-yield').value) || 0;
+            const weldTensile = parseFloat(document.getElementById('weld-tensile').value) || 0;
+            const modulus = parseFloat(document.getElementById('modulus').value) || 0;
+            const poisson = parseFloat(document.getElementById('poisson').value) || 0;
+            
+            const radius = parseFloat(document.getElementById('radius').value) || 0;
+            const thickness = parseFloat(document.getElementById('thickness').value) || 0;
+            const holeDiameter = parseFloat(document.getElementById('hole-diameter').value) || 0;
+            const cheekDiameter = parseFloat(document.getElementById('cheek-diameter').value) || 0;
+            const cheekThickness = parseFloat(document.getElementById('cheek-thickness').value) || 0;
+            const height = parseFloat(document.getElementById('height').value) || 0;
+            const baseLength = parseFloat(document.getElementById('base-length').value) || 0;
+            const baseWeld = parseFloat(document.getElementById('base-weld').value) || 0;
+            const cheekWeld = parseFloat(document.getElementById('cheek-weld').value) || 0;
+            const pinLength = parseFloat(document.getElementById('pin-length').value) || 0;
+            const pinDiameter = parseFloat(document.getElementById('pin-diameter').value) || 0;
+            
+            const load = parseFloat(document.getElementById('load').value) || 0;
+            const angle = parseFloat(document.getElementById('angle').value) || 0;
+            const outPlane = parseFloat(document.getElementById('out-plane').value) || 0;
+            const dlf = parseFloat(document.getElementById('dlf').value) || 0;
+            
+            // Update material values display
+            document.getElementById('mat-yield-value').textContent = steelYield.toFixed(0);
+            document.getElementById('weld-tensile-value').textContent = weldTensile.toFixed(0);
+            
+            // Calculate allowable stresses
+            const allowBearing = 0.9 * steelYield;
+            const allowBendingIn = 0.6 * steelYield;
+            const allowBendingOut = 0.75 * steelYield;
+            const allowTensile = 0.6 * steelYield;
+            const allowTensilePin = 0.45 * steelYield;
+            const allowShear = 0.4 * steelYield;
+            const allowVonMises = 0.75 * steelYield;
+            const allowHertz = 2.5 * steelYield;
+            const allowWeld = 0.3 * weldTensile;
+            
+            // Update allowable stresses
+            document.getElementById('allow-bearing').textContent = allowBearing.toFixed(1);
+            document.getElementById('allow-bending-in').textContent = allowBendingIn.toFixed(1);
+            document.getElementById('allow-bending-out').textContent = allowBendingOut.toFixed(1);
+            document.getElementById('allow-tensile').textContent = allowTensile.toFixed(1);
+            document.getElementById('allow-tensile-pin').textContent = allowTensilePin.toFixed(1);
+            document.getElementById('allow-shear').textContent = allowShear.toFixed(1);
+            document.getElementById('allow-von-mises').textContent = allowVonMises.toFixed(1);
+            document.getElementById('allow-hertz').textContent = allowHertz.toFixed(1);
+            document.getElementById('allow-weld').textContent = allowWeld.toFixed(1);
+            
+            // Calculate design loads
+            const loadOneSide = load / 2;
+            const loadVertical = loadOneSide * Math.cos(angle * Math.PI / 180);
+            const loadHorizontal = loadOneSide * Math.sin(angle * Math.PI / 180) * Math.cos(outPlane * Math.PI / 180);
+            const loadOutPlane = loadOneSide * Math.sin(angle * Math.PI / 180) * Math.sin(outPlane * Math.PI / 180);
+            
+            const designLoad = loadOneSide * dlf;
+            const designVertical = loadVertical * dlf;
+            const designHorizontal = loadHorizontal * dlf;
+            const designOutPlane = loadOutPlane * dlf + designLoad * 0.05;
+            
+            // Update summary section
+            document.getElementById('summary-load').textContent = load.toFixed(1) + " MT";
+            document.getElementById('summary-load-side').textContent = loadOneSide.toFixed(1) + " MT";
+            document.getElementById('summary-design-load').textContent = designLoad.toFixed(1) + " MT";
+            document.getElementById('summary-vertical').textContent = loadVertical.toFixed(2) + " MT";
+            document.getElementById('summary-horizontal').textContent = loadHorizontal.toFixed(2) + " MT";
+            document.getElementById('summary-lateral').textContent = loadOutPlane.toFixed(2) + " MT";
+            
+            // PINHOLE CALCULATIONS
+            const cheekRadius = cheekDiameter / 2;
+            
+            // Bearing stress
+            const bearingArea = Math.PI / 4 * pinDiameter * (thickness + cheekThickness);
+            const bearingStress = designLoad * 9806.65 / bearingArea;
+            
+            // Shear stress
+            const shearArea = 2 * ((radius - holeDiameter/2) * thickness + (cheekRadius - holeDiameter/2) * cheekThickness);
+            const shearStress = designLoad * 9806.65 / shearArea;
+            
+            // Tensile stress A-A
+            const tensileAreaAA = 2 * ((radius - holeDiameter/2) * thickness + (cheekRadius - holeDiameter/2) * cheekThickness);
+            const tensileStressAA = designLoad * 9806.65 / tensileAreaAA;
+            
+            // Tensile stress B-B
+            const tensileAreaBB = (2 * radius + Math.PI * cheekRadius / 2) * thickness;
+            const tensileStressBB = designLoad * 9806.5 / tensileAreaBB;
+            
+            // Hertz stress
+            const loadPerUnit = designLoad / (thickness + cheekThickness);
+            const hertzStress = Math.sqrt(loadPerUnit * 9806.65 * modulus * (holeDiameter - pinDiameter) / (Math.PI * (1 - poisson*poisson) * holeDiameter * pinDiameter));
+            
+            // Pin shear stress
+            const pinArea = Math.PI / 4 * pinDiameter * pinDiameter;
+            const pinShearStress = designLoad * 9806.65 / pinArea;
+            
+            // Update pinhole values
+            document.getElementById('pinhole-load').textContent = designLoad.toFixed(1);
+            document.getElementById('pinhole-pin-dia').textContent = pinDiameter.toFixed(1);
+            document.getElementById('pinhole-main-thick').textContent = thickness.toFixed(1);
+            document.getElementById('pinhole-cheek-thick').textContent = cheekThickness.toFixed(1);
+            document.getElementById('pinhole-hole-dia').textContent = holeDiameter.toFixed(1);
+            document.getElementById('pinhole-radius').textContent = radius.toFixed(1);
+            document.getElementById('pinhole-cheek-radius').textContent = cheekRadius.toFixed(1);
+            
+            document.getElementById('pinhole-bearing-area').textContent = bearingArea.toFixed(1);
+            document.getElementById('pinhole-shear-area').textContent = shearArea.toFixed(1);
+            document.getElementById('pinhole-tensile-area-aa').textContent = tensileAreaAA.toFixed(1);
+            document.getElementById('pinhole-tensile-area-bb').textContent = tensileAreaBB.toFixed(1);
+            document.getElementById('pinhole-pin-area').textContent = pinArea.toFixed(1);
+            
+            document.getElementById('pinhole-bearing-stress').textContent = bearingStress.toFixed(1);
+            document.getElementById('pinhole-shear-stress').textContent = shearStress.toFixed(1);
+            document.getElementById('pinhole-tensile-stress-aa').textContent = tensileStressAA.toFixed(1);
+            document.getElementById('pinhole-tensile-stress-bb').textContent = tensileStressBB.toFixed(1);
+            document.getElementById('pinhole-hertz-stress').textContent = hertzStress.toFixed(1);
+            document.getElementById('pinhole-pin-shear').textContent = pinShearStress.toFixed(1);
+            
+            document.getElementById('pinhole-allow-bearing').textContent = allowBearing.toFixed(1);
+            document.getElementById('pinhole-allow-shear').textContent = allowShear.toFixed(1);
+            document.getElementById('pinhole-allow-tensile-pin').textContent = allowTensilePin.toFixed(1);
+            document.getElementById('pinhole-allow-hertz').textContent = allowHertz.toFixed(1);
+            document.getElementById('pinhole-allow-pin-shear').textContent = allowShear.toFixed(1);
+            
+            // Update pinhole statuses
+            updateStatus('pinhole-bearing-status', bearingStress < allowBearing);
+            updateStatus('pinhole-shear-status', shearStress < allowShear);
+            updateStatus('pinhole-tensile-status-aa', tensileStressAA < allowTensilePin);
+            updateStatus('pinhole-tensile-status-bb', tensileStressBB < allowTensilePin);
+            updateStatus('pinhole-hertz-status', hertzStress < allowHertz);
+            updateStatus('pinhole-pin-shear-status', pinShearStress < allowShear);
+            
+            // BASE PLATE CALCULATIONS
+            const momentLever = height - radius;
+            const verticalLever = baseLength / 2 - radius;
+            
+            // Tensile stress
+            const baseTensileArea = baseLength * thickness;
+            const baseTensileStress = designVertical * 9806.65 / baseTensileArea;
+            
+            // Bending stresses
+            const momentX = designHorizontal * momentLever + designVertical * verticalLever;
+            const sectionModulusX = thickness * baseLength * baseLength / 6;
+            const bendingStressX = momentX * 9806.65 / sectionModulusX;
+            
+            const momentY = designOutPlane * momentLever;
+            const sectionModulusY = baseLength * thickness * thickness / 6;
+            const bendingStressY = momentY * 9806.65 / sectionModulusY;
+            
+            // Shear stresses
+            const shearAreaBase = thickness * baseLength;
+            const shearStressY = designHorizontal * 9806.65 / shearAreaBase;
+            const shearStressX = designOutPlane * 9806.65 / shearAreaBase;
+            
+            // Von Mises stress
+            const vonMisesStress = Math.sqrt((baseTensileStress + bendingStressX + bendingStressY) * 
+                                            (baseTensileStress + bendingStressX + bendingStressY) + 
+                                            3 * (shearStressX * shearStressX + shearStressY * shearStressY));
+            
+            // Combined stress ratio (AISC H2-1)
+            const combinedStress = baseTensileStress / allowTensile + 
+                                  bendingStressX / allowBendingIn + 
+                                  bendingStressY / allowBendingOut;
+            
+            // Update base plate values
+            document.getElementById('base-length-value').textContent = baseLength.toFixed(1);
+            document.getElementById('base-thickness-value').textContent = thickness.toFixed(1);
+            document.getElementById('base-lever-h').textContent = momentLever.toFixed(0);
+            document.getElementById('base-lever-e').textContent = verticalLever.toFixed(0);
+            
+            document.getElementById('base-tensile-force').textContent = designVertical.toFixed(2);
+            document.getElementById('base-horizontal-load').textContent = designHorizontal.toFixed(2);
+            document.getElementById('base-vertical-load').textContent = designVertical.toFixed(2);
+            document.getElementById('base-lateral-load').textContent = designOutPlane.toFixed(2);
+            
+            document.getElementById('base-tensile-area').textContent = baseTensileArea.toFixed(0);
+            document.getElementById('base-shear-area').textContent = shearAreaBase.toFixed(0);
+            document.getElementById('base-modulus-x').textContent = (sectionModulusX/1e6).toFixed(2) + "E6";
+            document.getElementById('base-modulus-y').textContent = sectionModulusY.toFixed(0);
+            
+            document.getElementById('base-tensile-stress').textContent = baseTensileStress.toFixed(1);
+            document.getElementById('base-bending-stress-x').textContent = bendingStressX.toFixed(1);
+            document.getElementById('base-bending-stress-y').textContent = bendingStressY.toFixed(1);
+            document.getElementById('base-shear-stress-y').textContent = shearStressY.toFixed(1);
+            document.getElementById('base-shear-stress-x').textContent = shearStressX.toFixed(1);
+            document.getElementById('base-von-mises-stress').textContent = vonMisesStress.toFixed(1);
+            document.getElementById('base-combined-ratio').textContent = combinedStress.toFixed(2);
+            
+            document.getElementById('base-allow-tensile').textContent = allowTensile.toFixed(1);
+            document.getElementById('base-allow-bending-in').textContent = allowBendingIn.toFixed(1);
+            document.getElementById('base-allow-bending-out').textContent = allowBendingOut.toFixed(1);
+            document.getElementById('base-allow-shear').textContent = allowShear.toFixed(1);
+            document.getElementById('base-allow-von-mises').textContent = allowVonMises.toFixed(1);
+            
+            // Update base plate statuses
+            updateStatus('base-tensile-status', baseTensileStress < allowTensile);
+            updateStatus('base-bending-status-x', bendingStressX < allowBendingIn);
+            updateStatus('base-bending-status-y', bendingStressY < allowBendingOut);
+            updateStatus('base-shear-status-y', shearStressY < allowShear);
+            updateStatus('base-shear-status-x', shearStressX < allowShear);
+            updateStatus('base-von-mises-status', vonMisesStress < allowVonMises);
+            updateStatus('base-combined-status', combinedStress < 1);
+            updateStatus('base-aisc-status', combinedStress < 1);
+            
+            // WELD CALCULATIONS
+            const baseWeldThroat = baseWeld / Math.sqrt(2);
+            const totalWeldLength = 2 * (baseLength + thickness);
+            const baseWeldArea = baseWeldThroat * totalWeldLength;
+            
+            const baseWeldModulusX = (thickness * baseLength + baseLength * baseLength / 3) * baseWeld;
+            const baseWeldModulusY = (thickness * baseLength + thickness * thickness / 3) * baseWeld;
+            
+            // Base weld stresses
+            const baseWeldShearY = designHorizontal * 9806.65 / baseWeldArea;
+            const baseWeldShearX = designOutPlane * 9806.65 / baseWeldArea;
+            const baseWeldTensile = designVertical * 9806.65 / baseWeldArea;
+            
+            const baseWeldMomentX = designHorizontal * momentLever + designVertical * verticalLever;
+            const baseWeldBendingX = baseWeldMomentX * 9806.65 / baseWeldModulusX;
+            
+            const baseWeldMomentY = designOutPlane * momentLever;
+            const baseWeldBendingY = baseWeldMomentY * 9806.65 / baseWeldModulusY;
+            
+            const baseWeldTotal = Math.sqrt((baseWeldTensile + baseWeldBendingX + baseWeldBendingY) * 
+                                          (baseWeldTensile + baseWeldBendingX + baseWeldBendingY) + 
+                                          baseWeldShearY * baseWeldShearY + baseWeldShearX * baseWeldShearX);
+            
+            // Cheek weld calculations
+            const cheekWeldThroat = cheekWeld / Math.sqrt(2);
+            const cheekWeldLength = Math.PI * cheekDiameter / 2;
+            const cheekWeldArea = cheekWeldThroat * cheekWeldLength;
+            const cheekLoad = designLoad * cheekThickness / (thickness + cheekThickness);
+            const cheekWeldStress = cheekLoad * 9806.65 / cheekWeldArea;
+            
+            // Update weld values
+            document.getElementById('weld-base-size').textContent = baseWeld.toFixed(1);
+            document.getElementById('weld-cheek-size').textContent = cheekWeld.toFixed(1);
+            document.getElementById('weld-base-length').textContent = baseLength.toFixed(1);
+            document.getElementById('weld-base-width').textContent = thickness.toFixed(1);
+            document.getElementById('weld-cheek-dia').textContent = cheekDiameter.toFixed(1);
+            
+            document.getElementById('weld-base-throat').textContent = baseWeldThroat.toFixed(2);
+            document.getElementById('weld-base-total-length').textContent = totalWeldLength.toFixed(1);
+            document.getElementById('weld-base-area').textContent = baseWeldArea.toFixed(1);
+            document.getElementById('weld-base-modulus-x').textContent = (baseWeldModulusX/1e6).toFixed(2) + "E6";
+            document.getElementById('weld-base-modulus-y').textContent = (baseWeldModulusY/1e3).toFixed(1) + "E3";
+            document.getElementById('weld-cheek-throat').textContent = cheekWeldThroat.toFixed(2);
+            document.getElementById('weld-cheek-length').textContent = cheekWeldLength.toFixed(1);
+            document.getElementById('weld-cheek-area').textContent = cheekWeldArea.toFixed(1);
+            
+            document.getElementById('weld-base-shear-y').textContent = baseWeldShearY.toFixed(1);
+            document.getElementById('weld-base-shear-x').textContent = baseWeldShearX.toFixed(1);
+            document.getElementById('weld-base-tensile').textContent = baseWeldTensile.toFixed(1);
+            document.getElementById('weld-base-bending-x').textContent = baseWeldBendingX.toFixed(1);
+            document.getElementById('weld-base-bending-y').textContent = baseWeldBendingY.toFixed(1);
+            document.getElementById('weld-base-total').textContent = baseWeldTotal.toFixed(1);
+            
+            document.getElementById('weld-cheek-load').textContent = cheekLoad.toFixed(2);
+            document.getElementById('weld-cheek-stress').textContent = cheekWeldStress.toFixed(1);
+            
+            document.getElementById('weld-allowable').textContent = allowWeld.toFixed(1);
+            document.getElementById('weld-cheek-allowable').textContent = allowWeld.toFixed(1);
+            
+            // Update weld statuses - check only the combined total stress against allowable
+            // Base weld: check only the total combined stress (which includes all components)
+            const baseWeldOk = baseWeldTotal < allowWeld;
+            
+            updateStatus('weld-base-status', baseWeldOk);
+            updateStatus('weld-cheek-status', cheekWeldStress < allowWeld);
+            
+            // Update summary critical stresses
+            document.getElementById('summary-bearing').textContent = bearingStress.toFixed(1) + " MPa";
+            document.getElementById('summary-shear').textContent = Math.max(shearStress, pinShearStress).toFixed(1) + " MPa";
+            document.getElementById('summary-tensile').textContent = Math.max(tensileStressAA, tensileStressBB).toFixed(1) + " MPa";
+            document.getElementById('summary-von-mises').textContent = vonMisesStress.toFixed(1) + " MPa";
+            document.getElementById('summary-weld-base').textContent = baseWeldTotal.toFixed(1) + " MPa";
+            document.getElementById('summary-weld-cheek').textContent = cheekWeldStress.toFixed(1) + " MPa";
+            
+            // Update overall status
+            const pinholeOk = bearingStress < allowBearing && shearStress < allowShear && 
+                            tensileStressAA < allowTensilePin && tensileStressBB < allowTensilePin && 
+                            hertzStress < allowHertz && pinShearStress < allowShear;
+            
+            const baseOk = baseTensileStress < allowTensile && bendingStressX < allowBendingIn && 
+                          bendingStressY < allowBendingOut && shearStressY < allowShear && 
+                          shearStressX < allowShear && vonMisesStress < allowVonMises && combinedStress < 1;
+            
+            // Calculate weld check status - both base and cheek welds must pass
+            // Base weld check already done above (baseWeldTotal < allowWeld)
+            const cheekWeldOk = cheekWeldStress < allowWeld;
+            const weldOk = baseWeldOk && cheekWeldOk;
+            
+            // Debug logging (can be removed in production)
+            console.log('Weld Check Debug:', {
+                baseWeldTotal: baseWeldTotal.toFixed(2),
+                allowWeld: allowWeld.toFixed(2),
+                baseWeldOk: baseWeldOk,
+                cheekWeldStress: cheekWeldStress.toFixed(2),
+                cheekWeldOk: cheekWeldOk,
+                weldOk: weldOk
+            });
+            
+            updateStatus('status-pinhole', pinholeOk);
+            updateStatus('status-base', baseOk);
+            updateStatus('status-weld', weldOk);
+            
+            const overallOk = pinholeOk && baseOk && weldOk;
+            const overallTitle = document.getElementById('overall-status-title');
+            const overallDesc = document.getElementById('overall-status-desc');
+            
+            if (overallOk) {
+                overallTitle.textContent = "Design is Satisfactory";
+                overallTitle.style.color = "var(--success)";
+                overallDesc.textContent = "All stress checks are within allowable limits";
+                document.querySelector('.overall-status').style.background = "linear-gradient(135deg, var(--success-light) 0%, #c8e6c9 100%)";
+                document.querySelector('.overall-status').style.borderLeft = "4px solid var(--success)";
+            } else {
+                overallTitle.textContent = "Design Review Required";
+                overallTitle.style.color = "var(--danger)";
+                overallDesc.textContent = "Some stress checks exceed allowable limits";
+                document.querySelector('.overall-status').style.background = "linear-gradient(135deg, var(--danger-light) 0%, #ffcdd2 100%)";
+                document.querySelector('.overall-status').style.borderLeft = "4px solid var(--danger)";
+            }
+            
+            // Update individual tab overall statuses
+            updateOverallStatus('pinhole', pinholeOk, 
+                              pinholeOk ? 'Pinhole Stress Checks: All Satisfactory' : 'Pinhole Stress Checks: FAILED',
+                              pinholeOk ? 'All pinhole stress values are within allowable limits.' : 'Some pinhole stress checks exceed allowable limits.');
+            updateOverallStatus('base', baseOk, 
+                              baseOk ? 'Base Plate Checks: All Satisfactory' : 'Base Plate Checks: FAILED',
+                              baseOk ? 'All base plate stress checks are within allowable limits.' : 'Von Mises stress and combined stress ratio exceed allowable limits.');
+            
+            // Update weld overall status - ensure it reflects the actual check results
+            const weldTitle = weldOk ? 'Weld Checks: All Satisfactory' : 'Weld Checks: Failed';
+            const weldDesc = weldOk ? 'All weld stress checks are within allowable limits.' : 
+                            (baseWeldOk ? 'Cheek weld stress exceeds allowable limit.' : 
+                            (cheekWeldOk ? 'Base weld total stress exceeds allowable limit. Consider increasing weld size or reducing loads.' : 
+                            'Both base and cheek weld stresses exceed allowable limits. Consider increasing weld sizes or reducing loads.'));
+            updateOverallStatus('weld', weldOk, weldTitle, weldDesc);
+            
+            // Debug: Verify weld status update
+            console.log('Weld Overall Status Update:', {
+                weldOk: weldOk,
+                baseWeldOk: baseWeldOk,
+                cheekWeldOk: cheekWeldOk,
+                title: weldTitle
+            });
+        }
+        
+        function updateStatus(elementId, isOk) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                const row = element.closest('tr');
+                
+                // Determine text based on element ID
+                let okText = "OK";
+                let failText = "FAIL";
+                
+                if (elementId === 'status-pinhole') {
+                    okText = "Pinhole OK";
+                    failText = "Pinhole FAIL";
+                } else if (elementId === 'status-base') {
+                    okText = "Base OK";
+                    failText = "Base FAIL";
+                } else if (elementId === 'status-weld') {
+                    okText = "Weld OK";
+                    failText = "Weld FAIL";
+                }
+                
+                if (isOk) {
+                    element.textContent = okText;
+                    element.className = "status status-ok";
+                    if (row) {
+                        row.classList.remove('row-failed');
+                    }
+                } else {
+                    element.textContent = failText;
+                    element.className = "status status-not-safe";
+                    if (row) {
+                        row.classList.add('row-failed');
+                    }
+                }
+            }
+        }
+        
+        function updateOverallStatus(tab, isOk, title, description) {
+            const statusElement = document.getElementById(`${tab}-overall-status`);
+            const container = statusElement ? statusElement.closest('.overall-status') : null;
+            
+            // Debug logging
+            console.log(`updateOverallStatus called for ${tab}:`, {
+                elementFound: !!statusElement,
+                containerFound: !!container,
+                isOk: isOk,
+                title: title
+            });
+            
+            if (statusElement && container) {
+                if (isOk) {
+                    statusElement.innerHTML = `<i class="fas fa-check-circle"></i> ${title}`;
+                    statusElement.style.color = "var(--success)";
+                    container.style.background = "linear-gradient(135deg, var(--success-light) 0%, #c8e6c9 100%)";
+                    container.style.borderLeft = "4px solid var(--success)";
+                } else {
+                    statusElement.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${title}`;
+                    statusElement.style.color = "var(--danger)";
+                    container.style.background = "linear-gradient(135deg, var(--danger-light) 0%, #ffcdd2 100%)";
+                    container.style.borderLeft = "4px solid var(--danger)";
+                }
+                
+                const desc = container.querySelector('p');
+                if (desc) {
+                    desc.textContent = description;
+                    desc.style.color = "var(--text-secondary)";
+                }
+            } else {
+                console.error(`Could not find elements for ${tab} overall status:`, {
+                    statusElementId: `${tab}-overall-status`,
+                    statusElementFound: !!statusElement,
+                    containerFound: !!container
+                });
+            }
+        }
+    </script>
+</body>
+</html>

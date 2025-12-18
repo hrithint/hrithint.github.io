@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IACS Hull Form Tolerance Calculator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1600px;
+            width: 100%;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+            color: white;
+            padding: 30px 25px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(30%, -30%);
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        h1 {
+            font-size: 2.4rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        .credit {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            z-index: 2;
+        }
+        
+        .tabs {
+            display: flex;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .tab {
+            padding: 18px 30px;
+            cursor: pointer;
+            font-weight: 500;
+            color: #64748b;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .tab.active {
+            color: #1a237e;
+            border-bottom: 3px solid #1a237e;
+            background: white;
+        }
+        
+        .tab:hover:not(.active) {
+            background: #f1f5f9;
+            color: #475569;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 30px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .section-title {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #eaeef2;
+            color: #1a237e;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .input-container {
+            overflow-x: auto;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            background: white;
+        }
+        
+        .input-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            min-width: 1200px;
+        }
+        
+        .input-table th, .input-table td {
+            padding: 12px 10px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .input-table th {
+            background-color: #f1f5f9;
+            font-weight: 600;
+            color: #1a237e;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .input-table tr:hover {
+            background-color: #f8fafd;
+        }
+        
+        .draft-row {
+            background-color: #f8fafd;
+            font-weight: 600;
+        }
+        
+        input[type="number"] {
+            width: 90%;
+            padding: 8px 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            max-width: 120px;
+        }
+        
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #1a237e;
+            box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.1);
+        }
+        
+        .unit {
+            color: #64748b;
+            font-size: 0.8rem;
+            margin-left: 5px;
+            white-space: nowrap;
+        }
+        
+        .result-table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03);
+        }
+        
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            min-width: 1000px;
+        }
+        
+        .result-table th, .result-table td {
+            padding: 12px 15px;
+            text-align: center;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .result-table th {
+            background-color: #f1f5f9;
+            font-weight: 600;
+            color: #1a237e;
+            position: sticky;
+            top: 0;
+        }
+        
+        .result-table tr:hover {
+            background-color: #f8fafd;
+        }
+        
+        .status {
+            font-weight: bold;
+            padding: 6px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            font-size: 0.8rem;
+            min-width: 60px;
+        }
+        
+        .status-ok {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .status-fail {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        
+        .calculate-btn {
+            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 20px auto;
+        }
+        
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(26, 35, 126, 0.2);
+        }
+        
+        .calculate-btn:active {
+            transform: translateY(0);
+        }
+        
+        .instructions {
+            background: #f0f4ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #1a237e;
+            font-size: 0.9rem;
+        }
+        
+        .instructions i {
+            color: #1a237e;
+            margin-right: 8px;
+        }
+        
+        .add-row-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 10px 0;
+        }
+        
+        .add-row-btn:hover {
+            background: #0da271;
+        }
+        
+        .remove-row-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .remove-row-btn:hover {
+            background: #dc2626;
+        }
+        
+        .row-number {
+            font-weight: 600;
+            color: #1a237e;
+            min-width: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                padding: 15px;
+                border-bottom: 1px solid #e2e8f0;
+                border-left: 3px solid transparent;
+            }
+            
+            .tab.active {
+                border-left: 3px solid #1a237e;
+                border-bottom: 1px solid #e2e8f0;
+            }
+            
+            .credit {
+                position: relative;
+                top: auto;
+                right: auto;
+                margin-top: 15px;
+                display: inline-block;
+            }
+            
+            header {
+                text-align: center;
+            }
+            
+            .input-container, .result-table-container {
+                font-size: 0.8rem;
+            }
+            
+            input[type="number"] {
+                font-size: 0.8rem;
+                padding: 6px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1>IACS Hull Form Tolerance Calculator</h1>
+                <p class="subtitle">Based on IACS Req. 2004 for Hull Form Dependent Parameters</p>
+            </div>
+            <div class="credit">
+                Developed by Hrithin
+            </div>
+        </header>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="hull-form">Hull Form Parameters (10+ Rows)</div>
+            <div class="tab" data-tab="compartment">Compartment Parameters (5+ Rows)</div>
+            <div class="tab" data-tab="stability">Trim & Stability</div>
+        </div>
+        
+        <!-- Hull Form Tab -->
+        <div class="tab-content active" id="hull-form">
+            <div class="instructions">
+                <i class="fas fa-info-circle"></i>
+                Enter Base (original) and Applicant's (new) values for each parameter at different drafts. The calculator will check compliance with IACS tolerance requirements.
+            </div>
+            
+            <button class="add-row-btn" id="add-hull-row">
+                <i class="fas fa-plus"></i> Add Another Draft Row
+            </button>
+            
+            <div class="input-container">
+                <table class="input-table" id="hull-input-table">
+                    <thead>
+                        <tr>
+                            <th rowspan="2">Row</th>
+                            <th rowspan="2">Draft (m)</th>
+                            <th rowspan="2">Breadth of WL (m)</th>
+                            <th colspan="2">Displacement (t)</th>
+                            <th colspan="2">LCB from AP (m)</th>
+                            <th colspan="2">KB (m)</th>
+                            <th colspan="2">TCB (m)</th>
+                            <th colspan="2">LCF from AP (m)</th>
+                            <th colspan="2">MTCcm</th>
+                            <th colspan="2">KMT (m)</th>
+                            <th colspan="2">KML (m)</th>
+                        </tr>
+                        <tr>
+                            <th>Base</th>
+                            <th>Applicant's</th>
+                            <th>Base</th>
+                            <th>Applicant's</th>
+                            <th>Base</th>
+                            <th>Applicant's</th>
+                            <th>Base</th>
+                            <th>Applicant's</th>
+                            <th>Base</th>
+                            <th>Applicant's</th>
+                            <th>Base</th>
+                            <th>Applicant's</th>
+                            <th>Base</th>
+                            <th>Applicant's</th>
+                            <th>Base</th>
+                            <th>Applicant's</th>
+                        </tr>
+                    </thead>
+                    <tbody id="hull-input-body">
+                        <!-- Rows will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <button class="calculate-btn" id="calculate-hull">
+                <i class="fas fa-calculator"></i> Calculate All Hull Form Tolerances
+            </button>
+            
+            <div class="result-table-container">
+                <table class="result-table" id="hull-results">
+                    <thead>
+                        <tr>
+                            <th>Row</th>
+                            <th>Draft (m)</th>
+                            <th>Parameter</th>
+                            <th>Base Value</th>
+                            <th>Applicant's Value</th>
+                            <th>Difference</th>
+                            <th>% Difference</th>
+                            <th>IACS Check</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Results will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Compartment Tab -->
+        <div class="tab-content" id="compartment">
+            <div class="instructions">
+                <i class="fas fa-info-circle"></i>
+                Enter compartment parameters for both Base and Applicant's models at different soundings. The calculator will verify compliance with IACS compartment tolerance requirements.
+            </div>
+            
+            <button class="add-row-btn" id="add-compartment-row">
+                <i class="fas fa-plus"></i> Add Another Sounding Row
+            </button>
+            
+            <div class="input-container">
+                <table class="input-table" id="compartment-input-table">
+                    <thead>
+                        <tr>
+                            <th rowspan="2">Row</th>
+                            <th rowspan="2">Sounding (m)</th>
+                            <th colspan="2">Volume or DWt</th>
+                            <th colspan="2">LCG from AP (m)</th>
+                            <th colspan="2">VCG (m)</th>
+                            <th colspan="2">TCG (m)</th>
+                            <th colspan="2">Free Surface Moment</th>
+                            <th colspan="2">Shifting Moment</th>
+                            <th colspan="2">Level of Contents</th>
+                        </tr>
+                        <tr>
+                            <th>Base</th>
+                            <th>Applicant's</th>
+                            <th>Base</th>
+                            <th>Applicant's</th>
+                            <th>Base</th>
+                            <th>Applicant's</th>
+                            <th>Base</th>
+                            <th>Applicant's</th>
+                            <th>Base</th>
+                            <th>Applicant's</th>
+                            <th>Base</th>
+                            <th>Applicant's</th>
+                            <th>Base</th>
+                            <th>Applicant's</th>
+                        </tr>
+                    </thead>
+                    <tbody id="compartment-input-body">
+                        <!-- Rows will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <button class="calculate-btn" id="calculate-compartment">
+                <i class="fas fa-calculator"></i> Calculate All Compartment Tolerances
+            </button>
+            
+            <div class="result-table-container">
+                <table class="result-table" id="compartment-results">
+                    <thead>
+                        <tr>
+                            <th>Row</th>
+                            <th>Sounding (m)</th>
+                            <th>Parameter</th>
+                            <th>Base Value</th>
+                            <th>Applicant's Value</th>
+                            <th>Difference</th>
+                            <th>% Difference</th>
+                            <th>IACS Check</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Results will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Stability Tab -->
+        <div class="tab-content" id="stability">
+            <div class="instructions">
+                <i class="fas fa-info-circle"></i>
+                Enter trim and stability parameters for both Base and Applicant's models. The calculator will verify compliance with IACS stability tolerance requirements.
+            </div>
+            
+            <div class="input-container">
+                <table class="input-table" id="stability-input-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Base Value</th>
+                            <th>Applicant's Value</th>
+                            <th>Unit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Forward Draft</td>
+                            <td><input type="number" id="fwd-base" value="1" step="0.01"></td>
+                            <td><input type="number" id="fwd-applicant" value="1.1" step="0.01"></td>
+                            <td>m</td>
+                        </tr>
+                        <tr>
+                            <td>Aft Draft</td>
+                            <td><input type="number" id="aft-base" value="1" step="0.01"></td>
+                            <td><input type="number" id="aft-applicant" value="1.1" step="0.01"></td>
+                            <td>m</td>
+                        </tr>
+                        <tr>
+                            <td>Mean Draft</td>
+                            <td><input type="number" id="mean-base" value="1" step="0.01"></td>
+                            <td><input type="number" id="mean-applicant" value="1.1" step="0.01"></td>
+                            <td>m</td>
+                        </tr>
+                        <tr>
+                            <td>GMt</td>
+                            <td><input type="number" id="gmt-base" value="1" step="0.01"></td>
+                            <td><input type="number" id="gmt-applicant" value="1.1" step="0.01"></td>
+                            <td>m</td>
+                        </tr>
+                        <tr>
+                            <td>GZ</td>
+                            <td><input type="number" id="gz-base" value="1" step="0.01"></td>
+                            <td><input type="number" id="gz-applicant" value="1.1" step="0.01"></td>
+                            <td>m</td>
+                        </tr>
+                        <tr>
+                            <td>Downflooding Angle</td>
+                            <td><input type="number" id="downflood-base" value="1" step="0.1"></td>
+                            <td><input type="number" id="downflood-applicant" value="1.1" step="0.1"></td>
+                            <td>deg</td>
+                        </tr>
+                        <tr>
+                            <td>Equilibrium Angle</td>
+                            <td><input type="number" id="equilibrium-base" value="1" step="0.1"></td>
+                            <td><input type="number" id="equilibrium-applicant" value="1.1" step="0.1"></td>
+                            <td>deg</td>
+                        </tr>
+                        <tr>
+                            <td>Waterline Distance</td>
+                            <td><input type="number" id="waterline-base" value="1" step="0.01"></td>
+                            <td><input type="number" id="waterline-applicant" value="1.1" step="0.01"></td>
+                            <td>m</td>
+                        </tr>
+                        <tr>
+                            <td>GZ Curve Area</td>
+                            <td><input type="number" id="area-base" value="1" step="0.001"></td>
+                            <td><input type="number" id="area-applicant" value="1.1" step="0.001"></td>
+                            <td>m·rad</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <button class="calculate-btn" id="calculate-stability">
+                <i class="fas fa-calculator"></i> Calculate Stability Tolerances
+            </button>
+            
+            <div class="result-table-container">
+                <table class="result-table" id="stability-results">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Base Value</th>
+                            <th>Applicant's Value</th>
+                            <th>Difference</th>
+                            <th>% Difference</th>
+                            <th>IACS Check</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Results will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data for initial rows
+        const initialHullData = [
+            { draft: 0.5, breadth: 2, dispBase: 1, dispApp: 1.2, lcbBase: 1, lcbApp: 1.2, kbBase: 1, kbApp: 1.2, tcbBase: 1, tcbApp: 1.2, lcfBase: 1, lcfApp: 1.2, mtcBase: 1, mtcApp: 1.2, kmtBase: 1, kmtApp: 1.2, kmlBase: 1, kmlApp: 1.2 },
+            { draft: 1, breadth: 10, dispBase: 2, dispApp: 2.2, lcbBase: 2, lcbApp: 2.2, kbBase: 2, kbApp: 2.2, tcbBase: 2, tcbApp: 2.2, lcfBase: 2, lcfApp: 2.2, mtcBase: 2, mtcApp: 2.2, kmtBase: 2, kmtApp: 2.2, kmlBase: 2, kmlApp: 2.2 },
+            { draft: 1.5, breadth: 10, dispBase: 3, dispApp: 3.3, lcbBase: 3, lcbApp: 3.3, kbBase: 3, kbApp: 3.3, tcbBase: 3, tcbApp: 3.3, lcfBase: 3, lcfApp: 3.3, mtcBase: 3, mtcApp: 3.3, kmtBase: 3, kmtApp: 3.3, kmlBase: 3, kmlApp: 3.3 },
+            { draft: 2, breadth: 10, dispBase: 4, dispApp: 4.3, lcbBase: 4, lcbApp: 4.3, kbBase: 4, kbApp: 4.3, tcbBase: 4, tcbApp: 4.3, lcfBase: 4, lcfApp: 4.3, mtcBase: 4, mtcApp: 4.3, kmtBase: 4, kmtApp: 4.3, kmlBase: 4, kmlApp: 4.3 },
+            { draft: 2.5, breadth: 10, dispBase: 5, dispApp: 5.3, lcbBase: 5, lcbApp: 5.3, kbBase: 5, kbApp: 5.3, tcbBase: 5, tcbApp: 5.3, lcfBase: 5, lcfApp: 5.3, mtcBase: 5, mtcApp: 5.3, kmtBase: 5, kmtApp: 5.3, kmlBase: 5, kmlApp: 5.3 },
+            { draft: 3, breadth: 10, dispBase: 6, dispApp: 6.3, lcbBase: 6, lcbApp: 6.3, kbBase: 6, kbApp: 6.3, tcbBase: 6, tcbApp: 6.3, lcfBase: 6, lcfApp: 6.3, mtcBase: 6, mtcApp: 6.3, kmtBase: 6, kmtApp: 6.3, kmlBase: 6, kmlApp: 6.3 },
+            { draft: 3.5, breadth: 10, dispBase: 7, dispApp: 7.3, lcbBase: 7, lcbApp: 7.3, kbBase: 7, kbApp: 7.3, tcbBase: 7, tcbApp: 7.3, lcfBase: 7, lcfApp: 7.3, mtcBase: 7, mtcApp: 7.3, kmtBase: 7, kmtApp: 7.3, kmlBase: 7, kmlApp: 7.3 },
+            { draft: 4, breadth: 10, dispBase: 8, dispApp: 8.3, lcbBase: 8, lcbApp: 8.3, kbBase: 8, kbApp: 8.3, tcbBase: 8, tcbApp: 8.3, lcfBase: 8, lcfApp: 8.3, mtcBase: 8, mtcApp: 8.3, kmtBase: 8, kmtApp: 8.3, kmlBase: 8, kmlApp: 8.3 },
+            { draft: 4.5, breadth: 10, dispBase: 9, dispApp: 9.3, lcbBase: 9, lcbApp: 9.3, kbBase: 9, kbApp: 9.3, tcbBase: 9, tcbApp: 9.3, lcfBase: 9, lcfApp: 9.3, mtcBase: 9, mtcApp: 9.3, kmtBase: 9, kmtApp: 9.3, kmlBase: 9, kmlApp: 9.3 },
+            { draft: 5, breadth: 10, dispBase: 10, dispApp: 10.3, lcbBase: 10, lcbApp: 10.3, kbBase: 10, kbApp: 10.3, tcbBase: 10, tcbApp: 10.3, lcfBase: 10, lcfApp: 10.3, mtcBase: 10, mtcApp: 10.3, kmtBase: 10, kmtApp: 10.3, kmlBase: 10, kmlApp: 10.3 }
+        ];
+
+        const initialCompartmentData = [
+            { sounding: 0.5, volBase: 1, volApp: 0.999, lcgBase: 1, lcgApp: 1.2, vcgBase: 1, vcgApp: 1.2, tcgBase: 1, tcgApp: 1.2, fsmBase: 1, fsmApp: 1.2, shiftBase: 1, shiftApp: 1.2, levelBase: 1, levelApp: 1.2 },
+            { sounding: 1, volBase: 2, volApp: 2.2, lcgBase: 2, lcgApp: 2.2, vcgBase: 2, vcgApp: 2.2, tcgBase: 2, tcgApp: 2.2, fsmBase: 2, fsmApp: 2.2, shiftBase: 2, shiftApp: 2.2, levelBase: 2, levelApp: 2.2 },
+            { sounding: 1.5, volBase: 3, volApp: 3.3, lcgBase: 3, lcgApp: 3.3, vcgBase: 3, vcgApp: 3.3, tcgBase: 3, tcgApp: 3.3, fsmBase: 3, fsmApp: 3.3, shiftBase: 3, shiftApp: 3.3, levelBase: 3, levelApp: 3.3 },
+            { sounding: 2, volBase: 4, volApp: 4.3, lcgBase: 4, lcgApp: 4.3, vcgBase: 4, vcgApp: 4.3, tcgBase: 4, tcgApp: 4.3, fsmBase: 4, fsmApp: 4.3, shiftBase: 4, shiftApp: 4.3, levelBase: 4, levelApp: 4.3 },
+            { sounding: 2.5, volBase: 5, volApp: 5.3, lcgBase: 5, lcgApp: 5.6, vcgBase: 5, vcgApp: 5.3, tcgBase: 5, tcgApp: 5.3, fsmBase: 5, fsmApp: 5.3, shiftBase: 5, shiftApp: 5.3, levelBase: 5, levelApp: 5.3 }
+        ];
+
+        // Tab switching functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                tab.classList.add('active');
+                const tabId = tab.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        // Hull Form Data Management
+        let hullRows = [...initialHullData];
+        let compartmentRows = [...initialCompartmentData];
+
+        // Initialize tables
+        function initializeHullTable() {
+            const tbody = document.getElementById('hull-input-body');
+            tbody.innerHTML = '';
+            
+            hullRows.forEach((rowData, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="row-number">${index + 1}</td>
+                    <td><input type="number" class="draft-input" value="${rowData.draft}" step="0.1"></td>
+                    <td><input type="number" class="breadth-input" value="${rowData.breadth}" step="0.1"></td>
+                    <td><input type="number" class="disp-base-input" value="${rowData.dispBase}" step="0.1"></td>
+                    <td><input type="number" class="disp-app-input" value="${rowData.dispApp}" step="0.1"></td>
+                    <td><input type="number" class="lcb-base-input" value="${rowData.lcbBase}" step="0.1"></td>
+                    <td><input type="number" class="lcb-app-input" value="${rowData.lcbApp}" step="0.1"></td>
+                    <td><input type="number" class="kb-base-input" value="${rowData.kbBase}" step="0.1"></td>
+                    <td><input type="number" class="kb-app-input" value="${rowData.kbApp}" step="0.1"></td>
+                    <td><input type="number" class="tcb-base-input" value="${rowData.tcbBase}" step="0.01"></td>
+                    <td><input type="number" class="tcb-app-input" value="${rowData.tcbApp}" step="0.01"></td>
+                    <td><input type="number" class="lcf-base-input" value="${rowData.lcfBase}" step="0.1"></td>
+                    <td><input type="number" class="lcf-app-input" value="${rowData.lcfApp}" step="0.1"></td>
+                    <td><input type="number" class="mtc-base-input" value="${rowData.mtcBase}" step="0.1"></td>
+                    <td><input type="number" class="mtc-app-input" value="${rowData.mtcApp}" step="0.1"></td>
+                    <td><input type="number" class="kmt-base-input" value="${rowData.kmtBase}" step="0.1"></td>
+                    <td><input type="number" class="kmt-app-input" value="${rowData.kmtApp}" step="0.1"></td>
+                    <td><input type="number" class="kml-base-input" value="${rowData.kmlBase}" step="0.1"></td>
+                    <td><input type="number" class="kml-app-input" value="${rowData.kmlApp}" step="0.1"></td>
+                    <td><button class="remove-row-btn" onclick="removeHullRow(${index})"><i class="fas fa-trash"></i></button></td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function initializeCompartmentTable() {
+            const tbody = document.getElementById('compartment-input-body');
+            tbody.innerHTML = '';
+            
+            compartmentRows.forEach((rowData, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="row-number">${index + 1}</td>
+                    <td><input type="number" class="sounding-input" value="${rowData.sounding}" step="0.1"></td>
+                    <td><input type="number" class="vol-base-input" value="${rowData.volBase}" step="0.1"></td>
+                    <td><input type="number" class="vol-app-input" value="${rowData.volApp}" step="0.1"></td>
+                    <td><input type="number" class="lcg-base-input" value="${rowData.lcgBase}" step="0.1"></td>
+                    <td><input type="number" class="lcg-app-input" value="${rowData.lcgApp}" step="0.1"></td>
+                    <td><input type="number" class="vcg-base-input" value="${rowData.vcgBase}" step="0.1"></td>
+                    <td><input type="number" class="vcg-app-input" value="${rowData.vcgApp}" step="0.1"></td>
+                    <td><input type="number" class="tcg-base-input" value="${rowData.tcgBase}" step="0.01"></td>
+                    <td><input type="number" class="tcg-app-input" value="${rowData.tcgApp}" step="0.01"></td>
+                    <td><input type="number" class="fsm-base-input" value="${rowData.fsmBase}" step="0.1"></td>
+                    <td><input type="number" class="fsm-app-input" value="${rowData.fsmApp}" step="0.1"></td>
+                    <td><input type="number" class="shift-base-input" value="${rowData.shiftBase}" step="0.1"></td>
+                    <td><input type="number" class="shift-app-input" value="${rowData.shiftApp}" step="0.1"></td>
+                    <td><input type="number" class="level-base-input" value="${rowData.levelBase}" step="0.1"></td>
+                    <td><input type="number" class="level-app-input" value="${rowData.levelApp}" step="0.1"></td>
+                    <td><button class="remove-row-btn" onclick="removeCompartmentRow(${index})"><i class="fas fa-trash"></i></button></td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Add row functions
+        document.getElementById('add-hull-row').addEventListener('click', () => {
+            const lastRow = hullRows[hullRows.length - 1];
+            const newRow = {
+                draft: lastRow.draft + 0.5,
+                breadth: lastRow.breadth,
+                dispBase: lastRow.dispBase + 1,
+                dispApp: lastRow.dispApp + 1,
+                lcbBase: lastRow.lcbBase + 1,
+                lcbApp: lastRow.lcbApp + 1,
+                kbBase: lastRow.kbBase + 1,
+                kbApp: lastRow.kbApp + 1,
+                tcbBase: lastRow.tcbBase + 1,
+                tcbApp: lastRow.tcbApp + 1,
+                lcfBase: lastRow.lcfBase + 1,
+                lcfApp: lastRow.lcfApp + 1,
+                mtcBase: lastRow.mtcBase + 1,
+                mtcApp: lastRow.mtcApp + 1,
+                kmtBase: lastRow.kmtBase + 1,
+                kmtApp: lastRow.kmtApp + 1,
+                kmlBase: lastRow.kmlBase + 1,
+                kmlApp: lastRow.kmlApp + 1
+            };
+            hullRows.push(newRow);
+            initializeHullTable();
+        });
+
+        document.getElementById('add-compartment-row').addEventListener('click', () => {
+            const lastRow = compartmentRows[compartmentRows.length - 1];
+            const newRow = {
+                sounding: lastRow.sounding + 0.5,
+                volBase: lastRow.volBase + 1,
+                volApp: lastRow.volApp + 1,
+                lcgBase: lastRow.lcgBase + 1,
+                lcgApp: lastRow.lcgApp + 1,
+                vcgBase: lastRow.vcgBase + 1,
+                vcgApp: lastRow.vcgApp + 1,
+                tcgBase: lastRow.tcgBase + 1,
+                tcgApp: lastRow.tcgApp + 1,
+                fsmBase: lastRow.fsmBase + 1,
+                fsmApp: lastRow.fsmApp + 1,
+                shiftBase: lastRow.shiftBase + 1,
+                shiftApp: lastRow.shiftApp + 1,
+                levelBase: lastRow.levelBase + 1,
+                levelApp: lastRow.levelApp + 1
+            };
+            compartmentRows.push(newRow);
+            initializeCompartmentTable();
+        });
+
+        // Remove row functions
+        window.removeHullRow = function(index) {
+            if (hullRows.length > 1) {
+                hullRows.splice(index, 1);
+                initializeHullTable();
+            }
+        };
+
+        window.removeCompartmentRow = function(index) {
+            if (compartmentRows.length > 1) {
+                compartmentRows.splice(index, 1);
+                initializeCompartmentTable();
+            }
+        };
+
+        // Calculation functions
+        document.getElementById('calculate-hull').addEventListener('click', calculateHullForm);
+        document.getElementById('calculate-compartment').addEventListener('click', calculateCompartment);
+        document.getElementById('calculate-stability').addEventListener('click', calculateStability);
+
+        function getHullInputData() {
+            const rows = document.querySelectorAll('#hull-input-body tr');
+            const data = [];
+            
+            rows.forEach((row, index) => {
+                const inputs = row.querySelectorAll('input');
+                data.push({
+                    draft: parseFloat(inputs[0].value) || 0,
+                    breadth: parseFloat(inputs[1].value) || 0,
+                    dispBase: parseFloat(inputs[2].value) || 0,
+                    dispApp: parseFloat(inputs[3].value) || 0,
+                    lcbBase: parseFloat(inputs[4].value) || 0,
+                    lcbApp: parseFloat(inputs[5].value) || 0,
+                    kbBase: parseFloat(inputs[6].value) || 0,
+                    kbApp: parseFloat(inputs[7].value) || 0,
+                    tcbBase: parseFloat(inputs[8].value) || 0,
+                    tcbApp: parseFloat(inputs[9].value) || 0,
+                    lcfBase: parseFloat(inputs[10].value) || 0,
+                    lcfApp: parseFloat(inputs[11].value) || 0,
+                    mtcBase: parseFloat(inputs[12].value) || 0,
+                    mtcApp: parseFloat(inputs[13].value) || 0,
+                    kmtBase: parseFloat(inputs[14].value) || 0,
+                    kmtApp: parseFloat(inputs[15].value) || 0,
+                    kmlBase: parseFloat(inputs[16].value) || 0,
+                    kmlApp: parseFloat(inputs[17].value) || 0
+                });
+            });
+            
+            return data;
+        }
+
+        function getCompartmentInputData() {
+            const rows = document.querySelectorAll('#compartment-input-body tr');
+            const data = [];
+            
+            rows.forEach((row, index) => {
+                const inputs = row.querySelectorAll('input');
+                data.push({
+                    sounding: parseFloat(inputs[0].value) || 0,
+                    volBase: parseFloat(inputs[1].value) || 0,
+                    volApp: parseFloat(inputs[2].value) || 0,
+                    lcgBase: parseFloat(inputs[3].value) || 0,
+                    lcgApp: parseFloat(inputs[4].value) || 0,
+                    vcgBase: parseFloat(inputs[5].value) || 0,
+                    vcgApp: parseFloat(inputs[6].value) || 0,
+                    tcgBase: parseFloat(inputs[7].value) || 0,
+                    tcgApp: parseFloat(inputs[8].value) || 0,
+                    fsmBase: parseFloat(inputs[9].value) || 0,
+                    fsmApp: parseFloat(inputs[10].value) || 0,
+                    shiftBase: parseFloat(inputs[11].value) || 0,
+                    shiftApp: parseFloat(inputs[12].value) || 0,
+                    levelBase: parseFloat(inputs[13].value) || 0,
+                    levelApp: parseFloat(inputs[14].value) || 0
+                });
+            });
+            
+            return data;
+        }
+
+        function calculateHullForm() {
+            const data = getHullInputData();
+            const results = [];
+            
+            data.forEach((rowData, rowIndex) => {
+                const params = [
+                    { name: "Displacement", base: rowData.dispBase, applicant: rowData.dispApp, check: checkDisplacement(rowData.dispBase, rowData.dispApp) },
+                    { name: "LCB from AP", base: rowData.lcbBase, applicant: rowData.lcbApp, check: checkLCB(rowData.lcbBase, rowData.lcbApp) },
+                    { name: "KB", base: rowData.kbBase, applicant: rowData.kbApp, check: checkKB(rowData.kbBase, rowData.kbApp) },
+                    { name: "TCB", base: rowData.tcbBase, applicant: rowData.tcbApp, check: checkTCB(rowData.breadth, rowData.tcbBase, rowData.tcbApp) },
+                    { name: "LCF from AP", base: rowData.lcfBase, applicant: rowData.lcfApp, check: checkLCF(rowData.lcfBase, rowData.lcfApp) },
+                    { name: "MTCcm", base: rowData.mtcBase, applicant: rowData.mtcApp, check: checkMTC(rowData.mtcBase, rowData.mtcApp) },
+                    { name: "KMT", base: rowData.kmtBase, applicant: rowData.kmtApp, check: checkKMT(rowData.kmtBase, rowData.kmtApp) },
+                    { name: "KML", base: rowData.kmlBase, applicant: rowData.kmlApp, check: checkKML(rowData.kmlBase, rowData.kmlApp) }
+                ];
+                
+                params.forEach(param => {
+                    results.push({
+                        row: rowIndex + 1,
+                        draft: rowData.draft,
+                        ...param
+                    });
+                });
+            });
+            
+            displayHullResults(results);
+        }
+
+        function calculateCompartment() {
+            const data = getCompartmentInputData();
+            const results = [];
+            
+            data.forEach((rowData, rowIndex) => {
+                const params = [
+                    { name: "Volume or DWt", base: rowData.volBase, applicant: rowData.volApp, check: checkVolume(rowData.volBase, rowData.volApp) },
+                    { name: "LCG from AP", base: rowData.lcgBase, applicant: rowData.lcgApp, check: checkLCG(rowData.lcgBase, rowData.lcgApp) },
+                    { name: "VCG", base: rowData.vcgBase, applicant: rowData.vcgApp, check: checkVCG(rowData.vcgBase, rowData.vcgApp) },
+                    { name: "TCG", base: rowData.tcgBase, applicant: rowData.tcgApp, check: checkTCGComp(rowData.sounding, rowData.tcgBase, rowData.tcgApp) },
+                    { name: "Free Surface Moment", base: rowData.fsmBase, applicant: rowData.fsmApp, check: checkFSM(rowData.fsmBase, rowData.fsmApp) },
+                    { name: "Shifting Moment", base: rowData.shiftBase, applicant: rowData.shiftApp, check: checkShiftingMoment(rowData.shiftBase, rowData.shiftApp) },
+                    { name: "Level of Contents", base: rowData.levelBase, applicant: rowData.levelApp, check: checkLevel(rowData.levelBase, rowData.levelApp) }
+                ];
+                
+                params.forEach(param => {
+                    results.push({
+                        row: rowIndex + 1,
+                        sounding: rowData.sounding,
+                        ...param
+                    });
+                });
+            });
+            
+            displayCompartmentResults(results);
+        }
+
+        function calculateStability() {
+            const fwdBase = parseFloat(document.getElementById('fwd-base').value) || 0;
+            const fwdApplicant = parseFloat(document.getElementById('fwd-applicant').value) || 0;
+            const aftBase = parseFloat(document.getElementById('aft-base').value) || 0;
+            const aftApplicant = parseFloat(document.getElementById('aft-applicant').value) || 0;
+            const meanBase = parseFloat(document.getElementById('mean-base').value) || 0;
+            const meanApplicant = parseFloat(document.getElementById('mean-applicant').value) || 0;
+            const gmtBase = parseFloat(document.getElementById('gmt-base').value) || 0;
+            const gmtApplicant = parseFloat(document.getElementById('gmt-applicant').value) || 0;
+            const gzBase = parseFloat(document.getElementById('gz-base').value) || 0;
+            const gzApplicant = parseFloat(document.getElementById('gz-applicant').value) || 0;
+            const downfloodBase = parseFloat(document.getElementById('downflood-base').value) || 0;
+            const downfloodApplicant = parseFloat(document.getElementById('downflood-applicant').value) || 0;
+            const equilibriumBase = parseFloat(document.getElementById('equilibrium-base').value) || 0;
+            const equilibriumApplicant = parseFloat(document.getElementById('equilibrium-applicant').value) || 0;
+            const waterlineBase = parseFloat(document.getElementById('waterline-base').value) || 0;
+            const waterlineApplicant = parseFloat(document.getElementById('waterline-applicant').value) || 0;
+            const areaBase = parseFloat(document.getElementById('area-base').value) || 0;
+            const areaApplicant = parseFloat(document.getElementById('area-applicant').value) || 0;
+            
+            const results = [
+                { name: "Forward Draft", base: fwdBase, applicant: fwdApplicant, check: checkDraft(fwdBase, fwdApplicant) },
+                { name: "Aft Draft", base: aftBase, applicant: aftApplicant, check: checkDraft(aftBase, aftApplicant) },
+                { name: "Mean Draft", base: meanBase, applicant: meanApplicant, check: checkDraft(meanBase, meanApplicant) },
+                { name: "GMt", base: gmtBase, applicant: gmtApplicant, check: checkGMT(gmtBase, gmtApplicant) },
+                { name: "GZ", base: gzBase, applicant: gzApplicant, check: checkGZ(gzBase, gzApplicant) },
+                { name: "Downflooding Angle", base: downfloodBase, applicant: downfloodApplicant, check: checkDownflooding(downfloodBase, downfloodApplicant) },
+                { name: "Equilibrium Angle", base: equilibriumBase, applicant: equilibriumApplicant, check: checkEquilibrium(equilibriumBase, equilibriumApplicant) },
+                { name: "Waterline Distance", base: waterlineBase, applicant: waterlineApplicant, check: checkWaterline(waterlineBase, waterlineApplicant) },
+                { name: "GZ Curve Area", base: areaBase, applicant: areaApplicant, check: checkArea(areaBase, areaApplicant) }
+            ];
+            
+            displayStabilityResults(results);
+        }
+
+        // IACS Check Functions (from Excel formulas)
+        function checkDisplacement(base, applicant) {
+            if (base === 0) return "Fail";
+            const diffPercent = Math.abs(((base - applicant) / base) * 100);
+            return diffPercent < 2 ? "OK" : "Fail";
+        }
+        
+        function checkLCB(base, applicant) {
+            const condition = base * 100 * 0.01 < 50;
+            if (condition) {
+                return Math.abs(base - applicant) * 100 < 50 ? "OK" : "Fail";
+            } else {
+                if (base === 0) return "Fail";
+                return Math.abs((base - applicant) / base * 100) < 1 ? "OK" : "Fail";
+            }
+        }
+        
+        function checkKB(base, applicant) {
+            const condition = base * 100 * 0.01 < 5;
+            if (condition) {
+                return Math.abs(base - applicant) * 100 < 5 ? "OK" : "Fail";
+            } else {
+                if (base === 0) return "Fail";
+                return Math.abs((base - applicant) / base * 100) < 1 ? "OK" : "Fail";
+            }
+        }
+        
+        function checkTCB(breadth, base, applicant) {
+            const condition = breadth * 100 * 0.005 < 5;
+            if (condition) {
+                return Math.abs(base - applicant) * 100 < 5 ? "OK" : "Fail";
+            } else {
+                return Math.abs(base - applicant) < 0.005 * breadth ? "OK" : "Fail";
+            }
+        }
+        
+        function checkLCF(base, applicant) { return checkLCB(base, applicant); }
+        function checkMTC(base, applicant) { return checkDisplacement(base, applicant); }
+        function checkKMT(base, applicant) { return checkKB(base, applicant); }
+        function checkKML(base, applicant) { return checkLCB(base, applicant); }
+        function checkVolume(base, applicant) { return checkDisplacement(base, applicant); }
+        function checkLCG(base, applicant) { return checkLCB(base, applicant); }
+        function checkVCG(base, applicant) { return checkKB(base, applicant); }
+        function checkTCGComp(sounding, base, applicant) { return checkTCB(sounding, base, applicant); }
+        function checkFSM(base, applicant) { return checkDisplacement(base, applicant); }
+        
+        function checkShiftingMoment(base, applicant) {
+            if (base === 0) return "Fail";
+            const diffPercent = Math.abs(((base - applicant) / base) * 100);
+            return diffPercent < 5 ? "OK" : "Fail";
+        }
+        
+        function checkLevel(base, applicant) { return checkDisplacement(base, applicant); }
+        
+        function checkDraft(base, applicant) {
+            const condition = base * 100 * 0.01 < 5;
+            if (condition) {
+                return Math.abs(base - applicant) * 100 < 5 ? "OK" : "Fail";
+            } else {
+                if (base === 0) return "Fail";
+                return Math.abs((base - applicant) / base * 100) < 1 ? "OK" : "Fail";
+            }
+        }
+        
+        function checkGMT(base, applicant) { return checkDraft(base, applicant); }
+        
+        function checkGZ(base, applicant) {
+            const condition = base * 100 * 0.05 < 5;
+            if (condition) {
+                return Math.abs(base - applicant) * 100 < 5 ? "OK" : "Fail";
+            } else {
+                if (base === 0) return "Fail";
+                return Math.abs((base - applicant) / base * 100) < 5 ? "OK" : "Fail";
+            }
+        }
+        
+        function checkDownflooding(base, applicant) { return checkDisplacement(base, applicant); }
+        
+        function checkEquilibrium(base, applicant) {
+            if (base === 0) return "Fail";
+            const diffPercent = Math.abs(((base - applicant) / base) * 100);
+            return diffPercent < 1 ? "OK" : "Fail";
+        }
+        
+        function checkWaterline(base, applicant) { return checkGZ(base, applicant); }
+        
+        function checkArea(base, applicant) {
+            const condition = base * 0.05 < 0.0012;
+            if (condition) {
+                return Math.abs(base - applicant) < 5 ? "OK" : "Fail";
+            } else {
+                if (base === 0) return "Fail";
+                return Math.abs((base - applicant) / base * 100) < 5 ? "OK" : "Fail";
+            }
+        }
+
+        function displayHullResults(results) {
+            const tableBody = document.getElementById('hull-results').querySelector('tbody');
+            tableBody.innerHTML = '';
+            
+            results.forEach(result => {
+                const diff = result.applicant - result.base;
+                const diffPercent = result.base !== 0 ? Math.abs((diff / result.base) * 100) : 0;
+                const status = result.check;
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${result.row}</td>
+                    <td>${result.draft.toFixed(1)}</td>
+                    <td>${result.name}</td>
+                    <td>${result.base.toFixed(3)}</td>
+                    <td>${result.applicant.toFixed(3)}</td>
+                    <td>${diff.toFixed(3)}</td>
+                    <td>${diffPercent.toFixed(2)}%</td>
+                    <td>${result.check}</td>
+                    <td><span class="status ${status === 'OK' ? 'status-ok' : 'status-fail'}">${status}</span></td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+
+        function displayCompartmentResults(results) {
+            const tableBody = document.getElementById('compartment-results').querySelector('tbody');
+            tableBody.innerHTML = '';
+            
+            results.forEach(result => {
+                const diff = result.applicant - result.base;
+                const diffPercent = result.base !== 0 ? Math.abs((diff / result.base) * 100) : 0;
+                const status = result.check;
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${result.row}</td>
+                    <td>${result.sounding.toFixed(1)}</td>
+                    <td>${result.name}</td>
+                    <td>${result.base.toFixed(3)}</td>
+                    <td>${result.applicant.toFixed(3)}</td>
+                    <td>${diff.toFixed(3)}</td>
+                    <td>${diffPercent.toFixed(2)}%</td>
+                    <td>${result.check}</td>
+                    <td><span class="status ${status === 'OK' ? 'status-ok' : 'status-fail'}">${status}</span></td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+
+        function displayStabilityResults(results) {
+            const tableBody = document.getElementById('stability-results').querySelector('tbody');
+            tableBody.innerHTML = '';
+            
+            results.forEach(result => {
+                const diff = result.applicant - result.base;
+                const diffPercent = result.base !== 0 ? Math.abs((diff / result.base) * 100) : 0;
+                const status = result.check;
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${result.name}</td>
+                    <td>${result.base.toFixed(3)}</td>
+                    <td>${result.applicant.toFixed(3)}</td>
+                    <td>${diff.toFixed(3)}</td>
+                    <td>${diffPercent.toFixed(2)}%</td>
+                    <td>${result.check}</td>
+                    <td><span class="status ${status === 'OK' ? 'status-ok' : 'status-fail'}">${status}</span></td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Initialize on load
+        initializeHullTable();
+        initializeCompartmentTable();
+        calculateHullForm();
+        calculateCompartment();
+        calculateStability();
+    </script>
+</body>
+</html>

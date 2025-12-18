@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navculus | Naval Architecture Calculations</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #0a2a5a;
+            --secondary-blue: #1a4a8a;
+            --accent-blue: #2a6ac7;
+            --light-blue: #e8f1ff;
+            --highlight-blue: #4a8cff;
+            --dark-gray: #333333;
+            --medium-gray: #666666;
+            --light-gray: #f5f7fa;
+            --white: #ffffff;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --border-radius: 8px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-gray);
+            color: var(--dark-gray);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: var(--white);
+            padding: 1.5rem 0;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            font-size: 2.2rem;
+            color: var(--highlight-blue);
+        }
+
+        .logo-text h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .logo-text h1 span.nav-part {
+            color: var(--white);
+        }
+
+        .logo-text h1 span.culus-part {
+            color: var(--highlight-blue);
+        }
+
+        .logo-text p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 2px;
+        }
+
+        .tagline {
+            text-align: center;
+            font-style: italic;
+            font-weight: 300;
+            margin-top: 10px;
+            font-size: 1.1rem;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Developer credit in header */
+        .developer-credit {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(10, 42, 90, 0.85), rgba(10, 42, 90, 0.9)), url('https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            color: var(--white);
+            padding: 4rem 0;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .hero h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 1.5rem;
+            opacity: 0.95;
+        }
+
+        /* Modules Grid */
+        .modules-section {
+            padding: 2rem 0 4rem;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            color: var(--primary-blue);
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .section-title h2 {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 4px;
+            background-color: var(--accent-blue);
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .module-card {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border-top: 4px solid var(--accent-blue);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .module-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .module-header {
+            background-color: var(--light-blue);
+            padding: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .module-icon {
+            background-color: var(--accent-blue);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .module-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-blue);
+        }
+
+        .module-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .module-description {
+            color: var(--medium-gray);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .module-link {
+            display: inline-block;
+            background-color: var(--accent-blue);
+            color: white;
+            text-decoration: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: var(--transition);
+            text-align: center;
+            width: 100%;
+        }
+
+        .module-link:hover {
+            background-color: var(--secondary-blue);
+        }
+
+        .module-link i {
+            margin-left: 8px;
+            font-size: 0.9rem;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--primary-blue);
+            color: var(--white);
+            padding: 2.5rem 0;
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .footer-logo {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .footer-logo h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--highlight-blue);
+        }
+
+        .footer-logo p {
+            opacity: 0.85;
+            font-size: 0.95rem;
+        }
+
+        .footer-links {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .footer-links h4 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--highlight-blue);
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 8px;
+        }
+
+        .footer-links a {
+            color: var(--white);
+            text-decoration: none;
+            opacity: 0.85;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            opacity: 1;
+            color: var(--highlight-blue);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Developer credit in footer */
+        .footer-developer {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-weight: 600;
+            color: var(--highlight-blue);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+            
+            .developer-credit {
+                margin-top: 10px;
+                width: 100%;
+            }
+            
+            .hero h2 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .modules-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+
+        @media (max-width: 480px) {
+            .modules-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero {
+                padding: 3rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-anchor"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h1><span class="nav-part">Nav</span><span class="culus-part">culus</span></h1>
+                        <p>Naval Architecture Calculations</p>
+                    </div>
+                </div>
+                <div class="developer-credit">
+                    Developed by Hrithin
+                </div>
+            </div>
+            
+            <div class="tagline">
+                Precision engineering for marine design and analysis
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h2>Specialized Naval Architecture Calculations</h2>
+            <p>Access professional-grade calculation tools for ship design, structural analysis, and marine engineering. All tools are developed according to industry standards and best practices.</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container">
+        <section class="modules-section">
+            <div class="section-title">
+                <h2>Calculation Modules</h2>
+            </div>
+            
+            <div class="modules-grid" id="modulesGrid">
+                <!-- Modules will be inserted here by JavaScript -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h3>Navculus</h3>
+                    <p>Professional naval architecture calculation tools for marine engineers, ship designers, and naval architects. Providing reliable, accurate calculations for the marine industry.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Home</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> About Us</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Contact</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Documentation</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Industry Standards</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Reference Materials</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Technical Support</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> FAQ</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-developer">
+                Developed by Hrithin
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 Navculus Naval Architecture Calculations. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Module data with file links, descriptions, and icons
+        const modules = [
+            {
+                title: "Smit Bracket Design",
+                file: "29012025_Cal_Smit bracket design.html",
+                description: "Calculate and design Smit brackets for structural connections in shipbuilding with safety factor evaluation.",
+                icon: "fas fa-bracket-curly"
+            },
+            {
+                title: "Required Bollard Pull for Barges",
+                file: "26082023_Cal_Required bollard pull calculation for barges.html",
+                description: "Determine the required bollard pull for barge operations based on environmental conditions and barge characteristics.",
+                icon: "fas fa-tugrik-sign"
+            },
+            {
+                title: "Bollard Strength Check",
+                file: "22112024_Cal_Bollard Strength Check.html",
+                description: "Verify bollard structural integrity under load conditions as per classification society requirements.",
+                icon: "fas fa-weight-hanging"
+            },
+            {
+                title: "Padeye Design",
+                file: "18122024_Cal_Padeye design.html",
+                description: "Design and analyze padeyes for lifting operations with stress distribution calculations.",
+                icon: "fas fa-eye"
+            },
+            {
+                title: "Delta Plate Design",
+                file: "08112025_Cal_Delta plate design.html",
+                description: "Calculate dimensions and strength of delta plates used in ship structural connections.",
+                icon: "fas fa-shapes"
+            },
+            {
+                title: "Ship Squat Calculation",
+                file: "04072025_Cal_Ship Squat Calculation.html",
+                description: "Estimate ship squat in shallow water conditions using established empirical formulas.",
+                icon: "fas fa-water"
+            },
+            {
+                title: "Dog Plate Design",
+                file: "01092025_Cal_Dog plate design.html",
+                description: "Design dog plates for structural connections with load distribution analysis.",
+                icon: "fas fa-link"
+            },
+            {
+                title: "Hull Form Tolerance (IACS)",
+                file: "25042025_Cal_Hull form Acceptable tolerance_IACS.html",
+                description: "Check hull form compliance with IACS tolerance requirements for construction and repair.",
+                icon: "fas fa-ship"
+            }
+        ];
+
+        // Function to create module cards
+        function createModuleCards() {
+            const modulesGrid = document.getElementById('modulesGrid');
+            
+            modules.forEach(module => {
+                const card = document.createElement('div');
+                card.className = 'module-card';
+                
+                card.innerHTML = `
+                    <div class="module-header">
+                        <div class="module-icon">
+                            <i class="${module.icon}"></i>
+                        </div>
+                        <h3 class="module-title">${module.title}</h3>
+                    </div>
+                    <div class="module-content">
+                        <p class="module-description">${module.description}</p>
+                        <a href="${module.file}" class="module-link">
+                            Open Calculator <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                `;
+                
+                modulesGrid.appendChild(card);
+            });
+        }
+
+        // Initialize the page when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            createModuleCards();
+            
+            // Add smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if(targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if(targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 100,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
