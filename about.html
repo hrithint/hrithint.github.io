@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Navculus - Naval Architecture Calculations</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f9ff;
+            color: #333;
+            line-height: 1.6;
+            padding-bottom: 40px;
+        }
+        
+        /* Header & Navigation */
+        header {
+            background: linear-gradient(135deg, #1a2a4a 0%, #2c3e50 100%);
+            padding: 20px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+        
+        .logo-text {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+        
+        .nav-part {
+            color: white;
+        }
+        
+        .culus-part {
+            color: #4dc0ff;
+        }
+        
+        .tagline {
+            color: #a0c8f0;
+            font-size: 14px;
+            margin-left: 10px;
+            font-weight: 300;
+        }
+        
+        .home-btn {
+            background-color: #4dc0ff;
+            color: white;
+            padding: 10px 24px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .home-btn:hover {
+            background-color: #2aa0e0;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* Main Content */
+        .hero-section {
+            background: linear-gradient(to right, #1a2a4a, #2c3e50);
+            color: white;
+            padding: 60px 0;
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 50px;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .hero-content h1 {
+            font-size: 42px;
+            margin-bottom: 20px;
+        }
+        
+        .hero-content p {
+            font-size: 18px;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .content-section {
+            background-color: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+        
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        .profile-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #1a2a4a, #4dc0ff);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 25px;
+        }
+        
+        .profile-icon i {
+            font-size: 36px;
+            color: white;
+        }
+        
+        .profile-info h2 {
+            color: #1a2a4a;
+            margin-bottom: 8px;
+        }
+        
+        .profile-info p {
+            color: #4dc0ff;
+            font-weight: 500;
+        }
+        
+        .story-section p {
+            margin-bottom: 20px;
+            font-size: 17px;
+            color: #444;
+        }
+        
+        .highlight {
+            background-color: #f0f8ff;
+            border-left: 4px solid #4dc0ff;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid #e0e0e0;
+            color: #666;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0 30px;
+        }
+        
+        .social-links a {
+            color: #1a2a4a;
+            font-size: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            color: #4dc0ff;
+            transform: translateY(-3px);
+        }
+        
+        .contact-info {
+            background-color: #f8fbff;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 500px;
+            margin: 30px auto;
+        }
+        
+        .contact-info h3 {
+            color: #1a2a4a;
+            margin-bottom: 15px;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .hero-content h1 {
+                font-size: 32px;
+            }
+            
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .profile-icon {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+            
+            .content-section {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with Navigation -->
+    <header>
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <div class="logo-text">
+                    <span class="nav-part">Nav</span><span class="culus-part">culus</span>
+                </div>
+                <div class="tagline">Naval Architecture Calculations</div>
+            </a>
+            <a href="index.html" class="home-btn">
+                <i class="fas fa-home"></i> Home
+            </a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container hero-content">
+            <h1>About Navculus</h1>
+            <p>Discover the story behind our journey to create comprehensive naval architecture calculation tools that comply with international rules and regulations.</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <section class="content-section">
+            <div class="profile-header">
+                <div class="profile-icon">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+                <div class="profile-info">
+                    <h2>Hrithin Thavorath</h2>
+                    <p>Naval Architect | Kochi</p>
+                </div>
+            </div>
+            
+            <div class="story-section">
+                <p>I am a naval architect from Kochi, India, who has been developing Navculus since 2022. Like many early-career professionals, I faced challenges in building my career in naval architecture.</p>
+                
+                <div class="highlight">
+                    <p>At the initial stage of my career, I tried to build a new application for naval architecture calculations, but my lack of knowledge in coding made it extremely difficult for me.</p>
+                </div>
+                
+                <p>However, I didn't let this obstacle stop me. After three years of continuous studies and self-development in both naval architecture and programming, I successfully developed an application called Navculus for ship-related calculations.</p>
+                
+                <p>Initially, I created a mobile application, but I realized that naval architects often work on desktops where mobile apps aren't as accessible. This realization led me to start developing web-based solutions, culminating in the creation of <strong>navculus.in</strong> - one of my long-held dreams.</p>
+                
+                <p>Navculus provides various calculation modules that comply with respective rules and regulations, making complex naval architecture computations more accessible to professionals in the field.</p>
+                
+                <div class="highlight">
+                    <p>I hope everyone finds the interface intuitive and helpful for their work. Thank you for your support as I continue to improve and expand Navculus.</p>
+                </div>
+            </div>
+        </section>
+        
+        <div class="contact-info">
+            <h3><i class="fas fa-comments"></i> Feedback & Questions</h3>
+            <p>Please feel free to ask any questions or share your comments. Your feedback is valuable and will be incorporated into future updates when I have time. Thank you for supporting Navculus!</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="social-links">
+                <a href="https://www.linkedin.com/in/hrithin-t-5b071316a?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3BtJ8oxi9hQHOUhMASmQeALQ%3D%3D" target="_blank">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+                <a href="#">
+                    <i class="fas fa-envelope"></i>
+                </a>
+                <a href="#">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="#">
+                    <i class="fab fa-twitter"></i>
+                </a>
+            </div>
+            <p>Navculus &copy; 2025 | Naval Architecture Calculation Tools</p>
+            <p>Designed and developed by Hrithin Thavorath</p>
+        </div>
+    </footer>
+
+    <script>
+        // Simple script to handle smooth scroll if needed
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add any interactive functionality here if needed
+            console.log('Navculus About Page loaded');
+        });
+    </script>
+</body>
+</html>
