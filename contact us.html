@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact | Navculus - Naval Architecture Calculations</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #0a192f;
+            color: #e6f1ff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: linear-gradient(to bottom right, #0a192f 0%, #112240 100%);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            width: 100%;
+        }
+        
+        /* Header Styles */
+        header {
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(100, 255, 218, 0.1);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .logo {
+            font-size: 2.8rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-decoration: none;
+        }
+        
+        .nav {
+            color: #ffffff;
+        }
+        
+        .culus {
+            color: #64ffda;
+        }
+        
+        .tagline {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #8892b0;
+            margin-top: 5px;
+            font-weight: 300;
+        }
+        
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .home-btn {
+            background-color: rgba(100, 255, 218, 0.1);
+            color: #64ffda;
+            border: 1px solid #64ffda;
+            padding: 12px 28px;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .home-btn:hover {
+            background-color: rgba(100, 255, 218, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(100, 255, 218, 0.1);
+        }
+        
+        /* Main Content */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            flex-grow: 1;
+        }
+        
+        .page-title {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #ccd6f6;
+            text-align: center;
+        }
+        
+        .page-subtitle {
+            font-size: 1.1rem;
+            color: #8892b0;
+            margin-bottom: 40px;
+            text-align: center;
+            max-width: 600px;
+        }
+        
+        /* Contact Card */
+        .contact-card {
+            background-color: #112240;
+            border-radius: 10px;
+            padding: 40px;
+            width: 100%;
+            max-width: 800px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(100, 255, 218, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .contact-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(100, 255, 218, 0.1);
+        }
+        
+        .developer-icon {
+            background-color: rgba(100, 255, 218, 0.1);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 25px;
+            border: 2px solid #64ffda;
+        }
+        
+        .developer-icon i {
+            font-size: 2.5rem;
+            color: #64ffda;
+        }
+        
+        .developer-info h2 {
+            font-size: 1.8rem;
+            color: #ccd6f6;
+            margin-bottom: 5px;
+        }
+        
+        .developer-info p {
+            color: #8892b0;
+            font-size: 1rem;
+        }
+        
+        /* Contact Details */
+        .contact-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .contact-item {
+            background-color: rgba(17, 34, 64, 0.7);
+            border-radius: 8px;
+            padding: 25px;
+            transition: transform 0.3s ease;
+            border-left: 3px solid #64ffda;
+        }
+        
+        .contact-item:hover {
+            transform: translateY(-5px);
+            background-color: rgba(100, 255, 218, 0.05);
+        }
+        
+        .contact-item i {
+            font-size: 1.8rem;
+            color: #64ffda;
+            margin-bottom: 15px;
+        }
+        
+        .contact-item h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #ccd6f6;
+        }
+        
+        .contact-item p, .contact-item a {
+            color: #8892b0;
+            text-decoration: none;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .contact-item a:hover {
+            color: #64ffda;
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 25px 0;
+            color: #8892b0;
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(100, 255, 218, 0.1);
+            margin-top: 20px;
+        }
+        
+        .footer-note {
+            font-style: italic;
+            margin-top: 10px;
+            color: #64ffda;
+            opacity: 0.8;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2.2rem;
+            }
+            
+            .contact-card {
+                padding: 25px;
+            }
+            
+            .contact-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .developer-icon {
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+            
+            .contact-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .page-title {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 1.8rem;
+            }
+            
+            .page-title {
+                font-size: 1.8rem;
+            }
+            
+            .contact-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <a href="index.html" class="logo">
+                    <span class="nav">Nav</span><span class="culus">culus</span>
+                </a>
+            </div>
+            <p class="tagline">Naval Architecture Calculations & Design Tools</p>
+            
+            <nav>
+                <a href="index.html" class="home-btn">
+                    <i class="fas fa-home"></i>
+                    Back to Home
+                </a>
+            </nav>
+        </header>
+        
+        <main class="main-content">
+            <h1 class="page-title">Contact Information</h1>
+            <p class="page-subtitle">Get in touch with the developer for support, feedback, or collaboration on naval architecture projects.</p>
+            
+            <div class="contact-card">
+                <div class="contact-header">
+                    <div class="developer-icon">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <div class="developer-info">
+                        <h2>Hrithin Thavorath</h2>
+                        <p>Developer & Naval Architecture Specialist</p>
+                    </div>
+                </div>
+                
+                <div class="contact-details">
+                    <div class="contact-item">
+                        <i class="fas fa-phone-alt"></i>
+                        <h3>Phone Number</h3>
+                        <p>+91 7306787031</p>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <h3>Primary Email</h3>
+                        <a href="mailto:hrithinshaji@gmail.com">hrithinshaji@gmail.com</a>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <h3>Alternate Email</h3>
+                        <a href="mailto:talktoinnewton@gmail.com">talktoinnewton@gmail.com</a>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <i class="fas fa-ship"></i>
+                        <h3>Specialization</h3>
+                        <p>Naval Architecture Calculations, Ship Design, Hydrostatics, Stability Analysis</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Navculus. All rights reserved.</p>
+            <p class="footer-note">Precision tools for naval architects and marine engineers</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scroll and interactive effects
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add animation to contact items on load
+            const contactItems = document.querySelectorAll('.contact-item');
+            contactItems.forEach((item, index) => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    item.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateY(0)';
+                }, index * 100 + 300);
+            });
+            
+            // Add hover effect to logo
+            const logo = document.querySelector('.logo');
+            logo.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.05)';
+                this.style.transition = 'transform 0.3s ease';
+            });
+            
+            logo.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>
