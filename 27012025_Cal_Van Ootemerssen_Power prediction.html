@@ -1,0 +1,1587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Van Oortmerssen Power Prediction Calculator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        
+        .container {
+            max-width: 1600px;
+            width: 100%;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1a4b8c 0%, #2a5298 100%);
+            color: white;
+            padding: 30px 25px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(30%, -30%);
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        h1 {
+            font-size: 2.4rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        .credit {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            z-index: 2;
+        }
+        
+        .tabs {
+            display: flex;
+            background: #f0f4f9;
+            border-bottom: 1px solid #dce3ec;
+        }
+        
+        .tab {
+            padding: 18px 30px;
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            color: #5a6c7d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            max-width: 300px;
+        }
+        
+        .tab i {
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .tab.active {
+            color: #2a5298;
+            border-bottom: 3px solid #2a5298;
+            background: white;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 30px;
+        }
+        
+        .tab-content.active {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        
+        .input-section {
+            flex: 1;
+            min-width: 350px;
+            padding: 20px;
+            border-right: 1px solid #eaeef2;
+        }
+        
+        .output-section {
+            flex: 2;
+            min-width: 500px;
+            padding: 20px;
+        }
+        
+        .section-title {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #eaeef2;
+            color: #2a5298;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+            display: flex;
+            align-items: center;
+        }
+        
+        label i {
+            margin-right: 8px;
+            color: #2a5298;
+            width: 20px;
+            text-align: center;
+        }
+        
+        input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: #fafbfc;
+        }
+        
+        input[type="number"]:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: #2a5298;
+            box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.1);
+            background-color: white;
+        }
+        
+        .unit {
+            color: #666;
+            font-size: 0.9rem;
+            margin-left: 5px;
+            font-weight: normal;
+        }
+        
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03);
+            margin-bottom: 25px;
+        }
+        
+        .result-table th, .result-table td {
+            padding: 14px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eaeef2;
+        }
+        
+        .result-table th {
+            background-color: #f8fafd;
+            font-weight: 600;
+            color: #2a5298;
+        }
+        
+        .result-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .result-table tr:hover {
+            background-color: #f8fafd;
+        }
+        
+        .status {
+            font-weight: bold;
+            padding: 6px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            font-size: 0.85rem;
+        }
+        
+        .status-ok {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .status-not-applicable {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        
+        .status-applicable {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .calc-button {
+            background: linear-gradient(135deg, #2a5298 0%, #1a4b8c 100%);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 25px auto;
+            width: 200px;
+        }
+        
+        .calc-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(42, 82, 152, 0.2);
+        }
+        
+        .calc-button i {
+            margin-right: 10px;
+        }
+        
+        .input-row {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .input-row .input-group {
+            flex: 1;
+        }
+        
+        .diagram {
+            text-align: center;
+            margin: 25px 0;
+            padding: 20px;
+            background: #f8fafd;
+            border-radius: 12px;
+            border: 1px solid #eaeef2;
+        }
+        
+        .diagram-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #2a5298;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .diagram-title i {
+            margin-right: 10px;
+        }
+        
+        .ship-diagram {
+            width: 100%;
+            max-width: 400px;
+            height: 200px;
+            background: linear-gradient(135deg, #f0f4f9 0%, #e4edf5 100%);
+            border-radius: 8px;
+            margin: 0 auto;
+            position: relative;
+            border: 1px solid #d1d9e6;
+        }
+        
+        @media (max-width: 1024px) {
+            .tab-content.active {
+                flex-direction: column;
+            }
+            
+            .input-section {
+                border-right: none;
+                border-bottom: 1px solid #eaeef2;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                max-width: 100%;
+                padding: 15px;
+                justify-content: flex-start;
+            }
+            
+            .credit {
+                position: relative;
+                top: auto;
+                right: auto;
+                margin-top: 15px;
+                display: inline-block;
+            }
+            
+            header {
+                text-align: center;
+            }
+            
+            .input-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+        
+        .results-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .result-card {
+            flex: 1;
+            min-width: 300px;
+            background: #f8fafd;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #eaeef2;
+        }
+        
+        .result-card-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #2a5298;
+            display: flex;
+            align-items: center;
+        }
+        
+        .result-card-title i {
+            margin-right: 10px;
+        }
+        
+        .speed-range-input {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .speed-range-input input {
+            flex: 1;
+        }
+        
+        .formula-info {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 5px;
+            font-style: italic;
+        }
+        
+        .coeff-table {
+            font-size: 0.9rem;
+            margin-top: 20px;
+        }
+        
+        .coeff-table th, .coeff-table td {
+            padding: 8px 10px;
+            text-align: center;
+        }
+        
+        .note {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 12px 15px;
+            margin: 15px 0;
+            font-size: 0.9rem;
+            border-radius: 4px;
+        }
+        
+        .formula-display {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 6px;
+            font-family: monospace;
+            margin: 10px 0;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1>Van Oortmerssen Power Prediction Calculator</h1>
+                <p class="subtitle">A power prediction method for small ships based on resistance calculation</p>
+            </div>
+            <div class="credit">Based on work by G. Van Oortmerssen</div>
+        </header>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="input">
+                <i class="fas fa-sliders-h"></i> Vessel Parameters
+            </div>
+            <div class="tab" data-tab="resistance">
+                <i class="fas fa-water"></i> Resistance Calculation
+            </div>
+            <div class="tab" data-tab="results">
+                <i class="fas fa-chart-line"></i> Results & Power
+            </div>
+        </div>
+        
+        <!-- Vessel Parameters Tab Content -->
+        <div id="input-tab" class="tab-content active">
+            <div class="input-section">
+                <h2 class="section-title"><i class="fas fa-ship"></i> Vessel Particulars</h2>
+                
+                <div class="input-group">
+                    <label for="length-waterline"><i class="fas fa-ruler-horizontal"></i> Length of waterline, LWL <span class="unit">(m)</span></label>
+                    <input type="number" id="length-waterline" value="30.5" step="0.1">
+                </div>
+                
+                <div class="input-group">
+                    <label for="length-perpendiculars"><i class="fas fa-ruler-combined"></i> Length between perpendiculars, LPP <span class="unit">(m)</span></label>
+                    <input type="number" id="length-perpendiculars" value="27.5" step="0.1">
+                </div>
+                
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="beam-waterline"><i class="fas fa-arrows-alt-h"></i> Beam of waterline, B <span class="unit">(m)</span></label>
+                        <input type="number" id="beam-waterline" value="8.406" step="0.001">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="draft-moulded"><i class="fas fa-arrows-alt-v"></i> Draft moulded, T <span class="unit">(m)</span></label>
+                        <input type="number" id="draft-moulded" value="2.949" step="0.001">
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="volume-displacement"><i class="fas fa-weight-hanging"></i> Volume displacement, ∇ <span class="unit">(m³)</span></label>
+                    <input type="number" id="volume-displacement" value="376" step="0.1">
+                </div>
+                
+                <div class="input-group">
+                    <label for="wetted-surface"><i class="fas fa-water"></i> Wetted surface area, S <span class="unit">(m²)</span></label>
+                    <input type="number" id="wetted-surface" value="284" step="0.1">
+                </div>
+                
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="prismatic-coefficient"><i class="fas fa-shapes"></i> Prismatic coefficient on LWL, Cp <span class="unit">(-)</span></label>
+                        <input type="number" id="prismatic-coefficient" value="0.579" step="0.001">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="half-angle-entrance"><i class="fas fa-angle-right"></i> Half angle of waterline entrance, iE <span class="unit">(deg)</span></label>
+                        <input type="number" id="half-angle-entrance" value="23" step="0.1">
+                    </div>
+                </div>
+                
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="lcb-forward"><i class="fas fa-arrows-alt-h"></i> LCB forward of midship LWL, lcb <span class="unit">(m)</span></label>
+                        <input type="number" id="lcb-forward" value="0.0105" step="0.0001">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="design-speed"><i class="fas fa-tachometer-alt"></i> Design speed, V <span class="unit">(kn)</span></label>
+                        <input type="number" id="design-speed" value="13" step="0.1">
+                    </div>
+                </div>
+                
+                <h2 class="section-title"><i class="fas fa-tint"></i> Water Properties</h2>
+                
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="water-density"><i class="fas fa-weight"></i> Water density, ρ <span class="unit">(t/m³)</span></label>
+                        <input type="number" id="water-density" value="1.025" step="0.001">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="water-viscosity"><i class="fas fa-vial"></i> Water viscosity, ν <span class="unit">(m²/s)</span></label>
+                        <input type="number" id="water-viscosity" value="1.18831e-6" step="1e-8">
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="correlation-allowance"><i class="fas fa-plus-circle"></i> Correlation allowance, ΔCF <span class="unit">(-)</span></label>
+                    <input type="number" id="correlation-allowance" value="0.0004" step="0.00001">
+                    <div class="formula-info">Sum of roughness allowances (from Table V)</div>
+                </div>
+                
+                <h2 class="section-title"><i class="fas fa-cogs"></i> Calculation Options</h2>
+                
+                <div class="input-group">
+                    <label for="speed-range"><i class="fas fa-wind"></i> Speed range for calculation</label>
+                    <div class="speed-range-input">
+                        <input type="number" id="speed-min" value="3" step="0.5" placeholder="Min speed (kn)">
+                        <span>to</span>
+                        <input type="number" id="speed-max" value="13" step="0.5" placeholder="Max speed (kn)">
+                        <span>kn</span>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="speed-steps"><i class="fas fa-stairs"></i> Number of speed steps</label>
+                    <input type="number" id="speed-steps" value="11" step="1" min="2" max="20">
+                </div>
+                
+                <div class="diagram">
+                    <div class="diagram-title">
+                        <i class="fas fa-project-diagram"></i> Ship Parameters Diagram
+                    </div>
+                    <div class="ship-diagram" id="ship-diagram"></div>
+                </div>
+                
+                <button class="calc-button" id="calculate-power">
+                    <i class="fas fa-calculator"></i> Calculate Power
+                </button>
+            </div>
+            
+            <div class="output-section">
+                <h2 class="section-title"><i class="fas fa-clipboard-check"></i> Method Applicability Check</h2>
+                
+                <div id="applicability-check" style="padding: 20px; background: #f8fafd; border-radius: 12px; margin-bottom: 25px;">
+                    <h3 style="margin-bottom: 15px; color: #2a5298;">Range of Validity Check</h3>
+                    <p style="margin-bottom: 10px;">The Van Oortmerssen method is applicable within the following ranges:</p>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
+                        <div style="background: white; padding: 10px; border-radius: 6px; border: 1px solid #eaeef2;">
+                            <strong>8 < LWL < 80 m</strong><br>
+                            <span id="check-lwl" class="status status-ok">OK: 30.5 m</span>
+                        </div>
+                        <div style="background: white; padding: 10px; border-radius: 6px; border: 1px solid #eaeef2;">
+                            <strong>5 < ∇ < 3150 m³</strong><br>
+                            <span id="check-volume" class="status status-ok">OK: 376 m³</span>
+                        </div>
+                        <div style="background: white; padding: 10px; border-radius: 6px; border: 1px solid #eaeef2;">
+                            <strong>3 < LWL/B < 6.2</strong><br>
+                            <span id="check-lb" class="status status-ok">OK: 3.63</span>
+                        </div>
+                        <div style="background: white; padding: 10px; border-radius: 6px; border: 1px solid #eaeef2;">
+                            <strong>1.9 < B/T < 4</strong><br>
+                            <span id="check-bt" class="status status-ok">OK: 2.85</span>
+                        </div>
+                        <div style="background: white; padding: 10px; border-radius: 6px; border: 1px solid #eaeef2;">
+                            <strong>0.5 < Cp < 0.725</strong><br>
+                            <span id="check-cp" class="status status-ok">OK: 0.579</span>
+                        </div>
+                        <div style="background: white; padding: 10px; border-radius: 6px; border: 1px solid #eaeef2;">
+                            <strong>10 < iE < 46 deg</strong><br>
+                            <span id="check-ie" class="status status-ok">OK: 23 deg</span>
+                        </div>
+                    </div>
+                    
+                    <div id="overall-applicability" style="text-align: center; padding: 15px; background: white; border-radius: 8px; border: 1px solid #eaeef2;">
+                        <h3 id="applicability-status" style="color: #2e7d32;">Method is applicable for this vessel</h3>
+                        <p style="margin-top: 5px; color: #666;">All parameters are within the valid range</p>
+                    </div>
+                </div>
+                
+                <h2 class="section-title"><i class="fas fa-ruler-combined"></i> Derived Parameters</h2>
+                
+                <table class="result-table">
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Symbol</th>
+                        <th>Value</th>
+                        <th>Unit</th>
+                    </tr>
+                    <tr>
+                        <td>Displacement length, LD</td>
+                        <td>LD</td>
+                        <td id="derived-ld">29.00</td>
+                        <td>m</td>
+                    </tr>
+                    <tr>
+                        <td>Displacement, D</td>
+                        <td>Δ</td>
+                        <td id="derived-displacement">385.40</td>
+                        <td>t</td>
+                    </tr>
+                    <tr>
+                        <td>LD / B</td>
+                        <td>LD/B</td>
+                        <td id="derived-ldb">3.45</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>B / T</td>
+                        <td>B/T</td>
+                        <td id="derived-bt">2.85</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>Midship section coefficient, CM</td>
+                        <td>C<sub>M</sub></td>
+                        <td id="derived-cm">0.823</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>Waterplane coefficient, CWL</td>
+                        <td>C<sub>WL</sub></td>
+                        <td id="derived-cwl">1.05</td>
+                        <td>-</td>
+                    </tr>
+                </table>
+                
+                <h2 class="section-title"><i class="fas fa-table"></i> Regression Coefficients (Table II)</h2>
+                
+                <div class="coeff-table-container">
+                    <table class="result-table coeff-table">
+                        <tr>
+                            <th>Index</th>
+                            <th>c1</th>
+                            <th>c2</th>
+                            <th>c3</th>
+                            <th>c4</th>
+                        </tr>
+                        <tr>
+                            <td>0</td>
+                            <td>79.32134</td>
+                            <td>6714.88397</td>
+                            <td>-908.44371</td>
+                            <td>3012.14549</td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>-0.09287</td>
+                            <td>19.83</td>
+                            <td>2.52704</td>
+                            <td>2.71437</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>-0.00209</td>
+                            <td>2.66997</td>
+                            <td>-0.35794</td>
+                            <td>0.25521</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>-246.45896</td>
+                            <td>-19662.024</td>
+                            <td>755.1866</td>
+                            <td>-9198.8084</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>187.13664</td>
+                            <td>14099.904</td>
+                            <td>-48.93952</td>
+                            <td>6886.60416</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>-1.42893</td>
+                            <td>137.33613</td>
+                            <td>9.86873</td>
+                            <td>-159.92694</td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>0.11898</td>
+                            <td>-13.36938</td>
+                            <td>-0.77652</td>
+                            <td>16.23621</td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td>0.15727</td>
+                            <td>-4.49852</td>
+                            <td>3.7902</td>
+                            <td>-0.82014</td>
+                        </tr>
+                        <tr>
+                            <td>8</td>
+                            <td>-0.00064</td>
+                            <td>0.021</td>
+                            <td>-0.01879</td>
+                            <td>0.00225</td>
+                        </tr>
+                        <tr>
+                            <td>9</td>
+                            <td>-2.52862</td>
+                            <td>216.44923</td>
+                            <td>-9.24399</td>
+                            <td>236.3797</td>
+                        </tr>
+                        <tr>
+                            <td>10</td>
+                            <td>0.50619</td>
+                            <td>-35.07602</td>
+                            <td>1.28571</td>
+                            <td>-44.1782</td>
+                        </tr>
+                        <tr>
+                            <td>11</td>
+                            <td>1.62851</td>
+                            <td>-128.72535</td>
+                            <td>250.6491</td>
+                            <td>207.2558</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="note">
+                    <i class="fas fa-info-circle"></i> These coefficients are used in the residuary resistance calculation as per Van Oortmerssen's method.
+                </div>
+            </div>
+        </div>
+        
+        <!-- Resistance Calculation Tab Content -->
+        <div id="resistance-tab" class="tab-content">
+            <div class="output-section">
+                <h2 class="section-title"><i class="fas fa-calculator"></i> Resistance Calculation Details</h2>
+                
+                <div class="note">
+                    <i class="fas fa-info-circle"></i> The following calculations are performed for each speed in the specified range.
+                </div>
+                
+                <h3 class="section-title" style="font-size: 1.2rem;"><i class="fas fa-tachometer-alt"></i> For Design Speed: <span id="design-speed-display">13</span> kn</h3>
+                
+                <table class="result-table">
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Formula</th>
+                        <th>Value</th>
+                        <th>Unit</th>
+                    </tr>
+                    <tr>
+                        <td>Froude number, Fn</td>
+                        <td>V/√(g·LD)</td>
+                        <td id="calc-fn">0.405</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>Reynolds number, Rn</td>
+                        <td>V·LD/ν</td>
+                        <td id="calc-rn">6.83×10<sup>8</sup></td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>Frictional coefficient, CF</td>
+                        <td>0.075/(log<sub>10</sub>Rn - 2)²</td>
+                        <td id="calc-cf">0.00172</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>Total friction coefficient, CF+ΔCF</td>
+                        <td>CF + ΔCF</td>
+                        <td id="calc-cf-total">0.00212</td>
+                        <td>-</td>
+                    </tr>
+                </table>
+                
+                <h3 class="section-title" style="font-size: 1.2rem;"><i class="fas fa-wave-square"></i> Residuary Resistance Calculation</h3>
+                
+                <div class="formula-display">
+                    m = 0.14347 × C<sub>P</sub><sup>-2.1976</sup> = <span id="calc-m">0.518</span>
+                </div>
+                
+                <div class="formula-display">
+                    f1 = exp(-m/(9·Fn²)) = <span id="calc-f1">0.192</span><br>
+                    f2 = exp(-m/Fn²) = <span id="calc-f2">0.014</span><br>
+                    f3 = exp(-m/Fn²)·sin(1/Fn²) = <span id="calc-f3">0.010</span><br>
+                    f4 = exp(-m/Fn²)·cos(1/Fn²) = <span id="calc-f4">0.010</span>
+                </div>
+                
+                <div class="formula-display">
+                    R<sub>R</sub>/Δ = c1·f1 + c2·f2 + c3·f3 + c4·f4 = <span id="calc-rr-delta">0.00742</span>
+                </div>
+                
+                <h3 class="section-title" style="font-size: 1.2rem;"><i class="fas fa-weight"></i> Resistance Components</h3>
+                
+                <table class="result-table">
+                    <tr>
+                        <th>Component</th>
+                        <th>Formula</th>
+                        <th>Value</th>
+                        <th>Unit</th>
+                    </tr>
+                    <tr>
+                        <td>Frictional resistance, RF</td>
+                        <td>0.5·ρ·S·V²·(CF+ΔCF)</td>
+                        <td id="calc-rf">29560</td>
+                        <td>kgf</td>
+                    </tr>
+                    <tr>
+                        <td>Residuary resistance, RR</td>
+                        <td>(R<sub>R</sub>/Δ)·Δ·1000</td>
+                        <td id="calc-rr">2858</td>
+                        <td>kgf</td>
+                    </tr>
+                    <tr>
+                        <td>Total resistance, RT</td>
+                        <td>RF + RR</td>
+                        <td id="calc-rt">32418</td>
+                        <td>kgf</td>
+                    </tr>
+                    <tr>
+                        <td>Total resistance</td>
+                        <td>RT × 0.00980665</td>
+                        <td id="calc-rt-kn">317.9</td>
+                        <td>kN</td>
+                    </tr>
+                </table>
+                
+                <h3 class="section-title" style="font-size: 1.2rem;"><i class="fas fa-bolt"></i> Effective Power</h3>
+                
+                <div class="formula-display">
+                    P<sub>E</sub> = R<sub>T</sub> × V = <span id="calc-pe">32418 kgf</span> × <span id="calc-speed-ms">6.69 m/s</span> = <span id="calc-pe-kw">2129 kW</span>
+                </div>
+                
+                <div class="results-container" style="margin-top: 30px;">
+                    <div class="result-card">
+                        <div class="result-card-title">
+                            <i class="fas fa-water"></i> Resistance Summary
+                        </div>
+                        <div class="result-item">
+                            <strong>Frictional resistance:</strong> <span id="summary-rf">29560 kgf</span>
+                        </div>
+                        <div class="result-item">
+                            <strong>Residuary resistance:</strong> <span id="summary-rr">2858 kgf</span>
+                        </div>
+                        <div class="result-item">
+                            <strong>Total resistance:</strong> <span id="summary-rt">32418 kgf</span>
+                        </div>
+                        <div class="result-item">
+                            <strong>Effective power:</strong> <span id="summary-pe">2129 kW</span>
+                        </div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <div class="result-card-title">
+                            <i class="fas fa-percentage"></i> Resistance Ratios
+                        </div>
+                        <div class="result-item">
+                            <strong>RF/RT:</strong> <span id="ratio-rf">91.2%</span>
+                        </div>
+                        <div class="result-item">
+                            <strong>RR/RT:</strong> <span id="ratio-rr">8.8%</span>
+                        </div>
+                        <div class="result-item">
+                            <strong>RR/Δ:</strong> <span id="ratio-rr-delta">0.0074</span>
+                        </div>
+                        <div class="result-item">
+                            <strong>RT/Δ:</strong> <span id="ratio-rt-delta">0.0841</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Results & Power Tab Content -->
+        <div id="results-tab" class="tab-content">
+            <div class="output-section" style="width: 100%;">
+                <h2 class="section-title"><i class="fas fa-chart-line"></i> Power Prediction Results</h2>
+                
+                <div class="note">
+                    <i class="fas fa-info-circle"></i> The table below shows the resistance and power calculations for the specified speed range.
+                </div>
+                
+                <div style="overflow-x: auto; margin: 20px 0;">
+                    <table class="result-table" id="results-table">
+                        <thead>
+                            <tr>
+                                <th>Speed (kn)</th>
+                                <th>Speed (m/s)</th>
+                                <th>Fn</th>
+                                <th>Rn (×10<sup>8</sup>)</th>
+                                <th>C<sub>F</sub>+ΔC<sub>F</sub></th>
+                                <th>R<sub>F</sub> (kgf)</th>
+                                <th>R<sub>R</sub>/Δ</th>
+                                <th>R<sub>R</sub> (kgf)</th>
+                                <th>R<sub>T</sub> (kgf)</th>
+                                <th>R<sub>T</sub> (kN)</th>
+                                <th>P<sub>E</sub> (kW)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="results-body">
+                            <!-- Results will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <h3 class="section-title" style="font-size: 1.2rem;"><i class="fas fa-chart-bar"></i> Resistance Components vs. Speed</h3>
+                
+                <div style="height: 300px; background: #f8fafd; border-radius: 12px; padding: 20px; margin: 20px 0; border: 1px solid #eaeef2;">
+                    <canvas id="resistance-chart"></canvas>
+                </div>
+                
+                <h3 class="section-title" style="font-size: 1.2rem;"><i class="fas fa-bolt"></i> Effective Power vs. Speed</h3>
+                
+                <div style="height: 300px; background: #f8fafd; border-radius: 12px; padding: 20px; margin: 20px 0; border: 1px solid #eaeef2;">
+                    <canvas id="power-chart"></canvas>
+                </div>
+                
+                <div class="results-container">
+                    <div class="result-card">
+                        <div class="result-card-title">
+                            <i class="fas fa-ship"></i> Vessel Summary
+                        </div>
+                        <div class="result-item">
+                            <strong>Displacement:</strong> <span id="final-displacement">385.4 t</span>
+                        </div>
+                        <div class="result-item">
+                            <strong>Length between perpendiculars:</strong> <span id="final-lpp">27.5 m</span>
+                        </div>
+                        <div class="result-item">
+                            <strong>Beam:</strong> <span id="final-beam">8.406 m</span>
+                        </div>
+                        <div class="result-item">
+                            <strong>Draft:</strong> <span id="final-draft">2.949 m</span>
+                        </div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <div class="result-card-title">
+                            <i class="fas fa-tachometer-alt"></i> Design Speed Performance
+                        </div>
+                        <div class="result-item">
+                            <strong>Design speed:</strong> <span id="final-design-speed">13 kn</span>
+                        </div>
+                        <div class="result-item">
+                            <strong>Froude number:</strong> <span id="final-fn">0.405</span>
+                        </div>
+                        <div class="result-item">
+                            <strong>Total resistance:</strong> <span id="final-resistance">317.9 kN</span>
+                        </div>
+                        <div class="result-item">
+                            <strong>Effective power:</strong> <span id="final-power">2129 kW</span>
+                        </div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <div class="result-card-title">
+                            <i class="fas fa-cogs"></i> Coefficients
+                        </div>
+                        <div class="result-item">
+                            <strong>Prismatic coefficient:</strong> <span id="final-cp">0.579</span>
+                        </div>
+                        <div class="result-item">
+                            <strong>Midship coefficient:</strong> <span id="final-cm">0.823</span>
+                        </div>
+                        <div class="result-item">
+                            <strong>Waterplane coefficient:</strong> <span id="final-cwl">1.05</span>
+                        </div>
+                        <div class="result-item">
+                            <strong>Block coefficient:</strong> <span id="final-cb">0.477</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="calc-button" onclick="exportResults()">
+                        <i class="fas fa-download"></i> Export Results
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs and content
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab
+                tab.classList.add('active');
+                
+                // Show corresponding content
+                const tabId = tab.getAttribute('data-tab');
+                document.getElementById(`${tabId}-tab`).classList.add('active');
+            });
+        });
+        
+        // Initialize variables
+        let resistanceChart = null;
+        let powerChart = null;
+        
+        // Calculate All button
+        document.getElementById('calculate-power').addEventListener('click', calculatePower);
+        
+        // Add event listeners to all inputs
+        document.querySelectorAll('#input-tab input[type="number"]').forEach(input => {
+            input.addEventListener('input', calculatePower);
+        });
+        
+        // Initial calculation
+        calculatePower();
+        
+        function calculatePower() {
+            // Get input values
+            const LWL = parseFloat(document.getElementById('length-waterline').value) || 0;
+            const LPP = parseFloat(document.getElementById('length-perpendiculars').value) || 0;
+            const B = parseFloat(document.getElementById('beam-waterline').value) || 0;
+            const T = parseFloat(document.getElementById('draft-moulded').value) || 0;
+            const volume = parseFloat(document.getElementById('volume-displacement').value) || 0;
+            const S = parseFloat(document.getElementById('wetted-surface').value) || 0;
+            const Cp = parseFloat(document.getElementById('prismatic-coefficient').value) || 0;
+            const iE = parseFloat(document.getElementById('half-angle-entrance').value) || 0;
+            const lcb = parseFloat(document.getElementById('lcb-forward').value) || 0;
+            const designSpeed = parseFloat(document.getElementById('design-speed').value) || 0;
+            const rho = parseFloat(document.getElementById('water-density').value) || 0;
+            const nu = parseFloat(document.getElementById('water-viscosity').value) || 0;
+            const deltaCF = parseFloat(document.getElementById('correlation-allowance').value) || 0;
+            
+            const speedMin = parseFloat(document.getElementById('speed-min').value) || 0;
+            const speedMax = parseFloat(document.getElementById('speed-max').value) || 0;
+            const speedSteps = parseInt(document.getElementById('speed-steps').value) || 11;
+            
+            // Calculate derived parameters
+            const LD = (LWL + LPP) / 2;
+            const displacement = volume * rho;
+            const LDB = LD / B;
+            const BT = B / T;
+            const lcbLD = -(LD - LPP) / 2 + lcb;
+            const lcbPercent = lcbLD / LD * 100;
+            const CpLD = Cp * LWL / LD;
+            const CM = volume / (CpLD * LD * B * T);
+            const CWL = iE * LD / B;
+            const m = 0.14347 * Math.pow(CpLD, -2.1976);
+            
+            // Update derived parameters display
+            document.getElementById('derived-ld').textContent = LD.toFixed(2);
+            document.getElementById('derived-displacement').textContent = displacement.toFixed(1);
+            document.getElementById('derived-ldb').textContent = LDB.toFixed(2);
+            document.getElementById('derived-bt').textContent = BT.toFixed(2);
+            document.getElementById('derived-cm').textContent = CM.toFixed(3);
+            document.getElementById('derived-cwl').textContent = CWL.toFixed(2);
+            
+            // Update final summary
+            document.getElementById('final-displacement').textContent = displacement.toFixed(1) + " t";
+            document.getElementById('final-lpp').textContent = LPP.toFixed(1) + " m";
+            document.getElementById('final-beam').textContent = B.toFixed(3) + " m";
+            document.getElementById('final-draft').textContent = T.toFixed(3) + " m";
+            document.getElementById('final-cp').textContent = CpLD.toFixed(3);
+            document.getElementById('final-cm').textContent = CM.toFixed(3);
+            document.getElementById('final-cwl').textContent = CWL.toFixed(2);
+            document.getElementById('final-cb').textContent = (CpLD * CM).toFixed(3);
+            
+            // Check applicability
+            const checkLWL = LWL > 8 && LWL < 80;
+            const checkVolume = volume > 5 && volume < 3150;
+            const checkLB = LDB > 3 && LDB < 6.2;
+            const checkBT = BT > 1.9 && BT < 4;
+            const checkCp = CpLD > 0.5 && CpLD < 0.725;
+            const checkIE = iE > 10 && iE < 46;
+            const checkLcb = lcbPercent > -8 && lcbPercent < 2.8;
+            const checkFn = (designSpeed * 0.5144) / Math.sqrt(9.80665 * LD) < 1.79;
+            
+            // Update check displays
+            updateCheck('check-lwl', checkLWL, LWL.toFixed(1) + " m");
+            updateCheck('check-volume', checkVolume, volume.toFixed(0) + " m³");
+            updateCheck('check-lb', checkLB, LDB.toFixed(2));
+            updateCheck('check-bt', checkBT, BT.toFixed(2));
+            updateCheck('check-cp', checkCp, CpLD.toFixed(3));
+            updateCheck('check-ie', checkIE, iE.toFixed(0) + "°");
+            
+            const overallApplicable = checkLWL && checkVolume && checkLB && checkBT && checkCp && checkIE && checkLcb && checkFn;
+            const applicabilityStatus = document.getElementById('applicability-status');
+            const overallApplicabilityDiv = document.getElementById('overall-applicability');
+            
+            if (overallApplicable) {
+                applicabilityStatus.textContent = "Method is applicable for this vessel";
+                applicabilityStatus.style.color = "#2e7d32";
+                overallApplicabilityDiv.style.borderColor = "#4caf50";
+            } else {
+                applicabilityStatus.textContent = "Method may not be fully applicable";
+                applicabilityStatus.style.color = "#ff9800";
+                overallApplicabilityDiv.style.borderColor = "#ff9800";
+            }
+            
+            // Calculate coefficients c1, c2, c3, c4
+            const c1 = calculateCoefficient(0, LD, B, T, LDB, BT, CpLD, CM, CWL, iE, lcbPercent);
+            const c2 = calculateCoefficient(1, LD, B, T, LDB, BT, CpLD, CM, CWL, iE, lcbPercent);
+            const c3 = calculateCoefficient(2, LD, B, T, LDB, BT, CpLD, CM, CWL, iE, lcbPercent);
+            const c4 = calculateCoefficient(3, LD, B, T, LDB, BT, CpLD, CM, CWL, iE, lcbPercent);
+            
+            // Calculate for design speed
+            calculateForSpeed(designSpeed, LD, nu, rho, S, deltaCF, displacement, m, c1, c2, c3, c4, true);
+            
+            // Calculate for speed range
+            const speedRange = [];
+            const step = (speedMax - speedMin) / (speedSteps - 1);
+            
+            for (let i = 0; i < speedSteps; i++) {
+                speedRange.push(speedMin + i * step);
+            }
+            
+            // Generate results table
+            generateResultsTable(speedRange, LD, nu, rho, S, deltaCF, displacement, m, c1, c2, c3, c4);
+            
+            // Create charts
+            createCharts(speedRange, LD, nu, rho, S, deltaCF, displacement, m, c1, c2, c3, c4);
+            
+            // Update design speed display
+            document.getElementById('design-speed-display').textContent = designSpeed.toFixed(1);
+            document.getElementById('final-design-speed').textContent = designSpeed.toFixed(1) + " kn";
+        }
+        
+        function calculateCoefficient(index, LD, B, T, LDB, BT, Cp, CM, CWL, iE, lcbPercent) {
+            // Table II coefficients
+            const coeffs = [
+                [79.32134, 6714.88397, -908.44371, 3012.14549],      // 0
+                [-0.09287, 19.83, 2.52704, 2.71437],                // 1
+                [-0.00209, 2.66997, -0.35794, 0.25521],             // 2
+                [-246.45896, -19662.024, 755.1866, -9198.8084],     // 3
+                [187.13664, 14099.904, -48.93952, 6886.60416],      // 4
+                [-1.42893, 137.33613, 9.86873, -159.92694],         // 5
+                [0.11898, -13.36938, -0.77652, 16.23621],           // 6
+                [0.15727, -4.49852, 3.7902, -0.82014],              // 7
+                [-0.00064, 0.021, -0.01879, 0.00225],               // 8
+                [-2.52862, 216.44923, -9.24399, 236.3797],          // 9
+                [0.50619, -35.07602, 1.28571, -44.1782],            // 10
+                [1.62851, -128.72535, 250.6491, 207.2558]           // 11
+            ];
+            
+            // Calculate coefficient based on index (0-3 for c1-c4)
+            let coeff = coeffs[0][index] + 
+                       coeffs[1][index] * LDB + 
+                       coeffs[2][index] * Math.pow(LDB, 2) + 
+                       coeffs[3][index] * Cp + 
+                       coeffs[4][index] * Math.pow(Cp, 2) + 
+                       coeffs[5][index] * LDB + 
+                       coeffs[6][index] * Math.pow(LDB, 2) + 
+                       coeffs[7][index] * CWL + 
+                       coeffs[8][index] * Math.pow(CWL, 2) + 
+                       coeffs[9][index] * BT + 
+                       coeffs[10][index] * Math.pow(BT, 2) + 
+                       coeffs[11][index] * iE;
+            
+            return coeff / 1000; // Division by 1000 as in Excel
+        }
+        
+        function calculateForSpeed(speedKn, LD, nu, rho, S, deltaCF, displacement, m, c1, c2, c3, c4, updateDisplay = false) {
+            const speedMs = speedKn * 0.5144;
+            const g = 9.80665;
+            
+            // Calculate Fn and Rn
+            const Fn = speedMs / Math.sqrt(g * LD);
+            const Rn = speedMs * LD / nu;
+            
+            // Calculate CF (ITTC '57 formula)
+            const CF = 0.075 / Math.pow(Math.log10(Rn) - 2, 2);
+            const CFtotal = CF + deltaCF;
+            
+            // Calculate residuary resistance factors
+            const f1 = Math.exp(-m / (9 * Math.pow(Fn, 2)));
+            const f2 = Math.exp(-m / Math.pow(Fn, 2));
+            const f3 = Math.exp(-m / Math.pow(Fn, 2)) * Math.sin(1 / Math.pow(Fn, 2));
+            const f4 = Math.exp(-m / Math.pow(Fn, 2)) * Math.cos(1 / Math.pow(Fn, 2));
+            
+            // Calculate RR/Δ
+            const RRdelta = c1 * f1 + c2 * f2 + c3 * f3 + c4 * f4;
+            
+            // Calculate resistances
+            const RF = 0.5 * (rho * 1000 / g) * S * Math.pow(speedMs, 2) * CFtotal;
+            const RR = RRdelta * displacement * 1000;
+            const RT = RF + RR;
+            const RTkn = RT * 0.00980665;
+            
+            // Calculate effective power
+            const PE = RT * speedMs;
+            
+            if (updateDisplay) {
+                // Update resistance calculation tab
+                document.getElementById('calc-fn').textContent = Fn.toFixed(3);
+                document.getElementById('calc-rn').textContent = (Rn / 1e8).toFixed(2) + "×10⁸";
+                document.getElementById('calc-cf').textContent = CF.toFixed(5);
+                document.getElementById('calc-cf-total').textContent = CFtotal.toFixed(5);
+                
+                document.getElementById('calc-m').textContent = m.toFixed(3);
+                document.getElementById('calc-f1').textContent = f1.toFixed(3);
+                document.getElementById('calc-f2').textContent = f2.toFixed(3);
+                document.getElementById('calc-f3').textContent = f3.toFixed(3);
+                document.getElementById('calc-f4').textContent = f4.toFixed(3);
+                document.getElementById('calc-rr-delta').textContent = RRdelta.toFixed(5);
+                
+                document.getElementById('calc-rf').textContent = Math.round(RF).toLocaleString();
+                document.getElementById('calc-rr').textContent = Math.round(RR).toLocaleString();
+                document.getElementById('calc-rt').textContent = Math.round(RT).toLocaleString();
+                document.getElementById('calc-rt-kn').textContent = RTkn.toFixed(1);
+                
+                document.getElementById('calc-speed-ms').textContent = speedMs.toFixed(2) + " m/s";
+                document.getElementById('calc-pe-kw').textContent = Math.round(PE / 1000).toLocaleString();
+                document.getElementById('calc-pe').textContent = Math.round(RT).toLocaleString() + " kgf";
+                
+                // Update summary
+                document.getElementById('summary-rf').textContent = Math.round(RF).toLocaleString() + " kgf";
+                document.getElementById('summary-rr').textContent = Math.round(RR).toLocaleString() + " kgf";
+                document.getElementById('summary-rt').textContent = Math.round(RT).toLocaleString() + " kgf";
+                document.getElementById('summary-pe').textContent = Math.round(PE / 1000).toLocaleString() + " kW";
+                
+                // Update ratios
+                document.getElementById('ratio-rf').textContent = (RF / RT * 100).toFixed(1) + "%";
+                document.getElementById('ratio-rr').textContent = (RR / RT * 100).toFixed(1) + "%";
+                document.getElementById('ratio-rr-delta').textContent = RRdelta.toFixed(4);
+                document.getElementById('ratio-rt-delta').textContent = (RT / (displacement * 1000)).toFixed(4);
+                
+                // Update final results
+                document.getElementById('final-fn').textContent = Fn.toFixed(3);
+                document.getElementById('final-resistance').textContent = RTkn.toFixed(1) + " kN";
+                document.getElementById('final-power').textContent = Math.round(PE / 1000).toLocaleString() + " kW";
+            }
+            
+            return {
+                speedKn,
+                speedMs,
+                Fn,
+                Rn,
+                CF,
+                CFtotal,
+                f1,
+                f2,
+                f3,
+                f4,
+                RRdelta,
+                RF,
+                RR,
+                RT,
+                RTkn,
+                PE
+            };
+        }
+        
+        function generateResultsTable(speedRange, LD, nu, rho, S, deltaCF, displacement, m, c1, c2, c3, c4) {
+            const resultsBody = document.getElementById('results-body');
+            resultsBody.innerHTML = '';
+            
+            speedRange.forEach(speed => {
+                const result = calculateForSpeed(speed, LD, nu, rho, S, deltaCF, displacement, m, c1, c2, c3, c4);
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${speed.toFixed(1)}</td>
+                    <td>${result.speedMs.toFixed(2)}</td>
+                    <td>${result.Fn.toFixed(3)}</td>
+                    <td>${(result.Rn / 1e8).toFixed(2)}</td>
+                    <td>${result.CFtotal.toFixed(5)}</td>
+                    <td>${Math.round(result.RF).toLocaleString()}</td>
+                    <td>${result.RRdelta.toFixed(5)}</td>
+                    <td>${Math.round(result.RR).toLocaleString()}</td>
+                    <td>${Math.round(result.RT).toLocaleString()}</td>
+                    <td>${result.RTkn.toFixed(1)}</td>
+                    <td>${Math.round(result.PE / 1000).toLocaleString()}</td>
+                `;
+                
+                // Highlight design speed row
+                const designSpeed = parseFloat(document.getElementById('design-speed').value) || 0;
+                if (Math.abs(speed - designSpeed) < 0.1) {
+                    row.style.backgroundColor = '#e8f5e9';
+                }
+                
+                resultsBody.appendChild(row);
+            });
+        }
+        
+        function createCharts(speedRange, LD, nu, rho, S, deltaCF, displacement, m, c1, c2, c3, c4) {
+            const speeds = speedRange.map(s => s.toFixed(1));
+            const rfData = [];
+            const rrData = [];
+            const rtData = [];
+            const peData = [];
+            
+            speedRange.forEach(speed => {
+                const result = calculateForSpeed(speed, LD, nu, rho, S, deltaCF, displacement, m, c1, c2, c3, c4);
+                rfData.push(result.RF / 1000); // Convert to metric tons
+                rrData.push(result.RR / 1000);
+                rtData.push(result.RT / 1000);
+                peData.push(result.PE / 1000); // Already in kW
+            });
+            
+            // Get chart canvas elements
+            const resistanceCtx = document.getElementById('resistance-chart').getContext('2d');
+            const powerCtx = document.getElementById('power-chart').getContext('2d');
+            
+            // Destroy existing charts if they exist
+            if (resistanceChart) {
+                resistanceChart.destroy();
+            }
+            if (powerChart) {
+                powerChart.destroy();
+            }
+            
+            // Create resistance chart
+            resistanceChart = new Chart(resistanceCtx, {
+                type: 'line',
+                data: {
+                    labels: speeds,
+                    datasets: [
+                        {
+                            label: 'Frictional Resistance (RF)',
+                            data: rfData,
+                            borderColor: '#2a5298',
+                            backgroundColor: 'rgba(42, 82, 152, 0.1)',
+                            borderWidth: 2,
+                            fill: false
+                        },
+                        {
+                            label: 'Residuary Resistance (RR)',
+                            data: rrData,
+                            borderColor: '#4caf50',
+                            backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                            borderWidth: 2,
+                            fill: false
+                        },
+                        {
+                            label: 'Total Resistance (RT)',
+                            data: rtData,
+                            borderColor: '#ff9800',
+                            backgroundColor: 'rgba(255, 152, 0, 0.1)',
+                            borderWidth: 3,
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Resistance Components vs. Speed'
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Speed (kn)'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Resistance (×1000 kgf)'
+                            },
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            
+            // Create power chart
+            powerChart = new Chart(powerCtx, {
+                type: 'line',
+                data: {
+                    labels: speeds,
+                    datasets: [
+                        {
+                            label: 'Effective Power (PE)',
+                            data: peData,
+                            borderColor: '#e91e63',
+                            backgroundColor: 'rgba(233, 30, 99, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Effective Power vs. Speed'
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Speed (kn)'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Effective Power (kW)'
+                            },
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+        
+        function updateCheck(elementId, isOk, value) {
+            const element = document.getElementById(elementId);
+            if (isOk) {
+                element.innerHTML = `<span class="status status-ok">OK: ${value}</span>`;
+            } else {
+                element.innerHTML = `<span class="status status-not-applicable">Out of range: ${value}</span>`;
+            }
+        }
+        
+        function exportResults() {
+            // Create a simple text export
+            const designSpeed = parseFloat(document.getElementById('design-speed').value) || 0;
+            const displacement = parseFloat(document.getElementById('volume-displacement').value) * parseFloat(document.getElementById('water-density').value) || 0;
+            const power = document.getElementById('final-power').textContent;
+            
+            const exportText = `
+Van Oortmerssen Power Prediction Results
+========================================
+
+Vessel Particulars:
+- Length of waterline: ${document.getElementById('length-waterline').value} m
+- Length between perpendiculars: ${document.getElementById('length-perpendiculars').value} m
+- Beam of waterline: ${document.getElementById('beam-waterline').value} m
+- Draft moulded: ${document.getElementById('draft-moulded').value} m
+- Volume displacement: ${document.getElementById('volume-displacement').value} m³
+- Wetted surface area: ${document.getElementById('wetted-surface').value} m²
+- Prismatic coefficient: ${document.getElementById('prismatic-coefficient').value}
+- Half angle of entrance: ${document.getElementById('half-angle-entrance').value}°
+
+Design Speed Performance:
+- Design speed: ${designSpeed} kn
+- Froude number: ${document.getElementById('final-fn').textContent}
+- Total resistance: ${document.getElementById('final-resistance').textContent}
+- Effective power: ${power}
+
+Calculation performed on: ${new Date().toLocaleDateString()}
+            `;
+            
+            // Create a blob and download link
+            const blob = new Blob([exportText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'van_oortmerssen_power_prediction.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            // Show confirmation
+            alert('Results exported successfully!');
+        }
+        
+        // Create simple ship diagram
+        function createShipDiagram() {
+            const diagram = document.getElementById('ship-diagram');
+            if (!diagram) return;
+            
+            // Clear any existing content
+            diagram.innerHTML = '';
+            
+            // Create a simple SVG representation
+            const svgNS = "http://www.w3.org/2000/svg";
+            const svg = document.createElementNS(svgNS, "svg");
+            svg.setAttribute("width", "100%");
+            svg.setAttribute("height", "100%");
+            svg.setAttribute("viewBox", "0 0 400 200");
+            
+            // Draw ship hull
+            const hullPath = document.createElementNS(svgNS, "path");
+            hullPath.setAttribute("d", "M50,100 C150,50 250,50 350,100 L350,150 C250,130 150,130 50,150 Z");
+            hullPath.setAttribute("fill", "#d1e3ff");
+            hullPath.setAttribute("stroke", "#2a5298");
+            hullPath.setAttribute("stroke-width", "2");
+            svg.appendChild(hullPath);
+            
+            // Draw waterline
+            const waterline = document.createElementNS(svgNS, "line");
+            waterline.setAttribute("x1", "50");
+            waterline.setAttribute("y1", "100");
+            waterline.setAttribute("x2", "350");
+            waterline.setAttribute("y2", "100");
+            waterline.setAttribute("stroke", "#1a4b8c");
+            waterline.setAttribute("stroke-width", "1");
+            waterline.setAttribute("stroke-dasharray", "5,3");
+            svg.appendChild(waterline);
+            
+            // Draw length dimensions
+            const lengthLine = document.createElementNS(svgNS, "line");
+            lengthLine.setAttribute("x1", "50");
+            lengthLine.setAttribute("y1", "170");
+            lengthLine.setAttribute("x2", "350");
+            lengthLine.setAttribute("y2", "170");
+            lengthLine.setAttribute("stroke", "#666");
+            lengthLine.setAttribute("stroke-width", "1");
+            lengthLine.setAttribute("stroke-dasharray", "5,5");
+            svg.appendChild(lengthLine);
+            
+            const lengthText = document.createElementNS(svgNS, "text");
+            lengthText.setAttribute("x", "200");
+            lengthText.setAttribute("y", "165");
+            lengthText.setAttribute("text-anchor", "middle");
+            lengthText.setAttribute("fill", "#333");
+            lengthText.setAttribute("font-size", "12");
+            lengthText.textContent = "LWL";
+            svg.appendChild(lengthText);
+            
+            // Draw beam dimension
+            const beamLine = document.createElementNS(svgNS, "line");
+            beamLine.setAttribute("x1", "350");
+            beamLine.setAttribute("y1", "100");
+            beamLine.setAttribute("x2", "350");
+            beamLine.setAttribute("y2", "150");
+            beamLine.setAttribute("stroke", "#666");
+            beamLine.setAttribute("stroke-width", "1");
+            beamLine.setAttribute("stroke-dasharray", "5,5");
+            svg.appendChild(beamLine);
+            
+            const beamText = document.createElementNS(svgNS, "text");
+            beamText.setAttribute("x", "365");
+            beamText.setAttribute("y", "125");
+            beamText.setAttribute("text-anchor", "middle");
+            beamText.setAttribute("fill", "#333");
+            beamText.setAttribute("font-size", "12");
+            beamText.setAttribute("transform", "rotate(90 365 125)");
+            beamText.textContent = "B";
+            svg.appendChild(beamText);
+            
+            diagram.appendChild(svg);
+        }
+        
+        // Initialize diagram
+        setTimeout(createShipDiagram, 100);
+    </script>
+</body>
+</html>
