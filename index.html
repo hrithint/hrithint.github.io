@@ -109,6 +109,73 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
+        /* Search Bar */
+        .search-section {
+            background-color: var(--white);
+            padding: 1.5rem 0;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            border-radius: var(--border-radius);
+        }
+
+        .search-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 0.9rem 1.2rem;
+            border: 2px solid var(--light-blue);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(42, 106, 199, 0.1);
+        }
+
+        .search-button {
+            background-color: var(--accent-blue);
+            color: var(--white);
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 0 1.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-button:hover {
+            background-color: var(--secondary-blue);
+        }
+
+        .search-info {
+            text-align: center;
+            margin-top: 0.8rem;
+            color: var(--medium-gray);
+            font-size: 0.9rem;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            color: var(--medium-gray);
+            font-size: 1.1rem;
+            display: none;
+        }
+
         /* Hero Section */
         .hero {
             background: linear-gradient(rgba(10, 42, 90, 0.85), rgba(10, 42, 90, 0.9)), url('https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
@@ -340,6 +407,15 @@
                 width: 100%;
             }
             
+            .search-box {
+                flex-direction: column;
+            }
+            
+            .search-button {
+                padding: 0.9rem 1.2rem;
+                justify-content: center;
+            }
+            
             .hero h2 {
                 font-size: 2rem;
             }
@@ -397,11 +473,34 @@
         </div>
     </section>
 
+    <!-- Search Section -->
+    <section class="search-section">
+        <div class="container">
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" id="searchInput" class="search-input" placeholder="Search calculation modules...">
+                    <button id="searchButton" class="search-button">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+                <div class="search-info">
+                    Type keywords like "design", "power", "bollard", "hull" etc.
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Main Content -->
     <main class="container">
         <section class="modules-section">
             <div class="section-title">
                 <h2>Calculation Modules</h2>
+            </div>
+            
+            <div class="no-results" id="noResults">
+                <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                <h3>No modules found</h3>
+                <p>Try different search terms</p>
             </div>
             
             <div class="modules-grid" id="modulesGrid">
@@ -496,14 +595,50 @@
                 file: "25042025_Cal_Hull form Acceptable tolerance_IACS.html",
                 description: "Check hull form compliance with IACS tolerance requirements for construction and repair.",
                 icon: "fas fa-ship"
+            },
+            // New modules added
+            {
+                title: "Holtrop and Mennen Power Prediction",
+                file: "26052024_Cal_Holtrop and Mennen power prediction methods.html",
+                description: "Predict ship power requirements using the Holtrop and Mennen method for resistance and propulsion.",
+                icon: "fas fa-bolt"
+            },
+            {
+                title: "Van Ootemerssen Power Prediction",
+                file: "27012025_Cal_Van Ootemerssen_Power prediction.html",
+                description: "Calculate power prediction using Van Ootemerssen's method for ship resistance estimation.",
+                icon: "fas fa-chart-line"
+            },
+            {
+                title: "Towing Bridle Design Check",
+                file: "19122025_Cal_Towing Bridle Design Check.html",
+                description: "Design and check towing bridle arrangements for safe and efficient towing operations.",
+                icon: "fas fa-link"
+            },
+            {
+                title: "Motions and Accelerations (DNVGL-RU-SHIP)",
+                file: "01092025_Cal_Motions and Accelrations_DNVGL-RU-SHIP.html",
+                description: "Calculate ship motions and accelerations according to DNVGL Rules for Ships requirements.",
+                icon: "fas fa-wave-square"
             }
         ];
 
         // Function to create module cards
-        function createModuleCards() {
+        function createModuleCards(filteredModules = null) {
             const modulesGrid = document.getElementById('modulesGrid');
+            const noResults = document.getElementById('noResults');
+            modulesGrid.innerHTML = '';
             
-            modules.forEach(module => {
+            const modulesToDisplay = filteredModules || modules;
+            
+            if (modulesToDisplay.length === 0) {
+                noResults.style.display = 'block';
+                return;
+            }
+            
+            noResults.style.display = 'none';
+            
+            modulesToDisplay.forEach(module => {
                 const card = document.createElement('div');
                 card.className = 'module-card';
                 
@@ -526,9 +661,39 @@
             });
         }
 
+        // Function to search modules
+        function searchModules() {
+            const searchInput = document.getElementById('searchInput');
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            
+            if (searchTerm === '') {
+                createModuleCards();
+                return;
+            }
+            
+            const filteredModules = modules.filter(module => {
+                return module.title.toLowerCase().includes(searchTerm) ||
+                       module.description.toLowerCase().includes(searchTerm) ||
+                       module.file.toLowerCase().includes(searchTerm);
+            });
+            
+            createModuleCards(filteredModules);
+        }
+
         // Initialize the page when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
             createModuleCards();
+            
+            // Add event listeners for search
+            const searchInput = document.getElementById('searchInput');
+            const searchButton = document.getElementById('searchButton');
+            
+            searchButton.addEventListener('click', searchModules);
+            searchInput.addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    searchModules();
+                }
+            });
             
             // Add smooth scrolling for anchor links
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
