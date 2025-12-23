@@ -554,12 +554,50 @@
                     <input type="number" id="speed-steps" value="11" step="1" min="2" max="20">
                 </div>
                 
-                <div class="diagram">
-                    <div class="diagram-title">
-                        <i class="fas fa-project-diagram"></i> Ship Parameters Diagram
-                    </div>
-                    <div class="ship-diagram" id="ship-diagram"></div>
-                </div>
+                <!-- Table I: Correlation Allowances -->
+<div class="diagram">
+    <div class="diagram-title">
+        <i class="fas fa-table"></i> Table I - Correlation Allowances (ΔCF)
+    </div>
+    <div style="overflow-x: auto; margin-top: 15px;">
+        <table class="result-table coeff-table">
+            <tr>
+                <th>Item</th>
+                <th>Allowance</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>0.00035</td>
+                <td>Roughness all-welded hull</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>0.00004</td>
+                <td>Steering resistance</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>0.00004</td>
+                <td>Bilge keel resistance</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>0.00008</td>
+                <td>Air resistance</td>
+            </tr>
+            <tr style="background-color: #f8fafd; font-weight: bold;">
+                <td>Total</td>
+                <td>0.00051</td>
+                <td>Sum of correlation allowances</td>
+            </tr>
+        </table>
+    </div>
+    <div class="note" style="margin-top: 15px; font-size: 0.85rem;">
+        <i class="fas fa-info-circle"></i> The total correlation allowance (ΔCF) above sums to 0.00051. 
+        The default value in the input field is set to 0.0004. Adjust as needed based on your vessel's specific characteristics.
+    </div>
+</div>
                 
                 <button class="calc-button" id="calculate-power">
                     <i class="fas fa-calculator"></i> Calculate Power
