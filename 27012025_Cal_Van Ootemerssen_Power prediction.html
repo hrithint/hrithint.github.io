@@ -640,7 +640,7 @@
                     
                     <div id="overall-applicability" style="text-align: center; padding: 15px; background: white; border-radius: 8px; border: 1px solid #eaeef2;">
                         <h3 id="applicability-status" style="color: #2e7d32;">Method is applicable for this vessel</h3>
-                        <p style="margin-top: 5px; color: #666;">All parameters are within the valid range</p>
+                        <p id="parastatus" style="margin-top: 5px; color: #666;">All parameters are within the valid range</p>
                     </div>
                 </div>
                 
@@ -1156,10 +1156,12 @@
             if (overallApplicable) {
                 applicabilityStatus.textContent = "Method is applicable for this vessel";
                 applicabilityStatus.style.color = "#2e7d32";
+                parastatus.textContent = "All parameters are within the valid range";
                 overallApplicabilityDiv.style.borderColor = "#4caf50";
             } else {
                 applicabilityStatus.textContent = "Method may not be fully applicable";
                 applicabilityStatus.style.color = "#ff9800";
+                parastatus.textContent = "Check the vessel particulars";
                 overallApplicabilityDiv.style.borderColor = "#ff9800";
             }
             
