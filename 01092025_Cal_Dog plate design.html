@@ -658,7 +658,7 @@
                 <h2 class="check-title"><i class="fas fa-clipboard-check"></i> Overall Design Status</h2>
                 <div style="text-align: center; padding: 20px; background: #f8fafd; border-radius: 12px; margin-top: 15px;">
                     <h3 id="overall-status" style="color: #2e7d32;">Design is satisfactory for all checks</h3>
-                    <p style="margin-top: 10px; color: #666;">All stress values are within allowable limits</p>
+                    <p id="limitstatus" style="margin-top: 10px; color: #666;">All stress values are within allowable limits</p>
                 </div>
             </div>
         </div>
@@ -1262,6 +1262,7 @@
             if (overallOk) {
                 overallStatus.textContent = "Design is satisfactory for all checks";
                 overallStatus.style.color = "#2e7d32";
+                limitstatus.textContent = "All stress values are within allowable limits";
                 transOverallStatus.textContent = "Transverse direction strength check is satisfactory";
                 transOverallStatus.style.color = "#2e7d32";
                 longOverallStatus.textContent = "Longitudinal direction strength check is satisfactory";
@@ -1269,6 +1270,7 @@
             } else {
                 overallStatus.textContent = "Design checks FAILED - Review calculations";
                 overallStatus.style.color = "#c62828";
+                limitstatus.textContent = "Stress values are not within the limit, redisgn!";
                 transOverallStatus.textContent = "Transverse direction strength check FAILED";
                 transOverallStatus.style.color = "#c62828";
                 longOverallStatus.textContent = "Longitudinal direction strength check FAILED";
