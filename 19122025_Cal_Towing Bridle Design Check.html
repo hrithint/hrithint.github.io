@@ -861,7 +861,7 @@
                 
                 <div style="text-align: center; padding: 20px; background: #f8fafd; border-radius: 12px; margin-top: 30px;">
                     <h3 id="overall-status" style="color: #2e7d32;">All design checks are satisfactory</h3>
-                    <p style="margin-top: 10px; color: #666;">All requirements meet DNV-ST-N001 standards</p>
+                    <p id="sumstatus" style="margin-top: 10px; color: #666;">All requirements meet DNV-ST-N001 standards</p>
                 </div>
             </div>
         </div>
@@ -1143,9 +1143,11 @@
             if (overallOk) {
                 overallStatus.textContent = "All design checks are satisfactory";
                 overallStatus.style.color = "#2e7d32";
+                sumstatus.textContent = "All requirements meet DNV-ST-N001 standards";
             } else {
                 overallStatus.textContent = "Some design checks FAILED - Review results";
                 overallStatus.style.color = "#c62828";
+                sumstatus.textContent = "A redesign is recommended";
             }
         }
         
