@@ -523,11 +523,7 @@
                     </table>
                     
                     <h3 class="section-title" style="margin-top: 30px;"><i class="fas fa-tachometer-alt"></i> Speed Limitation</h3>
-                    
-                    <div class="formula-display">
-                        Maximum vessel speed to achieve UKCreq:
-                        Umax = ((((((-(((UKCstatic-UKCreq)²*L²/(B²*Tm²*CB²*2.4²))-(((UKCstatic-UKCreq)²*L²/(B²*Tm²*CB²*2.4²))²-4*(((UKCstatic-UKCreq)²*L²/(B²*Tm²*CB²*2.4²))*-1))^0.5)/2)^0.25)*(9.8066*h)^0.5)/0.5144)+UC)*0.5144
-                    </div>
+                   
                     
                     <div class="result-card" style="grid-column: span 2; margin-top: 20px;">
                         <div class="result-card-title">Maximum vessel speed to achieve UKCreq</div>
@@ -677,14 +673,6 @@
                         </tr>
                     </table>
                     
-                    <div class="formula-display" style="margin-top: 20px;">
-                        Maximum squat formula: zmax = CB * S^0.81 * V^2.08 / 20
-                        
-                        Where:
-                        - CB = Block coefficient
-                        - S = Blockage factor = (B * max(Tf, Ta)) / (W * H) for channel
-                        - V = Relative velocity = U - UC (in knots)
-                    </div>
                     
                     <h3 class="section-title" style="margin-top: 30px;"><i class="fas fa-tachometer-alt"></i> Speed Limitation</h3>
                     
@@ -723,95 +711,159 @@
             });
         });
         
-        // DNV Calculation Function
-        function calculateDNV() {
-            // Get input values
-            const L = parseFloat(document.getElementById('dnv-length').value) || 0;
-            const B = parseFloat(document.getElementById('dnv-breadth').value) || 0;
-            const Tm = parseFloat(document.getElementById('dnv-mean-draft').value) || 0;
-            const Tf = parseFloat(document.getElementById('dnv-forward-draft').value) || 0;
-            const Ta = parseFloat(document.getElementById('dnv-aft-draft').value) || 0;
-            const D = parseFloat(document.getElementById('dnv-displacement').value) || 0;
-            const U = parseFloat(document.getElementById('dnv-speed').value) || 0;
-            const rho = parseFloat(document.getElementById('dnv-water-density').value) || 1.025;
-            const UC = parseFloat(document.getElementById('dnv-current-speed').value) || 0;
-            const h = parseFloat(document.getElementById('dnv-water-depth').value) || 0;
-            const UKCreq = parseFloat(document.getElementById('dnv-ukc-req').value) || 0;
+        // DNV Calculation Function - USING ITERATIVE METHOD
+function calculateDNV() {
+    // Get input values
+    const L = parseFloat(document.getElementById('dnv-length').value) || 0;
+    const B = parseFloat(document.getElementById('dnv-breadth').value) || 0;
+    const Tm = parseFloat(document.getElementById('dnv-mean-draft').value) || 0;
+    const Tf = parseFloat(document.getElementById('dnv-forward-draft').value) || 0;
+    const Ta = parseFloat(document.getElementById('dnv-aft-draft').value) || 0;
+    const D = parseFloat(document.getElementById('dnv-displacement').value) || 0;
+    const U = parseFloat(document.getElementById('dnv-speed').value) || 0;
+    const rho = parseFloat(document.getElementById('dnv-water-density').value) || 1.025;
+    const UC = parseFloat(document.getElementById('dnv-current-speed').value) || 0;
+    const h = parseFloat(document.getElementById('dnv-water-depth').value) || 0;
+    const UKCreq = parseFloat(document.getElementById('dnv-ukc-req').value) || 0;
+    
+    // Calculate block coefficient (CB)
+    const CB = D / (L * B * Tm * rho);
+    document.getElementById('dnv-cb').textContent = CB.toFixed(4);
+    
+    // Calculate relative velocity (V = U - UC)
+    const V = U - UC;
+    document.getElementById('dnv-relative-velocity').textContent = V.toFixed(2);
+    
+    // Calculate depth Froude number (Fh = V * 0.5144 / sqrt(9.8066 * h))
+    const V_ms = V * 0.5144; // Convert knots to m/s
+    const g = 9.8066;
+    const Fh = V_ms / Math.sqrt(g * h);
+    document.getElementById('dnv-froude').textContent = Fh.toFixed(3);
+    
+    // Calculate maximum squat (zmax = Tm * 2.4 * CB * Fh^2 / ((L/B) * sqrt(1-Fh^2)))
+    const L_B_ratio = L / B;
+    const sqrtTerm = Math.sqrt(Math.max(0.001, 1 - Math.pow(Fh, 2))); // Avoid negative square root
+    const zmax = Tm * 2.4 * CB * Math.pow(Fh, 2) / (L_B_ratio * sqrtTerm);
+    document.getElementById('dnv-squat').textContent = zmax.toFixed(2);
+    
+    // Calculate static UKC (h - max(Tf, Ta))
+    const maxDraft = Math.max(Tf, Ta);
+    const UKCstatic = h - maxDraft;
+    document.getElementById('dnv-static-ukc').textContent = UKCstatic.toFixed(2);
+    
+    // Calculate actual UKC (UKCstatic - zmax)
+    const UKCactual = UKCstatic - zmax;
+    document.getElementById('dnv-actual-ukc').textContent = UKCactual.toFixed(2);
+    
+    // Set required UKC
+    document.getElementById('dnv-required-ukc').textContent = UKCreq.toFixed(2);
+    
+    // Update status indicators
+    const staticStatus = document.getElementById('dnv-static-status');
+    const actualStatus = document.getElementById('dnv-actual-status');
+    
+    if (UKCstatic >= UKCreq) {
+        staticStatus.textContent = "OK";
+        staticStatus.className = "status status-ok";
+    } else {
+        staticStatus.textContent = "Not safe";
+        staticStatus.className = "status status-danger";
+    }
+    
+    if (UKCactual >= UKCreq) {
+        actualStatus.textContent = "OK";
+        actualStatus.className = "status status-ok";
+    } else {
+        actualStatus.textContent = "Not safe";
+        actualStatus.className = "status status-danger";
+    }
+    
+    // Calculate maximum speed to achieve required UKC using iterative method
+    const UKCdiff = UKCstatic - UKCreq;
+    
+    if (UKCdiff > 0) {
+        // We need to solve for V such that squat = UKCdiff
+        // squat = Tm * 2.4 * CB * Fh^2 / ((L/B) * sqrt(1-Fh^2))
+        // where Fh = (V*0.5144)/sqrt(g*h)
+        
+        const targetSquat = UKCdiff;
+        
+        // Use binary search to find V (relative speed through water)
+        let low = 0;
+        let high = 30; // Reasonable max speed in knots
+        let Vmax_est = 0;
+        let iterations = 0;
+        const maxIterations = 50;
+        const tolerance = 0.001;
+        
+        // Handle cases where Fh might approach 1 (critical speed)
+        let foundSolution = false;
+        
+        while (iterations < maxIterations && (high - low) > tolerance) {
+            Vmax_est = (low + high) / 2;
             
-            // Calculate block coefficient (CB)
-            const CB = D / (L * B * Tm * rho);
-            document.getElementById('dnv-cb').textContent = CB.toFixed(4);
+            // Convert to m/s
+            const V_ms_est = Vmax_est * 0.5144;
             
-            // Calculate relative velocity (V = U - UC)
-            const V = U - UC;
-            document.getElementById('dnv-relative-velocity').textContent = V.toFixed(2);
+            // Calculate Froude number
+            const Fh_est = V_ms_est / Math.sqrt(g * h);
             
-            // Calculate depth Froude number (Fh = V * 0.5144 / sqrt(9.8066 * h))
-            const V_ms = V * 0.5144; // Convert knots to m/s
-            const Fh = V_ms / Math.sqrt(9.8066 * h);
-            document.getElementById('dnv-froude').textContent = Fh.toFixed(3);
+            // Avoid Fh >= 1 (critical/supercritical flow)
+            if (Fh_est >= 0.99) {
+                high = Vmax_est;
+                iterations++;
+                continue;
+            }
             
-            // Calculate maximum squat (zmax = Tm * 2.4 * CB * Fh^2 / ((L/B) * sqrt(1-Fh^2)))
+            // Calculate squat with this speed
             const L_B_ratio = L / B;
-            const sqrtTerm = Math.sqrt(1 - Math.pow(Fh, 2));
-            const zmax = Tm * 2.4 * CB * Math.pow(Fh, 2) / (L_B_ratio * sqrtTerm);
-            document.getElementById('dnv-squat').textContent = zmax.toFixed(2);
+            const sqrtTerm_est = Math.sqrt(Math.max(0.001, 1 - Math.pow(Fh_est, 2)));
+            const squat_est = Tm * 2.4 * CB * Math.pow(Fh_est, 2) / (L_B_ratio * sqrtTerm_est);
             
-            // Calculate static UKC (h - max(Tf, Ta))
-            const maxDraft = Math.max(Tf, Ta);
-            const UKCstatic = h - maxDraft;
-            document.getElementById('dnv-static-ukc').textContent = UKCstatic.toFixed(2);
-            
-            // Calculate actual UKC (UKCstatic - zmax)
-            const UKCactual = UKCstatic - zmax;
-            document.getElementById('dnv-actual-ukc').textContent = UKCactual.toFixed(2);
-            
-            // Set required UKC
-            document.getElementById('dnv-required-ukc').textContent = UKCreq.toFixed(2);
-            
-            // Update status indicators
-            const staticStatus = document.getElementById('dnv-static-status');
-            const actualStatus = document.getElementById('dnv-actual-status');
-            
-            if (UKCstatic >= UKCreq) {
-                staticStatus.textContent = "OK";
-                staticStatus.className = "status status-ok";
-            } else {
-                staticStatus.textContent = "Not safe";
-                staticStatus.className = "status status-danger";
+            // Check if we found the solution
+            if (Math.abs(squat_est - targetSquat) < tolerance) {
+                foundSolution = true;
+                break;
             }
             
-            if (UKCactual >= UKCreq) {
-                actualStatus.textContent = "OK";
-                actualStatus.className = "status status-ok";
+            // Adjust search range
+            if (squat_est > targetSquat) {
+                high = Vmax_est; // Too much squat, reduce speed
             } else {
-                actualStatus.textContent = "Not safe";
-                actualStatus.className = "status status-danger";
+                low = Vmax_est; // Not enough squat, increase speed
             }
             
-            // Calculate maximum speed to achieve required UKC
-            // This is a simplified version of the complex formula from Excel
-            // For demonstration purposes
-            const term1 = Math.pow(UKCstatic - UKCreq, 2) * Math.pow(L, 2) / 
-                         (Math.pow(B, 2) * Math.pow(Tm, 2) * Math.pow(CB, 2) * Math.pow(2.4, 2));
+            iterations++;
+        }
+        
+        if (foundSolution) {
+            // Vmax_est is the relative speed through water
+            // Add current speed to get vessel speed over ground
+            // V = U - UC, so U = V + UC
+            const Umax = Vmax_est + UC;
+            document.getElementById('dnv-max-speed').textContent = Math.max(0, Umax).toFixed(2);
+        } else {
+            // Try one more approach: analytical solution for simplified case
+            // If Fh is small, we can approximate sqrt(1-Fh^2) ≈ 1
+            // Then squat ≈ Tm * 2.4 * CB * Fh^2 / (L/B)
+            // Solve for Fh: Fh^2 = (squat * (L/B)) / (Tm * 2.4 * CB)
+            // Then V = Fh * sqrt(g*h) / 0.5144
             
-            const term2 = Math.pow(term1, 2) - 4 * term1 * (-1);
-            
-            if (term2 >= 0) {
-                const term3 = (-term1 - Math.sqrt(term2)) / 2;
-                
-                if (term3 >= 0) {
-                    const term4 = Math.pow(term3, 0.25);
-                    const term5 = term4 * Math.sqrt(9.8066 * h) / 0.5144;
-                    const Umax_knots = (term5 + UC) * 0.5144;
-                    document.getElementById('dnv-max-speed').textContent = Umax_knots.toFixed(2);
-                } else {
-                    document.getElementById('dnv-max-speed').textContent = "N/A";
-                }
+            const simplifiedFh2 = (targetSquat * L_B_ratio) / (Tm * 2.4 * CB);
+            if (simplifiedFh2 > 0 && simplifiedFh2 < 0.9) {
+                const simplifiedFh = Math.sqrt(simplifiedFh2);
+                const simplifiedV_ms = simplifiedFh * Math.sqrt(g * h);
+                const simplifiedV_knots = simplifiedV_ms / 0.5144;
+                const Umax_simplified = Math.max(0, simplifiedV_knots + UC);
+                document.getElementById('dnv-max-speed').textContent = Umax_simplified.toFixed(2);
             } else {
                 document.getElementById('dnv-max-speed').textContent = "N/A";
             }
         }
+    } else {
+        document.getElementById('dnv-max-speed').textContent = "0.00";
+    }
+}
         
         // Barrass Calculation Function
         function calculateBarrass() {
