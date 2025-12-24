@@ -244,7 +244,22 @@
             margin-bottom: 10px;
             opacity: 0.7;
         }
-        
+
+.diagram-image {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.diagram-image img {
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-height: 250px; /* Optional: limits image height */
+    object-fit: contain; /* Optional: maintains aspect ratio */
+}        
+
         .check-title {
             display: flex;
             align-items: center;
@@ -339,12 +354,12 @@
                     <input type="number" id="corner-radius" value="101.6" step="0.1">
                 </div>
                 
-                <div class="diagram">
-                    <div class="diagram-placeholder">
-                        <i class="fas fa-project-diagram"></i>
-                        <div>Delta Plate Diagram</div>
-                    </div>
-                </div>
+               <div class="diagram">
+    <div class="diagram-image">
+        <img src="Deltaplate.jpg" alt="Delta Plate Diagram" style="max-width: 100%; height: auto; border-radius: 8px;">
+        <div style="margin-top: 10px; color: #666; font-size: 0.9rem;">Delta Plate Diagram</div>
+    </div>
+</div>
             </div>
             
             <div class="output-section">
