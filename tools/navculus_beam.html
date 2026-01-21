@@ -1088,7 +1088,9 @@
                 latestResults.positions.forEach((pos, i) => {
                     const x = margin + pos * scale;
                     const defl_mm = latestResults.deflections[i];
-                    const y = beamY + defl_mm * drawScale; 
+                    // Invert direction because Canvas Y increases downwards
+                    // Negative deflection (down) should result in positive Y offset (down on screen)
+                    const y = beamY - defl_mm * drawScale; 
                     
                     if (i === 0) ctx.moveTo(x, y);
                     else ctx.lineTo(x, y);
