@@ -656,6 +656,10 @@
                             <i class="fas fa-vector-square control-icon"></i>
                             <span style="font-size: 0.8rem;">2D</span>
                         </div>
+                        <div class="control-item" id="deflectionBtn" title="Show Deflection" onclick="toggleDeflectionOverlay()">
+                            <i class="fas fa-wave-square control-icon"></i>
+                            <span style="font-size: 0.8rem;">Deflection</span>
+                        </div>
                     </div>
                 </div>
                 <div class="visualization-container">
@@ -720,6 +724,7 @@
         let currentChart = null;
         let currentChartType = 'sfd';
         let latestResults = null;
+        let showDeflectionOverlay = false;
 
         const materials = {
             mild_steel: { E: 200, I: 0.0001, A: 0.01, name: "Mild Steel" },
@@ -1061,6 +1066,57 @@
                 ctx.stroke();
                 ctx.fillText(i + 'm', x, beamY + 30);
             }
+
+            // Draw Deflection Overlay
+            if (showDeflectionOverlay && latestResults) {
+                ctx.strokeStyle = '#fd7e14';
+                ctx.lineWidth = 3;
+                ctx.setLineDash([5, 5]);
+                ctx.beginPath();
+                
+                const maxDefl = latestResults.maxDeflection; // abs value in mm
+                
+                // Scale so max deflection is visible (e.g., 50px height)
+                // If deflection is tiny, we exaggerate it.
+                // We want the curve to be visible but not go off canvas.
+                // Limit max visual height to 60px.
+                let drawScale = 1;
+                if (maxDefl > 0.0001) {
+                    drawScale = 60 / maxDefl;
+                }
+
+                latestResults.positions.forEach((pos, i) => {
+                    const x = margin + pos * scale;
+                    const defl_mm = latestResults.deflections[i];
+                    const y = beamY + defl_mm * drawScale; 
+                    
+                    if (i === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                });
+                
+                ctx.stroke();
+                ctx.setLineDash([]); // Reset dash
+
+                // Legend
+                ctx.fillStyle = '#fd7e14';
+                ctx.font = 'bold 12px Arial';
+                ctx.fillText(`Deflection Scale: x${drawScale.toFixed(1)}`, margin + beamWidth - 80, beamY + 80);
+                ctx.fillText(`Max: ${maxDefl.toFixed(2)} mm`, margin + beamWidth - 80, beamY + 95);
+            }
+        }
+
+        function toggleDeflectionOverlay() {
+            showDeflectionOverlay = !showDeflectionOverlay;
+            const btn = document.getElementById('deflectionBtn');
+            if (showDeflectionOverlay) {
+                btn.classList.add('active');
+                if (!latestResults) {
+                    alert('Please run the calculation first to see deflection.');
+                }
+            } else {
+                btn.classList.remove('active');
+            }
+            drawBeam();
         }
 
         function calculate() {
@@ -1090,6 +1146,9 @@
             
             displayResults(results);
             document.getElementById('resultsArea').style.display = 'block';
+            
+            // Update beam visualization (in case overlay is active)
+            drawBeam();
         }
 
         function getMaterialProperties() {
