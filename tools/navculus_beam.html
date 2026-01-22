@@ -68,6 +68,17 @@
             font-weight: 600;
         }
         
+        .navculus-title {
+            color: var(--accent-color);
+            font-weight: 700;
+        }
+        
+        .beam-title {
+            color: white;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        
         .logo-icon {
             font-size: 2rem;
             color: var(--accent-color);
@@ -442,6 +453,14 @@
         .step-by-step.active {
             display: block !important;
         }
+        
+        .developer-tag {
+            text-align: center;
+            margin-top: 1rem;
+            color: rgba(255,255,255,0.5);
+            font-size: 0.9rem;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
@@ -450,7 +469,7 @@
             <div class="logo">
                 <i class="fas fa-anchor logo-icon"></i>
                 <div>
-                    <h1>NAVCULUS BEAM</h1>
+                    <h1><span class="navculus-title">NAVCULUS</span> <span class="beam-title">BEAM</span></h1>
                     <p style="font-size: 0.9rem; opacity: 0.8; font-weight: 400;">Advanced Beam Bending Analysis Tool</p>
                 </div>
             </div>
@@ -701,19 +720,10 @@
                 <h4>About Navculus Beam</h4>
                 <p>A professional engineering tool designed for naval architects and structural engineers to perform rapid beam analysis.</p>
             </div>
-            <div class="footer-section">
-                <h4>Quick Links</h4>
-                <a href="https://navculus.in">Navculus Home</a>
-                <a href="#">Documentation</a>
-                <a href="#">Support</a>
-            </div>
-            <div class="footer-section">
-                <h4>Contact</h4>
-                <p>support@navculus.in</p>
-            </div>
         </div>
         <div class="copyright">
             &copy; 2026 Navculus. All rights reserved.
+            <div class="developer-tag">Developed by Hrithin</div>
         </div>
     </footer>
 
