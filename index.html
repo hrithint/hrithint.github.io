@@ -205,9 +205,9 @@
             opacity: 0.95;
         }
 
-        /* Features Grid */
-        .features-section {
-            padding: 2rem 0 4rem;
+        /* Modules Grid */
+        .modules-section {
+            padding: 2rem 0 3rem;
         }
 
         .section-title {
@@ -235,13 +235,14 @@
             border-radius: 2px;
         }
 
-        .features-grid {
+        .modules-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 25px;
+            margin-bottom: 2rem;
         }
 
-        .feature-card {
+        .module-card {
             background-color: var(--white);
             border-radius: var(--border-radius);
             overflow: hidden;
@@ -251,179 +252,16 @@
             display: flex;
             flex-direction: column;
             height: 100%;
-            cursor: pointer;
         }
 
-        .feature-card:hover {
+        .module-card:hover {
             transform: translateY(-8px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
         }
 
-        .feature-header {
-            background-color: var(--light-blue);
-            padding: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .feature-icon {
-            background-color: var(--accent-blue);
-            color: white;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            flex-shrink: 0;
-        }
-
-        .feature-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: var(--primary-blue);
-        }
-
-        .feature-content {
-            padding: 1.5rem;
-            flex-grow: 1;
-        }
-
-        .feature-description {
-            color: var(--medium-gray);
-            font-size: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .feature-action {
-            display: inline-block;
-            background-color: var(--accent-blue);
-            color: white;
-            text-decoration: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 4px;
-            font-weight: 600;
-            transition: var(--transition);
-            text-align: center;
-            width: 100%;
-            border: none;
-            cursor: pointer;
-        }
-
-        .feature-action:hover {
-            background-color: var(--secondary-blue);
-        }
-
-        .feature-action i {
-            margin-left: 8px;
-            font-size: 0.9rem;
-        }
-
-        /* Dialog Modal */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s, visibility 0.3s;
-        }
-
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .modal {
-            background-color: var(--white);
-            border-radius: var(--border-radius);
-            width: 90%;
-            max-width: 900px;
-            max-height: 80vh;
-            overflow: hidden;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            transform: translateY(-30px);
-            transition: transform 0.3s ease-out;
-        }
-
-        .modal-overlay.active .modal {
-            transform: translateY(0);
-        }
-
-        .modal-header {
-            background-color: var(--primary-blue);
-            color: var(--white);
-            padding: 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .modal-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            color: var(--white);
-            font-size: 1.5rem;
-            cursor: pointer;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: background-color 0.2s;
-        }
-
-        .modal-close:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        .modal-body {
-            padding: 2rem;
-            max-height: calc(80vh - 80px);
-            overflow-y: auto;
-        }
-
-        .modules-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-        }
-
-        .module-card {
-            background-color: var(--light-gray);
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-            border-left: 4px solid var(--accent-blue);
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-
-        .module-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
-        }
-
         .module-header {
             background-color: var(--light-blue);
-            padding: 1rem;
+            padding: 1.2rem;
             display: flex;
             align-items: center;
             gap: 12px;
@@ -431,83 +269,6 @@
 
         .module-icon {
             background-color: var(--accent-blue);
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-            flex-shrink: 0;
-        }
-
-        .module-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--primary-blue);
-        }
-
-        .module-content {
-            padding: 1rem;
-            flex-grow: 1;
-        }
-
-        .module-description {
-            color: var(--medium-gray);
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-        }
-
-        .module-link {
-            display: inline-block;
-            background-color: var(--accent-blue);
-            color: white;
-            text-decoration: none;
-            padding: 0.6rem 1rem;
-            border-radius: 4px;
-            font-weight: 600;
-            transition: var(--transition);
-            text-align: center;
-            width: 100%;
-            font-size: 0.9rem;
-        }
-
-        .module-link:hover {
-            background-color: var(--secondary-blue);
-        }
-
-        .tools-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-        }
-
-        .tool-card {
-            background-color: var(--light-gray);
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-            border-left: 4px solid #2ecc71;
-            cursor: pointer;
-        }
-
-        .tool-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
-        }
-
-        .tool-header {
-            background-color: #e8f8ef;
-            padding: 1.2rem;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .tool-icon {
-            background-color: #2ecc71;
             color: white;
             width: 50px;
             height: 50px;
@@ -519,19 +280,89 @@
             flex-shrink: 0;
         }
 
-        .tool-title {
+        .module-title {
             font-size: 1.2rem;
             font-weight: 600;
-            color: #0a5a2a;
+            color: var(--primary-blue);
         }
 
-        .tool-content {
-            padding: 1.2rem;
+        .module-content {
+            padding: 1.5rem;
+            flex-grow: 1;
         }
 
-        .tool-description {
+        .module-description {
             color: var(--medium-gray);
             font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .module-link {
+            display: inline-block;
+            background-color: var(--accent-blue);
+            color: white;
+            text-decoration: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: var(--transition);
+            text-align: center;
+            width: 100%;
+        }
+
+        .module-link:hover {
+            background-color: var(--secondary-blue);
+        }
+
+        .module-link i {
+            margin-left: 8px;
+            font-size: 0.9rem;
+        }
+
+        /* Show More Button */
+        .show-more-container {
+            text-align: center;
+            margin-top: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .show-more-button {
+            background-color: var(--white);
+            color: var(--primary-blue);
+            border: 2px solid var(--accent-blue);
+            padding: 0.8rem 2rem;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1rem;
+        }
+
+        .show-more-button:hover {
+            background-color: var(--accent-blue);
+            color: var(--white);
+        }
+
+        /* Coming Soon Badge */
+        .coming-soon {
+            display: inline-block;
+            background-color: #ff9800;
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            margin-left: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .tools-info {
+            text-align: center;
+            color: var(--medium-gray);
+            font-style: italic;
+            margin-top: 1rem;
+            margin-bottom: 3rem;
+            font-size: 1rem;
         }
 
         /* Footer */
@@ -645,24 +476,12 @@
                 font-size: 1.1rem;
             }
             
-            .features-grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            }
-            
-            .modal {
-                width: 95%;
-            }
-            
             .modules-grid {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             }
         }
 
         @media (max-width: 480px) {
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-            
             .modules-grid {
                 grid-template-columns: 1fr;
             }
@@ -725,68 +544,93 @@
 
     <!-- Main Content -->
     <main class="container">
-        <section class="features-section">
+        <!-- Calculation Modules Section -->
+        <section class="modules-section">
             <div class="section-title">
-                <h2>Features</h2>
+                <h2>Calculation Modules</h2>
             </div>
             
-            <div class="features-grid" id="featuresGrid">
-                <!-- Feature 1: Calculation Modules -->
-                <div class="feature-card" id="calculationModulesCard">
-                    <div class="feature-header">
-                        <div class="feature-icon">
-                            <i class="fas fa-calculator"></i>
+            <div class="no-results" id="noResults">
+                <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                <h3>No modules found</h3>
+                <p>Try different search terms</p>
+            </div>
+            
+            <div class="modules-grid" id="modulesGrid">
+                <!-- Modules will be inserted here by JavaScript -->
+            </div>
+            
+            <div class="show-more-container" id="showMoreContainer">
+                <button class="show-more-button" id="showMoreButton">
+                    <i class="fas fa-chevron-down"></i> Show More Modules
+                </button>
+            </div>
+        </section>
+        
+        <!-- Navculus Tools Section -->
+        <section class="modules-section">
+            <div class="section-title">
+                <h2>Navculus Tools</h2>
+            </div>
+            
+            <div class="tools-info">
+                Specialized tools developed by Navculus for advanced naval architecture calculations
+            </div>
+            
+            <div class="modules-grid">
+                <!-- Navculus Beam Tool -->
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon">
+                            <i class="fas fa-ruler-combined"></i>
                         </div>
-                        <h3 class="feature-title">Calculation Modules</h3>
+                        <h3 class="module-title">
+                            Navculus Beam
+                            <span class="coming-soon">Available</span>
+                        </h3>
                     </div>
-                    <div class="feature-content">
-                        <p class="feature-description">
-                            Access all specialized naval architecture calculation tools in one place. 
-                            Browse through our comprehensive collection of calculation modules for ship design, 
-                            structural analysis, and marine engineering.
-                        </p>
-                        <button class="feature-action" id="openCalculationModules">
-                            Browse All Modules <i class="fas fa-external-link-alt"></i>
-                        </button>
+                    <div class="module-content">
+                        <p class="module-description">Advanced beam calculation tool for ship structural analysis with comprehensive load distribution and stress analysis capabilities.</p>
+                        <a href="tools/navculus_beam.html" class="module-link">
+                            Open Tool <i class="fas fa-arrow-right"></i>
+                        </a>
                     </div>
                 </div>
                 
-                <!-- Feature 2: Navculus Tools -->
-                <div class="feature-card" id="navculusToolsCard">
-                    <div class="feature-header">
-                        <div class="feature-icon">
+                <!-- Coming Soon Tools -->
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon">
                             <i class="fas fa-tools"></i>
                         </div>
-                        <h3 class="feature-title">Navculus Tools</h3>
+                        <h3 class="module-title">
+                            Navculus Hull
+                            <span class="coming-soon">Coming Soon</span>
+                        </h3>
                     </div>
-                    <div class="feature-content">
-                        <p class="feature-description">
-                            Advanced analysis tools for specialized naval architecture applications.
-                            Includes beam analysis, structural evaluation, and other professional engineering tools.
-                        </p>
-                        <button class="feature-action" id="openNavculusTools">
-                            Explore Tools <i class="fas fa-external-link-alt"></i>
-                        </button>
+                    <div class="module-content">
+                        <p class="module-description">Comprehensive hull design and analysis tool for naval architects and marine engineers.</p>
+                        <a href="#" class="module-link" style="background-color: var(--medium-gray); cursor: not-allowed;">
+                            Under Development <i class="fas fa-hourglass-half"></i>
+                        </a>
                     </div>
                 </div>
                 
-                <!-- Feature 3: Documentation -->
-                <div class="feature-card">
-                    <div class="feature-header">
-                        <div class="feature-icon">
-                            <i class="fas fa-book"></i>
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon">
+                            <i class="fas fa-anchor"></i>
                         </div>
-                        <h3 class="feature-title">Documentation</h3>
+                        <h3 class="module-title">
+                            Navculus Stability
+                            <span class="coming-soon">Coming Soon</span>
+                        </h3>
                     </div>
-                    <div class="feature-content">
-                        <p class="feature-description">
-                            Comprehensive documentation for all calculation methods, 
-                            industry standards reference, and technical guidance for 
-                            proper use of our tools.
-                        </p>
-                        <button class="feature-action">
-                            View Documentation <i class="fas fa-external-link-alt"></i>
-                        </button>
+                    <div class="module-content">
+                        <p class="module-description">Advanced stability analysis tool for ships and offshore structures with dynamic simulation.</p>
+                        <a href="#" class="module-link" style="background-color: var(--medium-gray); cursor: not-allowed;">
+                            Under Development <i class="fas fa-hourglass-half"></i>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -828,71 +672,6 @@
             </div>
         </div>
     </footer>
-
-    <!-- Calculation Modules Modal -->
-    <div class="modal-overlay" id="calculationModulesModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h3 class="modal-title">Calculation Modules</h3>
-                <button class="modal-close" id="closeCalculationModal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="modules-grid" id="modulesGrid">
-                    <!-- Modules will be inserted here by JavaScript -->
-                </div>
-                <div class="no-results" id="noResults">
-                    <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
-                    <h3>No modules found</h3>
-                    <p>Try different search terms</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Navculus Tools Modal -->
-    <div class="modal-overlay" id="navculusToolsModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h3 class="modal-title">Navculus Tools</h3>
-                <button class="modal-close" id="closeToolsModal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="tools-grid">
-                    <!-- Navculus Beam Tool -->
-                    <div class="tool-card" id="navculusBeamCard">
-                        <div class="tool-header">
-                            <div class="tool-icon">
-                                <i class="fas fa-grip-lines"></i>
-                            </div>
-                            <h3 class="tool-title">Navculus Beam</h3>
-                        </div>
-                        <div class="tool-content">
-                            <p class="tool-description">
-                                Advanced beam analysis tool for structural engineering calculations. 
-                                Perform beam deflection, stress analysis, and load distribution calculations 
-                                for various structural applications.
-                            </p>
-                        </div>
-                    </div>
-                    
-                    <!-- Future tools can be added here -->
-                    <div class="tool-card" style="opacity: 0.7;">
-                        <div class="tool-header">
-                            <div class="tool-icon">
-                                <i class="fas fa-cube"></i>
-                            </div>
-                            <h3 class="tool-title">Coming Soon</h3>
-                        </div>
-                        <div class="tool-content">
-                            <p class="tool-description">
-                                More specialized tools are under development. Stay tuned for updates!
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <script>
         // Module data with file links, descriptions, and icons
@@ -945,6 +724,7 @@
                 description: "Check hull form compliance with IACS tolerance requirements for construction and repair.",
                 icon: "fas fa-ship"
             },
+            // New modules added
             {
                 title: "Holtrop and Mennen Power Prediction",
                 file: "26052024_Cal_Holtrop and Mennen power prediction methods.html",
@@ -971,63 +751,48 @@
             }
         ];
 
-        // Modal management
-        const calculationModal = document.getElementById('calculationModulesModal');
-        const toolsModal = document.getElementById('navculusToolsModal');
-        const openCalculationBtn = document.getElementById('openCalculationModules');
-        const openToolsBtn = document.getElementById('openNavculusTools');
-        const closeCalculationBtn = document.getElementById('closeCalculationModal');
-        const closeToolsBtn = document.getElementById('closeToolsModal');
-        const calculationCard = document.getElementById('calculationModulesCard');
-        const toolsCard = document.getElementById('navculusToolsCard');
-        const navculusBeamCard = document.getElementById('navculusBeamCard');
+        // State variables
+        let showAllModules = false;
+        let filteredModules = null;
 
-        // Function to open Calculation Modules modal
-        function openCalculationModal() {
-            calculationModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        // Function to close Calculation Modules modal
-        function closeCalculationModal() {
-            calculationModal.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-
-        // Function to open Navculus Tools modal
-        function openToolsModal() {
-            toolsModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        // Function to close Navculus Tools modal
-        function closeToolsModal() {
-            toolsModal.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-
-        // Function to open Navculus Beam tool
-        function openNavculusBeam() {
-            // Assuming the navculus_beam.html is in a "tools" folder in the same directory
-            window.open('tools/navculus_beam.html', '_blank');
-        }
-
-        // Function to create module cards in the modal
-        function createModuleCards(filteredModules = null) {
+        // Function to create module cards (showing only 6 initially)
+        function createModuleCards() {
             const modulesGrid = document.getElementById('modulesGrid');
             const noResults = document.getElementById('noResults');
+            const showMoreContainer = document.getElementById('showMoreContainer');
             modulesGrid.innerHTML = '';
             
             const modulesToDisplay = filteredModules || modules;
             
             if (modulesToDisplay.length === 0) {
                 noResults.style.display = 'block';
+                showMoreContainer.style.display = 'none';
                 return;
             }
             
             noResults.style.display = 'none';
             
-            modulesToDisplay.forEach(module => {
+            // Determine how many modules to show
+            const modulesToShow = (showAllModules || filteredModules) ? 
+                modulesToDisplay : 
+                modulesToDisplay.slice(0, 6);
+            
+            // Update show more button visibility
+            if (filteredModules) {
+                // If searching, don't show "Show More" button
+                showMoreContainer.style.display = 'none';
+            } else {
+                showMoreContainer.style.display = modulesToDisplay.length > 6 ? 'block' : 'none';
+                const showMoreButton = document.getElementById('showMoreButton');
+                if (showAllModules) {
+                    showMoreButton.innerHTML = '<i class="fas fa-chevron-up"></i> Show Less';
+                } else {
+                    showMoreButton.innerHTML = '<i class="fas fa-chevron-down"></i> Show More Modules';
+                }
+            }
+            
+            // Create cards for modules to show
+            modulesToShow.forEach(module => {
                 const card = document.createElement('div');
                 card.className = 'module-card';
                 
@@ -1040,8 +805,8 @@
                     </div>
                     <div class="module-content">
                         <p class="module-description">${module.description}</p>
-                        <a href="${module.file}" class="module-link" target="_blank">
-                            Open Calculator <i class="fas fa-external-link-alt"></i>
+                        <a href="${module.file}" class="module-link">
+                            Open Calculator <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
                 `;
@@ -1050,54 +815,41 @@
             });
         }
 
-        // Function to search modules within the modal
+        // Function to search modules
         function searchModules() {
             const searchInput = document.getElementById('searchInput');
             const searchTerm = searchInput.value.toLowerCase().trim();
             
-            const filteredModules = modules.filter(module => {
+            if (searchTerm === '') {
+                filteredModules = null;
+                showAllModules = false;
+                createModuleCards();
+                return;
+            }
+            
+            filteredModules = modules.filter(module => {
                 return module.title.toLowerCase().includes(searchTerm) ||
                        module.description.toLowerCase().includes(searchTerm) ||
                        module.file.toLowerCase().includes(searchTerm);
             });
             
-            createModuleCards(filteredModules);
+            createModuleCards();
+        }
+
+        // Function to toggle show more/less
+        function toggleShowMore() {
+            showAllModules = !showAllModules;
+            createModuleCards();
         }
 
         // Initialize the page when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
-            // Create initial module cards in the modal
             createModuleCards();
-            
-            // Set up modal event listeners
-            openCalculationBtn.addEventListener('click', openCalculationModal);
-            calculationCard.addEventListener('click', openCalculationModal);
-            
-            openToolsBtn.addEventListener('click', openToolsModal);
-            toolsCard.addEventListener('click', openToolsModal);
-            
-            closeCalculationBtn.addEventListener('click', closeCalculationModal);
-            closeToolsBtn.addEventListener('click', closeToolsModal);
-            
-            // Close modal when clicking outside
-            calculationModal.addEventListener('click', function(e) {
-                if (e.target === calculationModal) {
-                    closeCalculationModal();
-                }
-            });
-            
-            toolsModal.addEventListener('click', function(e) {
-                if (e.target === toolsModal) {
-                    closeToolsModal();
-                }
-            });
-            
-            // Open Navculus Beam when clicking on its card
-            navculusBeamCard.addEventListener('click', openNavculusBeam);
             
             // Add event listeners for search
             const searchInput = document.getElementById('searchInput');
             const searchButton = document.getElementById('searchButton');
+            const showMoreButton = document.getElementById('showMoreButton');
             
             searchButton.addEventListener('click', searchModules);
             searchInput.addEventListener('keyup', function(event) {
@@ -1105,6 +857,9 @@
                     searchModules();
                 }
             });
+            
+            // Add event listener for show more button
+            showMoreButton.addEventListener('click', toggleShowMore);
             
             // Add smooth scrolling for anchor links
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
