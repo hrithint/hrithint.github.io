@@ -19,6 +19,7 @@
             --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
             --border-radius: 8px;
             --transition: all 0.3s ease;
+            --reference-green: #2e7d32;
         }
 
         * {
@@ -317,6 +318,51 @@
         .module-link i {
             margin-left: 8px;
             font-size: 0.9rem;
+        }
+
+        /* Reference Section Specific Styles */
+        .reference-section .section-title::after {
+            background-color: var(--reference-green);
+        }
+
+        .reference-card {
+            border-top-color: var(--reference-green);
+        }
+
+        .reference-card .module-header {
+            background-color: #e8f5e9;
+        }
+
+        .reference-card .module-icon {
+            background-color: var(--reference-green);
+        }
+
+        .reference-card .module-title {
+            color: var(--reference-green);
+        }
+
+        .download-button {
+            display: inline-block;
+            background-color: var(--reference-green);
+            color: white;
+            text-decoration: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: var(--transition);
+            text-align: center;
+            width: 100%;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .download-button:hover {
+            background-color: #1b5e20;
+        }
+
+        .download-button i {
+            margin-right: 8px;
         }
 
         /* Show More Button */
@@ -635,6 +681,56 @@
                 </div>
             </div>
         </section>
+
+        <!-- Reference Section (New) -->
+        <section class="modules-section reference-section">
+            <div class="section-title">
+                <h2>Reference</h2>
+            </div>
+            
+            <div class="tools-info">
+                Technical reference materials, standards, and resources for naval architecture
+            </div>
+            
+            <div class="modules-grid">
+                <!-- Fire and Safety Symbols -->
+                <div class="module-card reference-card">
+                    <div class="module-header">
+                        <div class="module-icon">
+                            <i class="fas fa-fire-extinguisher"></i>
+                        </div>
+                        <h3 class="module-title">
+                            Fire and Safety Symbols
+                        </h3>
+                    </div>
+                    <div class="module-content">
+                        <p class="module-description">Complete set of LSA (Life-Saving Appliances) and FFA (Fire-Fighting Appliances) symbols in DWG format for ship design and safety plan drawings.</p>
+                        <button class="download-button" onclick="downloadFile()">
+                            <i class="fas fa-download"></i> Download DWG
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Placeholder for future reference items -->
+                <div class="module-card reference-card">
+                    <div class="module-header">
+                        <div class="module-icon">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <h3 class="module-title">
+                            More References
+                            <span class="coming-soon">Coming Soon</span>
+                        </h3>
+                    </div>
+                    <div class="module-content">
+                        <p class="module-description">Additional reference materials including classification society rules, standards, and technical guides.</p>
+                        <button class="download-button" style="background-color: var(--medium-gray); cursor: not-allowed;" disabled>
+                            <i class="fas fa-hourglass-half"></i> Under Development
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
     <!-- Footer -->
@@ -840,6 +936,17 @@
         function toggleShowMore() {
             showAllModules = !showAllModules;
             createModuleCards();
+        }
+
+        // Function to download the DWG file
+        function downloadFile() {
+            // This creates a link to the file in the reference folder
+            const link = document.createElement('a');
+            link.href = 'reference/LSA_FFA_SYMBOLS.dwg';
+            link.download = 'LSA_FFA_SYMBOLS.dwg';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
 
         // Initialize the page when DOM is loaded
