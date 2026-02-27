@@ -19,7 +19,7 @@
             --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
             --border-radius: 8px;
             --transition: all 0.3s ease;
-            --reference-green: #2e7d32;
+            --resource-green: #2e7d32;
         }
 
         * {
@@ -320,30 +320,30 @@
             font-size: 0.9rem;
         }
 
-        /* Reference Section Specific Styles */
-        .reference-section .section-title::after {
-            background-color: var(--reference-green);
+        /* Resource Section Specific Styles */
+        .resource-section .section-title::after {
+            background-color: var(--resource-green);
         }
 
-        .reference-card {
-            border-top-color: var(--reference-green);
+        .resource-card {
+            border-top-color: var(--resource-green);
         }
 
-        .reference-card .module-header {
+        .resource-card .module-header {
             background-color: #e8f5e9;
         }
 
-        .reference-card .module-icon {
-            background-color: var(--reference-green);
+        .resource-card .module-icon {
+            background-color: var(--resource-green);
         }
 
-        .reference-card .module-title {
-            color: var(--reference-green);
+        .resource-card .module-title {
+            color: var(--resource-green);
         }
 
         .download-button {
             display: inline-block;
-            background-color: var(--reference-green);
+            background-color: var(--resource-green);
             color: white;
             text-decoration: none;
             padding: 0.7rem 1.5rem;
@@ -682,10 +682,10 @@
             </div>
         </section>
 
-        <!-- Reference Section (New) -->
-        <section class="modules-section reference-section">
+        <!-- Resource Section (New) -->
+        <section class="modules-section resource-section">
             <div class="section-title">
-                <h2>Reference</h2>
+                <h2>Resource</h2>
             </div>
             
             <div class="tools-info">
@@ -694,7 +694,7 @@
             
             <div class="modules-grid">
                 <!-- Fire and Safety Symbols -->
-                <div class="module-card reference-card">
+                <div class="module-card resource-card">
                     <div class="module-header">
                         <div class="module-icon">
                             <i class="fas fa-fire-extinguisher"></i>
@@ -711,19 +711,19 @@
                     </div>
                 </div>
                 
-                <!-- Placeholder for future reference items -->
-                <div class="module-card reference-card">
+                <!-- Placeholder for future resource items -->
+                <div class="module-card resource-card">
                     <div class="module-header">
                         <div class="module-icon">
                             <i class="fas fa-file-pdf"></i>
                         </div>
                         <h3 class="module-title">
-                            More References
+                            More Resources
                             <span class="coming-soon">Coming Soon</span>
                         </h3>
                     </div>
                     <div class="module-content">
-                        <p class="module-description">Additional reference materials including classification society rules, standards, and technical guides.</p>
+                        <p class="module-description">Additional resource materials including classification society rules, standards, and technical guides.</p>
                         <button class="download-button" style="background-color: var(--medium-gray); cursor: not-allowed;" disabled>
                             <i class="fas fa-hourglass-half"></i> Under Development
                         </button>
@@ -754,7 +754,7 @@
                     <h4>Resources</h4>
                     <ul>
                         <li><a href="#"><i class="fas fa-chevron-right"></i> Industry Standards</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right"></i> Reference Materials</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right"></i> Resource Materials</a></li>
                         <li><a href="#"><i class="fas fa-chevron-right"></i> Technical Support</a></li>
                         <li><a href="#"><i class="fas fa-chevron-right"></i> FAQ</a></li>
                     </ul>
@@ -940,9 +940,9 @@
 
         // Function to download the DWG file
         function downloadFile() {
-            // This creates a link to the file in the reference folder
+            // This creates a link to the file in the resource folder
             const link = document.createElement('a');
-            link.href = 'reference/LSA_FFA_SYMBOLS.dwg';
+            link.href = 'resource/LSA_FFA_SYMBOLS.dwg';
             link.download = 'LSA_FFA_SYMBOLS.dwg';
             document.body.appendChild(link);
             link.click();
