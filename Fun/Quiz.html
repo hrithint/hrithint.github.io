@@ -638,7 +638,7 @@
                         </button>
                         <button class="btn-outline" id="exitBtn">
                             <i data-lucide="log-out" style="width: 20px; height: 20px;"></i>
-                            Exit to Home
+                            Home
                         </button>
                     </div>
                 </div>
@@ -1133,6 +1133,96 @@
                     text: "The fatigue load needs to be estimated corresponding to 10^8 wave encounters through the operating life of a ship. For shipbuilding steel, the S-N curve characteristics shall be available till:",
                     options: ["Number of cycles: 10^12", "Number of cycles: 10^8", "Number of cycles: 10^16", "Number of cycles: 10^4"],
                     correct: 1
+                },
+                {
+                    text: "Which of the following best defines displacement of a ship?",
+                    options: ["Weight of the ship", "Volume of the ship", "Weight of water displaced by the hull", "Buoyancy force acting on the ship"],
+                    correct: 2
+                },
+                {
+                    text: "Displacement is measured in:",
+                    options: ["Cubic meters", "Kilograms", "Tonnes", "Knots"],
+                    correct: 2
+                },
+                {
+                    text: "TPC is defined as:",
+                    options: ["Change in displacement per 1 meter change in draft", "Change in displacement per 1 cm change in draft", "Total weight of cargo", "Weight of ballast"],
+                    correct: 1
+                },
+                {
+                    text: "TPC increases when:",
+                    options: ["Ship's draft decreases", "Waterplane area increases", "Ship is light", "Ship is trimmed"],
+                    correct: 1
+                },
+                {
+                    text: "The block coefficient (Cb) is given by:",
+                    options: ["Volume of displacement / (L x B x D)", "Length x Breadth x Depth", "Area of waterplane / L x B", "Weight / Volume"],
+                    correct: 0
+                },
+                {
+                    text: "Which coefficient gives an idea of the fineness of the underwater hull?",
+                    options: ["Prismatic Coefficient", "Waterplane Coefficient", "Midship Coefficient", "Block Coefficient"],
+                    correct: 3
+                },
+                {
+                    text: "Simpson's Rule is used to calculate:",
+                    options: ["Displacement", "Weight", "Centre of Gravity", "Area or volume"],
+                    correct: 3
+                },
+                {
+                    text: "In Simpson's First Rule, the multipliers are:",
+                    options: ["1, 2, 2, ..., 1", "1, 4, 2, 4, ..., 1", "1, 3, 3, ..., 1", "1, 5, 5, ..., 1"],
+                    correct: 1
+                },
+                {
+                    text: "Centre of Gravity of a ship is defined as:",
+                    options: ["Point where all buoyant forces act", "Point through which weight of the ship acts vertically downward", "Point of intersection of keel and midship", "Point through which displacement acts"],
+                    correct: 1
+                },
+                {
+                    text: "When cargo is shifted upward, the centre of gravity will:",
+                    options: ["Remain same", "Move upward", "Move downward", "Shift forward"],
+                    correct: 1
+                },
+                {
+                    text: "Metacentric height (GM) is an indicator of:",
+                    options: ["Trim", "Longitudinal balance", "Initial stability", "Freeboard"],
+                    correct: 2
+                },
+                {
+                    text: "A ship with a negative GM is:",
+                    options: ["Stable", "Unstable", "Neutrally stable", "At equilibrium"],
+                    correct: 1
+                },
+                {
+                    text: "Trim is the difference between:",
+                    options: ["Draft forward and draft aft", "Port and starboard draft", "Freeboard and draft", "Beam and draft"],
+                    correct: 0
+                },
+                {
+                    text: "When a ship has greater draft forward than aft, it is said to be:",
+                    options: ["On even keel", "Trimmed by the stern", "Trimmed by the head", "Untrimmed"],
+                    correct: 2
+                },
+                {
+                    text: "The total resistance of a ship is composed of:",
+                    options: ["Only wave-making resistance", "Only frictional resistance", "Frictional, wave-making and eddy resistance", "Wind resistance only"],
+                    correct: 2
+                },
+                {
+                    text: "Which resistance increases rapidly with speed?",
+                    options: ["Frictional resistance", "Wave-making resistance", "Form drag", "Air resistance"],
+                    correct: 1
+                },
+                {
+                    text: "Which of the following affects propeller efficiency the most?",
+                    options: ["Number of blades", "Diameter of the shaft", "Hull paint", "Anchor weight"],
+                    correct: 0
+                },
+                {
+                    text: "The main function of the rudder is to:",
+                    options: ["Increase speed", "Reduce vibration", "Steer the ship", "Lower fuel consumption"],
+                    correct: 2
                 }
             ];
 
@@ -1147,11 +1237,44 @@
             let answerLocked = false;
             let topScorers = [];
 
-            // Load previous scorers
+            // Load leaderboard from external JSON file first
+            async function loadExternalLeaderboard() {
+                try {
+                    const response = await fetch('leaderboard.json');
+                    if (response.ok) {
+                        const data = await response.json();
+                        // Merge with existing topScorers (prioritizing high scores)
+                        data.forEach(item => {
+                            const exists = topScorers.findIndex(s => s.name === item.name && s.company === item.company);
+                            if (exists === -1) {
+                                topScorers.push(item);
+                            } else if (item.score > topScorers[exists].score) {
+                                topScorers[exists] = item;
+                            }
+                        });
+                    }
+                } catch (e) {
+                    console.log('No external leaderboard found or fetch failed');
+                }
+                updateLeaderboardUI();
+            }
+
+            // Load local scorers from localStorage
             try {
                 const stored = localStorage.getItem('navculus_topScorers_v2');
-                topScorers = stored ? JSON.parse(stored) : [];
-            } catch (e) { topScorers = []; }
+                const localScorers = stored ? JSON.parse(stored) : [];
+                localScorers.forEach(item => {
+                    const exists = topScorers.findIndex(s => s.name === item.name && s.company === item.company);
+                    if (exists === -1) {
+                        topScorers.push(item);
+                    } else if (item.score > topScorers[exists].score) {
+                        topScorers[exists] = item;
+                    }
+                });
+            } catch (e) { }
+
+            // Initial load
+            loadExternalLeaderboard();
 
             // ---------- DOM elements ----------
             const regPanel = document.getElementById('regPanel');
@@ -1444,6 +1567,7 @@
                 quizPanel.style.display = 'block';
                 renderQuestion();
             });
+
             exitBtn.addEventListener('click', resetToRegistration);
             nextBtn.addEventListener('click', e => { e.preventDefault(); handleNext(); });
 
