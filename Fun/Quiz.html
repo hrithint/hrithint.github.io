@@ -657,10 +657,30 @@
         </div>
     </div>
 
-    <script>
-        (function() {
-            // Initialize Lucide icons
-            lucide.createIcons();
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-analytics.js";
+        import { getDatabase, ref, onValue, set, get, child } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-database.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBuNoOBF2k1wWnawI7ZyMWpcC-b4rJjAqA",
+            authDomain: "navculus-quiz.firebaseapp.com",
+            projectId: "navculus-quiz",
+            storageBucket: "navculus-quiz.firebasestorage.app",
+            messagingSenderId: "366165527210",
+            appId: "1:366165527210:web:b2a17619e8219c91acded3",
+            measurementId: "G-WPERF6KQV2"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const database = getDatabase(app);
+        const leaderboardRef = ref(database, 'leaderboard');
+
+        // Initialize Lucide icons
+        lucide.createIcons();
 
             // ---------- quiz data ----------
             const questions = [
@@ -1237,26 +1257,22 @@
             let answerLocked = false;
             let topScorers = [];
 
-            // Real-time synchronization using localStorage
-            function syncLeaderboard() {
-                try {
-                    const stored = localStorage.getItem('navculus_topScorers_v3');
-                    topScorers = stored ? JSON.parse(stored) : [];
-                    updateLeaderboardUI();
-                } catch (e) {
-                    console.error('Failed to sync leaderboard');
-                }
+            // Real-time synchronization using Firebase
+            function loadLeaderboard() {
+                onValue(leaderboardRef, (snapshot) => {
+                    const data = snapshot.val();
+                    if (data) {
+                        // Convert object to array and update UI
+                        topScorers = Object.values(data);
+                        updateLeaderboardUI();
+                    }
+                }, (error) => {
+                    console.error('Firebase read failed:', error);
+                });
             }
 
-            // Listen for updates from other tabs (local real-time sync)
-            window.addEventListener('storage', (e) => {
-                if (e.key === 'navculus_topScorers_v3') {
-                    syncLeaderboard();
-                }
-            });
-
             // Initial load
-            syncLeaderboard();
+            loadLeaderboard();
 
             // ---------- DOM elements ----------
             const regPanel = document.getElementById('regPanel');
@@ -1351,7 +1367,7 @@
                 lucide.createIcons();
             }
 
-            function saveScore(isComplete) {
+            async function saveScore(isComplete) {
                 if (!currentUser.name) return;
 
                 const totalQ = currentQuestions.length;
@@ -1366,24 +1382,22 @@
                     timestamp: Date.now()
                 };
 
-                // Find if user already exists
-                const existingIndex = topScorers.findIndex(s => s.name === userData.name && s.company === userData.company);
-                
-                if (existingIndex !== -1) {
-                    // Update only if new score is higher or same score but better completion
-                    if (userData.score > topScorers[existingIndex].score || 
-                       (userData.score === topScorers[existingIndex].score && userData.completion > topScorers[existingIndex].completion)) {
-                        topScorers[existingIndex] = userData;
-                    }
-                } else {
-                    topScorers.push(userData);
-                }
+                // Use a unique key for each user-vessel combo
+                const playerKey = btoa(`${currentUser.name}-${currentUser.company}`).replace(/[/+=]/g, '');
+                const playerRef = child(leaderboardRef, playerKey);
 
-                // Global persistence (browser level)
-                localStorage.setItem('navculus_topScorers_v3', JSON.stringify(topScorers));
-                
-                // Real-time UI update
-                updateLeaderboardUI();
+                try {
+                    const snapshot = await get(playerRef);
+                    const existing = snapshot.val();
+                    
+                    // Update only if new score is better
+                    if (!existing || userData.score > existing.score || 
+                       (userData.score === existing.score && userData.completion > existing.completion)) {
+                        await set(playerRef, userData);
+                    }
+                } catch (error) {
+                    console.error('Firebase write failed:', error);
+                }
             }
 
             function showSummary(isComplete = false) {
