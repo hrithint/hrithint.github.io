@@ -20,6 +20,8 @@
             --border-radius: 8px;
             --transition: all 0.3s ease;
             --resource-green: #2e7d32;
+            --fun-purple: #7b2e8a;
+            --fun-accent: #9b4dca;
         }
 
         * {
@@ -365,6 +367,51 @@
             margin-right: 8px;
         }
 
+        /* Fun Section Specific Styles */
+        .fun-section .section-title::after {
+            background-color: var(--fun-purple);
+        }
+
+        .fun-card {
+            border-top-color: var(--fun-purple);
+        }
+
+        .fun-card .module-header {
+            background-color: #f3e5f5;
+        }
+
+        .fun-card .module-icon {
+            background-color: var(--fun-purple);
+        }
+
+        .fun-card .module-title {
+            color: var(--fun-purple);
+        }
+
+        .quiz-button {
+            display: inline-block;
+            background-color: var(--fun-purple);
+            color: white;
+            text-decoration: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: var(--transition);
+            text-align: center;
+            width: 100%;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .quiz-button:hover {
+            background-color: #5e2a6f;
+        }
+
+        .quiz-button i {
+            margin-right: 8px;
+        }
+
         /* Show More Button */
         .show-more-container {
             text-align: center;
@@ -682,7 +729,7 @@
             </div>
         </section>
 
-        <!-- Resource Section (New) -->
+        <!-- Resource Section -->
         <section class="modules-section resource-section">
             <div class="section-title">
                 <h2>Resource</h2>
@@ -725,6 +772,56 @@
                     <div class="module-content">
                         <p class="module-description">Additional resource materials including classification society rules, standards, and technical guides.</p>
                         <button class="download-button" style="background-color: var(--medium-gray); cursor: not-allowed;" disabled>
+                            <i class="fas fa-hourglass-half"></i> Under Development
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Navculus Fun Section -->
+        <section class="modules-section fun-section">
+            <div class="section-title">
+                <h2>Navculus Fun</h2>
+            </div>
+            
+            <div class="tools-info">
+                Test your naval architecture knowledge with fun quizzes and interactive challenges
+            </div>
+            
+            <div class="modules-grid">
+                <!-- Quiz Card -->
+                <div class="module-card fun-card">
+                    <div class="module-header">
+                        <div class="module-icon">
+                            <i class="fas fa-question-circle"></i>
+                        </div>
+                        <h3 class="module-title">
+                            Naval Architecture Quiz
+                        </h3>
+                    </div>
+                    <div class="module-content">
+                        <p class="module-description">Test your knowledge of naval architecture with this interactive quiz covering ship design, stability, structures, and marine engineering principles.</p>
+                        <a href="Fun/Quiz.html" class="quiz-button">
+                            <i class="fas fa-play"></i> Start Quiz
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Placeholder for future fun items -->
+                <div class="module-card fun-card">
+                    <div class="module-header">
+                        <div class="module-icon">
+                            <i class="fas fa-puzzle-piece"></i>
+                        </div>
+                        <h3 class="module-title">
+                            More Fun Activities
+                            <span class="coming-soon">Coming Soon</span>
+                        </h3>
+                    </div>
+                    <div class="module-content">
+                        <p class="module-description">Additional interactive games, puzzles, and learning activities related to naval architecture and marine engineering.</p>
+                        <button class="quiz-button" style="background-color: var(--medium-gray); cursor: not-allowed;" disabled>
                             <i class="fas fa-hourglass-half"></i> Under Development
                         </button>
                     </div>
