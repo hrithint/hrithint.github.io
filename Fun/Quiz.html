@@ -1237,44 +1237,21 @@
             let answerLocked = false;
             let topScorers = [];
 
-            // Load leaderboard from external JSON file first
-            async function loadExternalLeaderboard() {
+            // Load leaderboard from external JSON file
+            async function loadLeaderboard() {
                 try {
                     const response = await fetch('leaderboard.json');
                     if (response.ok) {
-                        const data = await response.json();
-                        // Merge with existing topScorers (prioritizing high scores)
-                        data.forEach(item => {
-                            const exists = topScorers.findIndex(s => s.name === item.name && s.company === item.company);
-                            if (exists === -1) {
-                                topScorers.push(item);
-                            } else if (item.score > topScorers[exists].score) {
-                                topScorers[exists] = item;
-                            }
-                        });
+                        topScorers = await response.json();
+                        updateLeaderboardUI();
                     }
                 } catch (e) {
-                    console.log('No external leaderboard found or fetch failed');
+                    console.log('Failed to load leaderboard.json');
                 }
-                updateLeaderboardUI();
             }
 
-            // Load local scorers from localStorage
-            try {
-                const stored = localStorage.getItem('navculus_topScorers_v2');
-                const localScorers = stored ? JSON.parse(stored) : [];
-                localScorers.forEach(item => {
-                    const exists = topScorers.findIndex(s => s.name === item.name && s.company === item.company);
-                    if (exists === -1) {
-                        topScorers.push(item);
-                    } else if (item.score > topScorers[exists].score) {
-                        topScorers[exists] = item;
-                    }
-                });
-            } catch (e) { }
-
             // Initial load
-            loadExternalLeaderboard();
+            loadLeaderboard();
 
             // ---------- DOM elements ----------
             const regPanel = document.getElementById('regPanel');
@@ -1386,7 +1363,6 @@
 
                 const existingIndex = topScorers.findIndex(s => s.name === currentUser.name && s.company === currentUser.company);
                 if (existingIndex !== -1) {
-                    // Update only if new score is higher or same score but better completion
                     if (userData.score > topScorers[existingIndex].score || 
                        (userData.score === topScorers[existingIndex].score && userData.completion > topScorers[existingIndex].completion)) {
                         topScorers[existingIndex] = userData;
@@ -1395,7 +1371,8 @@
                     topScorers.push(userData);
                 }
 
-                localStorage.setItem('navculus_topScorers_v2', JSON.stringify(topScorers));
+                // Note: To automatically update the leaderboard.json file on a live server,
+                // a backend API (e.g., Node.js/Express) is required to handle file writes.
                 updateLeaderboardUI();
             }
 
