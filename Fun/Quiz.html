@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navculus Quiz · Professional Interface</title>
+    <!-- Google Fonts: Inter & Montserrat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary: #0f172a;
+            --primary-light: #1e293b;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --success: #10b981;
+            --error: #f43f5e;
+            --warning: #f59e0b;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --radius-lg: 1.5rem;
+            --radius-md: 1rem;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(20, 184, 166, 0.1) 0px, transparent 50%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .main-container {
+            display: flex;
+            gap: 2rem;
+            width: 100%;
+            max-width: 1100px;
+            align-items: flex-start;
+        }
+
+        .quiz-wrapper {
+            flex: 1;
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            position: relative;
+        }
+
+        /* Leaderboard Window */
+        .leaderboard-window {
+            width: 320px;
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .leaderboard-header {
+            background: var(--primary);
+            color: white;
+            padding: 1.25rem;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .leaderboard-content {
+            padding: 1rem;
+        }
+
+        .leaderboard-item {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .leaderboard-item:last-child {
+            border-bottom: none;
+        }
+
+        .leaderboard-rank {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            font-size: 0.875rem;
+        }
+
+        .leaderboard-name {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1rem;
+        }
+
+        .leaderboard-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .leaderboard-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 0.8125rem;
+            font-weight: 600;
+        }
+
+        .leaderboard-score {
+            color: var(--success);
+        }
+
+        .leaderboard-perc {
+            color: var(--accent);
+        }
+
+        /* Header */
+        .quiz-header {
+            background: var(--primary);
+            padding: 1.5rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo-area {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-area span {
+            background: var(--accent);
+            color: white;
+            font-size: 0.875rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .end-quiz-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 600;
+            padding: 0.625rem 1.25rem;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .end-quiz-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        /* Content */
+        .quiz-content {
+            padding: 2.5rem;
+        }
+
+        /* Registration Panel */
+        .reg-panel {
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .reg-title {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .reg-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .input-group label {
+            font-weight: 600;
+            color: var(--text-main);
+            font-size: 0.875rem;
+        }
+
+        .input-group input {
+            padding: 0.875rem 1.25rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            transition: all 0.2s;
+            background: var(--bg);
+            color: var(--text-main);
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+            background: white;
+        }
+
+        .submit-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 1rem;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .submit-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
+
+        /* Quiz Panel */
+        .quiz-active {
+            display: none;
+            animation: slideUp 0.4s ease-out;
+        }
+
+        /* Summary Panel */
+        .summary-panel {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+            text-align: center;
+        }
+
+        .summary-header {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .summary-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg);
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--accent);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .summary-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-outline {
+            background: white;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 1rem;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .lives-panel {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .lives {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .heart {
+            color: var(--error);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .heart-lost {
+            visibility: hidden;
+            opacity: 0;
+            transform: scale(0.8);
+            color: var(--border);
+        }
+
+        .user-badge {
+            background: var(--bg);
+            color: var(--text-muted);
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .question-box {
+            background: white;
+        }
+
+        .q-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            line-height: 1.4;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .option {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 1.25rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-main);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .option:hover {
+            border-color: var(--accent);
+            background: var(--bg);
+            transform: translateX(4px);
+        }
+
+        .option.selected {
+            border-color: var(--accent);
+            background: rgba(99, 102, 241, 0.05);
+            font-weight: 600;
+            box-shadow: 0 0 0 1px var(--accent);
+        }
+
+        .option.correct {
+            border-color: var(--success);
+            background: rgba(16, 185, 129, 0.05);
+            color: var(--success);
+            box-shadow: 0 0 0 1px var(--success);
+        }
+
+        .option.wrong {
+            border-color: var(--error);
+            background: rgba(244, 63, 94, 0.05);
+            color: var(--error);
+            box-shadow: 0 0 0 1px var(--error);
+        }
+
+        .next-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 1.125rem;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: var(--radius-md);
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .next-btn:hover:not(:disabled) {
+            background: var(--primary-light);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
+
+        .next-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .feedback-message {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+            min-height: 1.25rem;
+            border-radius: var(--radius-md);
+            padding: 0.75rem;
+            display: none;
+        }
+
+        .feedback-message.show {
+            display: block;
+        }
+
+        .feedback-message.correct {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .feedback-message.wrong {
+            background: rgba(244, 63, 94, 0.1);
+            color: var(--error);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            height: 4px;
+            background: var(--border);
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--accent);
+            width: 0%;
+            transition: width 0.4s ease-out;
+        }
+
+        @media (max-width: 1000px) {
+            .main-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .leaderboard-window {
+                width: 100%;
+                max-width: 680px;
+                order: 2;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="quiz-wrapper" id="quizWrapper">
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <div class="quiz-header">
+                <div class="logo-area">
+                    Navculus <span>Quiz</span>
+                </div>
+                <button class="end-quiz-btn" id="headerActionBtn">
+                    <i data-lucide="home" style="width: 18px; height: 18px;"></i>
+                    Home
+                </button>
+            </div>
+
+            <div class="quiz-content">
+                <!-- registration panel (visible initially) -->
+                <div id="regPanel" class="reg-panel">
+                    <div class="reg-title">
+                        <i data-lucide="anchor" style="color: var(--accent); width: 32px; height: 32px;"></i>
+                        Welcome Aboard
+                    </div>
+                    <div class="reg-form">
+                        <div class="input-group">
+                            <label>Full Name</label>
+                            <input type="text" id="userName" placeholder="e.g. Aryan Mehta" autocomplete="off">
+                        </div>
+                        <div class="input-group">
+                            <label>Designation</label>
+                            <input type="text" id="userDesig" placeholder="e.g. Third Officer">
+                        </div>
+                        <div class="input-group">
+                            <label>Company / Vessel</label>
+                            <input type="text" id="userCompany" placeholder="e.g. Maersk Line">
+                        </div>
+                        <button class="submit-btn" id="registerBtn">
+                            Get Started
+                            <i data-lucide="chevron-right" style="width: 20px; height: 20px;"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- active quiz panel (hidden by default) -->
+                <div id="quizPanel" class="quiz-active">
+                    <div class="lives-panel">
+                        <div class="lives" id="livesContainer">
+                            <i data-lucide="heart" class="heart" id="heart1" style="width: 24px; height: 24px; fill: currentColor;"></i>
+                            <i data-lucide="heart" class="heart" id="heart2" style="width: 24px; height: 24px; fill: currentColor;"></i>
+                            <i data-lucide="heart" class="heart" id="heart3" style="width: 24px; height: 24px; fill: currentColor;"></i>
+                            <i data-lucide="heart" class="heart" id="heart4" style="width: 24px; height: 24px; fill: currentColor;"></i>
+                        </div>
+                        <div class="user-badge" id="userBadge">
+                            <i data-lucide="user" style="width: 14px; height: 14px;"></i>
+                            <span>Loading...</span>
+                        </div>
+                    </div>
+
+                    <div class="question-box">
+                        <div class="q-text" id="questionText">Loading...</div>
+                        <div class="options" id="optionsContainer"></div>
+                        <div class="feedback-message" id="feedbackMsg"></div>
+                        <button class="next-btn" id="nextBtn" disabled>
+                            Next Question
+                            <i data-lucide="arrow-right" style="width: 20px; height: 20px;"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Summary Panel -->
+                <div id="summaryPanel" class="summary-panel">
+                    <div class="summary-header" id="summaryTitle">Quiz Summary</div>
+                    <div id="summaryStatus" style="margin-bottom: 1.5rem; color: var(--text-muted); font-weight: 500;"></div>
+                    <div class="summary-stats">
+                        <div class="stat-card">
+                            <div class="stat-value" id="summaryScore">0/0</div>
+                            <div class="stat-label">Correct Answers</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="summaryCompletion">0%</div>
+                            <div class="stat-label">Completion</div>
+                        </div>
+                    </div>
+                    <div class="summary-actions">
+                        <button class="submit-btn" id="restartBtn">
+                            <i data-lucide="refresh-cw" style="width: 20px; height: 20px;"></i>
+                            Play Again
+                        </button>
+                        <button class="btn-outline" id="exitBtn">
+                            <i data-lucide="log-out" style="width: 20px; height: 20px;"></i>
+                            Exit to Home
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Leaderboard Window -->
+        <div class="leaderboard-window">
+            <div class="leaderboard-header">
+                <i data-lucide="trophy" style="width: 20px; height: 20px; color: var(--warning);"></i>
+                Top 3 Scorers
+            </div>
+            <div class="leaderboard-content" id="leaderboardList">
+                <!-- Items added dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // Initialize Lucide icons
+            lucide.createIcons();
+
+            // ---------- quiz data ----------
+            const questions = [
+                {
+                    text: "The stability of the vessel changes due to bilging. This change can be due to __________",
+                    options: ["change in KB", "Change in BM", "Change in KB and BM", "Change in KG"],
+                    correct: 2
+                },
+                {
+                    text: "As per tonnage regulations, NT shall not be less than _________ of GT",
+                    options: ["30%", "20%", "25%", "35%"],
+                    correct: 0
+                },
+                {
+                    text: "Simpson’s Rule is mainly related to calculation of ______",
+                    options: ["Resistance", "Ship curve", "Ship’s speed", "Metacentric Height"],
+                    correct: 1
+                },
+                {
+                    text: "Appendages resistance are not part of resistance due to_____",
+                    options: ["Shaft bearing", "Rudder", "Parallel middle body", "Bilge keel"],
+                    correct: 2
+                },
+                {
+                    text: "For a larger vessel which type of resistance is the main part of resistance?",
+                    options: ["Wave making resistance", "Frictional resistance", "Air drags resistance", "Eddy making Resistance"],
+                    correct: 1
+                },
+                {
+                    text: "Metacenter related to trimming is_____",
+                    options: ["Transverse Metacenter", "Longitudinal Metacenter", "Both Metacenters", "Not depends on Metacenter"],
+                    correct: 1
+                },
+                {
+                    text: "Vertical prismatic coefficient is given by the ratio of displacement with the product of _____",
+                    options: ["Water plane area and draft", "Water plane area and length", "Length between perpendicular, breadth and draft", "Breadth and draft"],
+                    correct: 0
+                },
+                {
+                    text: "A larger Vertical prismatic coefficient means ____ form hull body section.",
+                    options: ["U", "V", "W", "Catamaran"],
+                    correct: 1
+                },
+                {
+                    text: "“Larger Vessels have generally high Block Coefficient.”",
+                    options: ["True", "False"],
+                    correct: 0
+                },
+                {
+                    text: "“Reserve of buoyancy denotes a measure of a ship’s ability to sustain damage.”",
+                    options: ["True", "False"],
+                    correct: 0
+                },
+                {
+                    text: "That center around which a vessel trims is called the __________.",
+                    options: ["tipping center.", "center of buoyancy.", "center of gravity", "turning center"],
+                    correct: 0
+                },
+                {
+                    text: "In the event a ship with flume tanks is damaged, you could dump the flume tanks into the dump tank below to __________.",
+                    options: ["reduce the free surface effect and raise the KG", "not have any effect on free surface and raise the KG", "reduce the free surface effect and lower the KG", "not have any effect on free surface and lower the KG"],
+                    correct: 2
+                },
+                {
+                    text: "Plating on bulkheads are generally fitted _______ for better graduation of thickness.",
+                    options: ["Vertically in bulk heads", "horizontally in bulk heads", "vertically in transverse bulk head only", "Horizontally in transverse bulk head only"],
+                    correct: 1
+                },
+                {
+                    text: "Relation between CB, CP and CM is:",
+                    options: ["CP = CB * CM", "CM = CP * CB", "CM * CP * CB = 1", "CB = CP * CM"],
+                    correct: 3
+                },
+                {
+                    text: "Hull model relation is based on ______.",
+                    options: ["Reynolds no of both hull and model are equal", "Froude’s no of both hull and model are equal", "Reynolds and Froude no of both hull and model are equal", "None"],
+                    correct: 1
+                },
+                {
+                    text: "The ship's model estimates the __________.",
+                    options: ["Hull Frictional Resistance", "Hull Wave Making Resistance", "All the above", "None of the above"],
+                    correct: 1
+                },
+                {
+                    text: "Position of centre of buoyancy of vessel is at:",
+                    options: ["Centroid of the full cargo space", "Centroid of underwater hull", "Centroid of all masses", "Centroid of hull where buoyancy is maximum"],
+                    correct: 1
+                },
+                {
+                    text: "What is the front part of a ship called?",
+                    options: ["Hull", "Stern", "Bow", "Aft"],
+                    correct: 2
+                },
+                {
+                    text: "What is the primary structural member along the center line of a hull at the bottom called?",
+                    options: ["Deck", "Keel", "Waterline", "Stem"],
+                    correct: 1
+                },
+                {
+                    text: "What is the maximum breadth of the ship measured at the midship section to the insides of the side plating called?",
+                    options: ["Moulded Breadth or Beam", "Extreme Breadth or Beam", "Moulded Depth", "Moulded Draught"],
+                    correct: 0
+                },
+                {
+                    text: "What is the definition of FREEBOARD?",
+                    options: ["The vertical distance measured at the side amidships, between the Summer Load Line and the freeboard deck.", "The maximum draught to which a ship can load as per the load lines regulations.", "The total enclosed space or internal capacity of a vessel.", "The capacity of a merchant ship expressed in Ton."],
+                    correct: 0
+                },
+                {
+                    text: "What is the definition of GROSS TONNAGE?",
+                    options: ["The maximum draught at which the ship can withstand all the loads safely.", "The total enclosed space or internal capacity of a vessel.", "The capacity of a merchant ship expressed in Ton.", "The vertical distance measured from the lowest point of a hull to the waterline or the water surface."],
+                    correct: 1
+                },
+                {
+                    text: "What is the definition of TONNAGE MARK?",
+                    options: ["A mark placed on each side of a vessel amidships to indicate any draught limitations imposed as a result of exempting spaces.", "The maximum draught at which the ship can withstand all the loads safely.", "The capacity of a merchant ship expressed in Ton.", "The vertical distance measured at the side amidships, between the Summer Load Line and the freeboard deck."],
+                    correct: 0
+                },
+                {
+                    text: "What is the BILGE in naval architecture?",
+                    options: ["The section of the hull that joins the vertical sides to the horizontal bottom.", "The radius of the circular arc forming the bilge.", "The height above the baseline, measured at the shipside.", "The curvature of decks in the transverse direction."],
+                    correct: 0
+                },
+                {
+                    text: "What is the RISE OF FLOOR in naval architecture?",
+                    options: ["The curvature of decks in the transverse direction.", "The height above the baseline, measured at the shipside.", "The inclination of the stem to the vertical.", "The gradual reduction in section towards the stem from the parallel body."],
+                    correct: 1
+                },
+                {
+                    text: "What is the purpose of BALLAST in naval architecture?",
+                    options: ["To determine the cargo weight on board by measuring the draught.", "To encourage smooth flow of water around the hull.", "To increase draught, change trim, or improve stability.", "To estimate ship size at the earlier stages of design."],
+                    correct: 2
+                },
+                {
+                    text: "A uniform flow with a velocity of 2 m/s is flowing over a source placed at the origin. The stagnation point occurs at (-0.398, 0). Maximum width of Rankine half-body is:",
+                    options: ["2.5 m", "2.2 m", "1.8 m", "4.0 m"],
+                    correct: 0
+                },
+                {
+                    text: "What is the purpose of using expansion joints in super structure of ships?",
+                    options: ["Reduce bending stress of super structure deck", "Reduce shear lag", "Reduce thickness of super structure deck", "Above statements, a) and c)"],
+                    correct: 0
+                },
+                {
+                    text: "As per MARPOL crude oil washing system needs to be provided for following ship type:",
+                    options: ["Oil tanker", "Tug", "Dredger", "None of the above"],
+                    correct: 0
+                },
+                {
+                    text: "In longitudinal strength calculation, hull girder is treated as a ________________",
+                    options: ["Simply supported beam", "Cantilever beam", "Free-Free beam", "Slender column"],
+                    correct: 0
+                },
+                {
+                    text: "What is sloshing? For which ship type this phenomenon is critical?",
+                    options: ["Random and free motion of liquid inside tank, Oil tanker", "Random and free motion of liquified gas inside tank, Gas Carrier", "Random and free motion of bulk grain inside cargo hold, Bulk carrier", "Above statements, a) and b)"],
+                    correct: 3
+                },
+                {
+                    text: "A vessel’s “minimum bow height” requirement is greater than the “freeboard”. The vessel’s operating requirements does not permit to have sheer. What alternative design option is available for complying with load line regulation.",
+                    options: ["Provide a forecastle", "Increase the vessel’s depth", "Above statements, a) and b)", "Proved bilge keel"],
+                    correct: 2
+                },
+                {
+                    text: "What is IACS?",
+                    options: ["Classification Society", "Association of Seafarers", "Flag state", "None of the above"],
+                    correct: 0
+                },
+                {
+                    text: "For a merchant ship in trim by aft condition, where is the position of Longitudinal Center of Gravity (LCG) with respect to Longitudinal Center of Buoyancy (LCB)?",
+                    options: ["LCG < LCB", "LCG > LCB", "LCG = LCB", "LCG <= LCB"],
+                    correct: 1
+                },
+                {
+                    text: "What is the relation between Length by Breadth (L/B ratio) and speed (V) in conventional ship types?",
+                    options: ["V increases with increase in L/B ratio.", "V decreases with increase in L/B ratio.", "Relation between V and L/B ratio is irrelevant.", "None of the above"],
+                    correct: 0
+                },
+                {
+                    text: "Slamming loads act on which area of the ship’s hull?",
+                    options: ["Midship area", "Bilge area", "Stem and Stern areas", "Bottom and Bow flare areas"],
+                    correct: 3
+                },
+                {
+                    text: "What is the numerical value of fluid velocity at stagnation point of planing hull?",
+                    options: ["0.5 N/mm2", "0.0 N/mm2", "1.0 N/mm2", "-1.0 N/mm2"],
+                    correct: 1
+                },
+                {
+                    text: "_______________is useful in deciding the subdivision of ships.",
+                    options: ["Resistance calculation", "Floodable length calculation", "Bonjean Calculation", "Hydrostatics calculation"],
+                    correct: 1
+                },
+                {
+                    text: "What is the change happens in the value of MCT 1cm when a vessel move from fresh water to sea water.",
+                    options: ["Increases", "Decreases", "No change happens", "Decreases by 2.5 %"],
+                    correct: 0
+                },
+                {
+                    text: "What is the value of TPC in fresh water for a rectangular barge of “Length = 80 m, Breadth = 13 m, Draught = 0.7 m and Depth = 1.2 m”.",
+                    options: ["9.04", "10.40", "12.35", "10.20"],
+                    correct: 1
+                },
+                {
+                    text: "What is the value of block coefficient of a sphere of diameter 2 meter, when the sphere is floating at a draught of 1 meter?",
+                    options: ["π/3", "π/4", "π/5", "π/6"],
+                    correct: 3
+                },
+                {
+                    text: "_______________ is the product of prismatic coefficient and midship section area coefficient.",
+                    options: ["Vertical Prismatic Coefficient", "Water plane area coefficient", "Block coefficient", "Form Coefficient"],
+                    correct: 2
+                },
+                {
+                    text: "_______________is not a high-speed craft.",
+                    options: ["Hovercraft", "Hydrofoil", "Catamaran", "Fishing vessel"],
+                    correct: 3
+                },
+                {
+                    text: "_______________is service ship.",
+                    options: ["General cargo ship", "Tug", "Fishing vessel", "Container feeder vessel"],
+                    correct: 1
+                },
+                {
+                    text: "Identify the major cause of stress concentration in ship structures?",
+                    options: ["Concentrated load on deck", "Uniform pressure acting on deck", "Hydrostatic pressure acting on side shell", "Hydrostatic pressure acting on bulkhead"],
+                    correct: 0
+                },
+                {
+                    text: "A real fluid in which the shear stress is directly proportional to rate of shear strain (or velocity gradient) is called________________.",
+                    options: ["Ideal fluid", "Real fluid", "Newtonian Fluid", "Viscous fluid"],
+                    correct: 2
+                },
+                {
+                    text: "An ideal fluid is considered as_____________, inviscid and irrotational.",
+                    options: ["Compressible", "Incompressible", "Viscous", "Volatile"],
+                    correct: 1
+                },
+                {
+                    text: "Sea surface elevation follow a _______________probability density function.",
+                    options: ["Normal", "Rayleigh", "Lognormal", "Weibull"],
+                    correct: 1
+                },
+                {
+                    text: "Position of center of buoyance of vessel is at:",
+                    options: ["Centroid of full cargo space", "Centroid of underwater hull", "Centre of gravity of all masses", "Above statements, a) and b)"],
+                    correct: 1
+                },
+                {
+                    text: "A random process for which temporal average is same as ensemble average is termed as _______________.",
+                    options: ["Stationary process", "Ergodic process", "Time dependent process", "None of the above"],
+                    correct: 1
+                },
+                {
+                    text: "The greatest breadth of the ship measure to the inside of the shell plating is known as____________________.",
+                    options: ["Moulded breadth", "Extreme breadth", "Breadth between perpendiculars", "None of the above"],
+                    correct: 0
+                },
+                {
+                    text: "What is the value of slope at the fixed end of a cantilever beam carrying a uniformly distributed load?",
+                    options: ["0 rad", "-1 rad", "1 rad", "0.5 rad"],
+                    correct: 0
+                },
+                {
+                    text: "The edge of the propeller which cuts the water first, when the ship is driven ahead is known as __________",
+                    options: ["Face", "Rake", "Trailing edge", "Leading edge"],
+                    correct: 3
+                },
+                {
+                    text: "What are the commonly used shapes of side scuttles in ships?",
+                    options: ["Rectangular and Circular", "Triangular and Oval", "Elliptical and Hexagonal", "Circular and Oval"],
+                    correct: 3
+                },
+                {
+                    text: "What is the electrode used in stud welding?",
+                    options: ["Flux coated electrode", "Tubular electrodes with flux inside", "Stud itself", "None of the above"],
+                    correct: 2
+                },
+                {
+                    text: "For what purpose, a mangling machine is used in a shipyard?",
+                    options: ["Cleaning plate", "Bending plate", "Straightening the plate", "Painting the plate"],
+                    correct: 2
+                },
+                {
+                    text: "Weld distortion can be reduced by:",
+                    options: ["Use of gas welding", "Applying shop primer", "Following proper welding sequence", "Reducing welding current"],
+                    correct: 2
+                },
+                {
+                    text: "The term DFT is related to:",
+                    options: ["Corrosion", "Paint thickness", "Gloss of painting", "Marine growth on hull surface"],
+                    correct: 1
+                },
+                {
+                    text: "What is the flight of an inclined ladder in a ship?",
+                    options: ["Distance between rungs", "Distance between the platforms", "Actual stringer length", "Distance between stringers"],
+                    correct: 1
+                },
+                {
+                    text: "Why the frictional resistance increases when the draft increases?",
+                    options: ["Deadweight of the vessel increases", "CB of the vessel increases", "Wetted surface area increases", "None of the above"],
+                    correct: 2
+                },
+                {
+                    text: "Which of the following is not a structural failure mode?",
+                    options: ["Corrosion", "Buckling", "Yielding", "Fatigue"],
+                    correct: 0
+                },
+                {
+                    text: "Where is Longitudinal Center of Flotation of a vessel?",
+                    options: ["At longitudinal center of gravity of sectional area curve", "At longitudinal center of gravity of water plane", "At Aft perpendicular", "At Midship"],
+                    correct: 1
+                },
+                {
+                    text: "Bowden’s formula is used in estimation of",
+                    options: ["Frictional resistance", "Wave resistance", "Roughness allowance", "Form factor"],
+                    correct: 2
+                },
+                {
+                    text: "In shallow waters beyond critical speed, which type of waves will be emanating from the pressure point",
+                    options: ["Only diverging waves", "Only transverse waves", "Both transverse & diverging waves", "None of the above"],
+                    correct: 0
+                },
+                {
+                    text: "The welded joint located between two plates in the same strake of hull plating is called as",
+                    options: ["Butt", "Lap", "Seam", "Bracket"],
+                    correct: 0
+                },
+                {
+                    text: "A ship of displacement 59319 t has an effective power of 6600 kW at a speed of 15.9 knots. Estimate the effective power of a similar ship of displacement 64000 t at a speed of 16.5 knots.",
+                    options: ["6500 kW", "5580 kW", "7758 kW", "6040 kW"],
+                    correct: 2
+                },
+                {
+                    text: "What is/are type(s) of blade section(s) employed in B-Series Propeller",
+                    options: ["Aerofoil", "Segmental", "Aerofoil & Segmental", "None of the above"],
+                    correct: 2
+                },
+                {
+                    text: "Wake velocity arises due to",
+                    options: ["Potential wake", "Frictional wake", "Wave wake", "All the above"],
+                    correct: 3
+                },
+                {
+                    text: "Cavitation at a particular location of the propeller indicates region of",
+                    options: ["High pressure & high velocity", "Low pressure & high velocity", "High pressure & low velocity", "Low pressure & low velocity"],
+                    correct: 1
+                },
+                {
+                    text: "If cavitation number is ________, the efficiency of propeller falls?",
+                    options: ["High", "Positive", "Low", "Negative"],
+                    correct: 2
+                },
+                {
+                    text: "For a blade section, KT = 0 represents slip ratio = _______",
+                    options: ["100 %", "50 %", "10%", "0%"],
+                    correct: 0
+                },
+                {
+                    text: "Kaplan series is adopted in _______________ type of propellers.",
+                    options: ["Surface piercing propellers", "Ducted propellers", "Contra-rotating propellers", "Super-cavitating propellers"],
+                    correct: 1
+                },
+                {
+                    text: "Choose the correct condition for an under-damped system",
+                    options: ["v2 = 𝜔2", "v2 < 𝜔2", "v2 > 𝜔2", "None of the above"],
+                    correct: 1
+                },
+                {
+                    text: "Seakeeping Performance Index – I may be classified as",
+                    options: ["Mission effectiveness", "Speed effectiveness", "Transit Time Index", "None of the above."],
+                    correct: 0
+                },
+                {
+                    text: "Over-balanced rudder represents that the centre of pressure of the rudder geometry is",
+                    options: ["Aft of rudder stock axis", "Forward of rudder stock axis", "Lies on the rudder stock axis", "None of the above"],
+                    correct: 1
+                },
+                {
+                    text: "As per IMO standards, for all ships of length 100m should not have tactical diameter more than (L: Length of the ship)",
+                    options: ["5L", "4.5L", "2.5L", "6L"],
+                    correct: 0
+                },
+                {
+                    text: "Identify the manoeuvring devices other than rudders",
+                    options: ["Bow/stern thrusters", "Twin screw propellers", "Waterjet proplusion system", "All of the above"],
+                    correct: 3
+                },
+                {
+                    text: "Which of the following pre-painting surface preparation method is considered most efficient in case of hulls of modern-day ships?",
+                    options: ["Pickling", "Wire brushing", "Blast cleaning", "None of the above"],
+                    correct: 2
+                },
+                {
+                    text: "Which of the following types of ships are assigned minimum freeboard?",
+                    options: ["Bulk carriers", "Car carriers", "Oil Tankers", "Container ships"],
+                    correct: 2
+                },
+                {
+                    text: "Position of center of buoyancy for a box shaped barge floating in even keel condition.",
+                    options: ["Half of ship draught", "Half of ship depth", "One fourth of ship depth", "None of the above"],
+                    correct: 0
+                },
+                {
+                    text: "Vertical support member used to strengthen bulkheads are called",
+                    options: ["Spurling pipe", "Stanchions", "Rungs", "Stiffeners"],
+                    correct: 3
+                },
+                {
+                    text: "Which of the following is correct for a cargo ship?",
+                    options: ["Dead weight = Displacement – Light weight", "Dead weight = Displacement + Light weight", "Displacement = LBP .B.T.CB", "Above statements, a) and c)"],
+                    correct: 3
+                },
+                {
+                    text: "The purpose of providing camber is to:",
+                    options: ["Strength main deck", "Improve the appearance of the ship", "Help drain off water from deck easily", "None of the above"],
+                    correct: 2
+                },
+                {
+                    text: "Morison’s equation may be applied when",
+                    options: ["D/L < 0.2", "D/L < 0.3", "D/L = 0.2", "D/L = 0.3"],
+                    correct: 0
+                },
+                {
+                    text: "A ship has a half circular cross section with breadth equal to diameter and draught equal to radius. Which of the following values will be its midship area coefficient?",
+                    options: ["𝜋", "𝜋/4", "2𝜋", "None of the above"],
+                    correct: 1
+                },
+                {
+                    text: "The sectional area curve of a ship is triangular with the maximum ordinate being at midship. What is the prismatic coefficient?",
+                    options: ["0.65", "0.6", "0.55", "0.5"],
+                    correct: 3
+                },
+                {
+                    text: "Identify a principal measure of a Z-manoeuvre.",
+                    options: ["Speed", "Resistance", "Rudder deflection rate", "Overshoot angle"],
+                    correct: 3
+                },
+                {
+                    text: "When flooding occurs in a damaged vessel, reserve buoyancy ______________.",
+                    options: ["Increases", "Decreases", "Remains the same", "None of the above"],
+                    correct: 1
+                },
+                {
+                    text: "The purpose of bilge keels is to _____________.",
+                    options: ["Lower the center of gravity of the ship", "Reduce the amplitude of roll", "Reduce pitching", "Reduce yawing"],
+                    correct: 1
+                },
+                {
+                    text: "If a vessel loses its reserve buoyancy, it will",
+                    options: ["Capsize and float on its side", "Remain unaffected if the hull remains intact", "Most likely sink", "Float upright with the main deck awash"],
+                    correct: 2
+                },
+                {
+                    text: "Hull-Model relation is based on:",
+                    options: ["Reynolds numbers of both Hull and Model are equal.", "Froude numbers of both Hull and Model are equal", "Reynolds and Froude numbers of both Hull and Model are equal", "None of the above"],
+                    correct: 1
+                },
+                {
+                    text: "The purpose of the vessel inclining experiment is to",
+                    options: ["Determine the location of the metacenter", "Determine the lightweight center of gravity location", "Verify the hydrostatic data", "Verify data in the vessel's operating manual"],
+                    correct: 1
+                },
+                {
+                    text: "A towing carriage is travelling at 4.0 m/s and has wheels of diameter 1000 mm. Assume no slipping of wheel occurs. What is the angular velocity of wheels?",
+                    options: ["76.4 rpm", "25.2 rpm", "358.6 rpm", "90.3 rpm"],
+                    correct: 0
+                },
+                {
+                    text: "The fatigue load needs to be estimated corresponding to 10^8 wave encounters through the operating life of a ship. For shipbuilding steel, the S-N curve characteristics shall be available till:",
+                    options: ["Number of cycles: 10^12", "Number of cycles: 10^8", "Number of cycles: 10^16", "Number of cycles: 10^4"],
+                    correct: 1
+                }
+            ];
+
+            // ---------- state ----------
+            let currentUser = { name: '', designation: '', company: '' };
+            let currentQuestions = []; // Shuffled version
+            let currentQIndex = 0;
+            let lives = 4;
+            let correctAnswersCount = 0;
+            let selectedOptionIndex = null;
+            let quizActive = false;
+            let answerLocked = false;
+            let topScorers = [];
+
+            // Load previous scorers
+            try {
+                const stored = localStorage.getItem('navculus_topScorers_v2');
+                topScorers = stored ? JSON.parse(stored) : [];
+            } catch (e) { topScorers = []; }
+
+            // ---------- DOM elements ----------
+            const regPanel = document.getElementById('regPanel');
+            const quizPanel = document.getElementById('quizPanel');
+            const summaryPanel = document.getElementById('summaryPanel');
+            const leaderboardList = document.getElementById('leaderboardList');
+            const userNameInp = document.getElementById('userName');
+            const userDesigInp = document.getElementById('userDesig');
+            const userCompanyInp = document.getElementById('userCompany');
+            const registerBtn = document.getElementById('registerBtn');
+            const headerActionBtn = document.getElementById('headerActionBtn');
+            const restartBtn = document.getElementById('restartBtn');
+            const exitBtn = document.getElementById('exitBtn');
+            const questionText = document.getElementById('questionText');
+            const optionsContainer = document.getElementById('optionsContainer');
+            const nextBtn = document.getElementById('nextBtn');
+            const feedbackMsg = document.getElementById('feedbackMsg');
+            const userBadge = document.getElementById('userBadge');
+            const progressBar = document.getElementById('progressBar');
+            const summaryTitle = document.getElementById('summaryTitle');
+            const summaryStatus = document.getElementById('summaryStatus');
+            const summaryScore = document.getElementById('summaryScore');
+            const summaryCompletion = document.getElementById('summaryCompletion');
+
+            function getHeartNodes() {
+                return Array.from(document.querySelectorAll('#livesContainer .heart'));
+            }
+
+            // ---------- helper functions ----------
+            function shuffleQuestions() {
+                currentQuestions = [...questions].sort(() => Math.random() - 0.5);
+            }
+
+            function updateHeaderButton() {
+                if (quizActive) {
+                    headerActionBtn.innerHTML = `
+                        <i data-lucide="x-circle" style="width: 18px; height: 18px;"></i>
+                        End Quiz
+                    `;
+                } else {
+                    headerActionBtn.innerHTML = `
+                        <i data-lucide="home" style="width: 18px; height: 18px;"></i>
+                        Home
+                    `;
+                }
+                lucide.createIcons();
+            }
+
+            function updateProgress() {
+                const progress = ((currentQIndex) / currentQuestions.length) * 100;
+                progressBar.style.width = `${progress}%`;
+            }
+
+            function updateLivesUI() {
+                const nodes = getHeartNodes();
+                for (let i = 0; i < nodes.length; i++) {
+                    if (i < lives) {
+                        nodes[i].classList.remove('heart-lost');
+                    } else {
+                        nodes[i].classList.add('heart-lost');
+                    }
+                }
+            }
+
+            function updateLeaderboardUI() {
+                if (topScorers.length === 0) {
+                    leaderboardList.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:2rem; font-size:0.875rem;">No scores yet. Be the first!</div>';
+                    return;
+                }
+
+                // Sort by score desc, then by completion desc
+                topScorers.sort((a, b) => {
+                    if (b.score !== a.score) return b.score - a.score;
+                    return b.completion - a.completion;
+                });
+
+                const top3 = topScorers.slice(0, 3);
+                leaderboardList.innerHTML = top3.map((s, idx) => `
+                    <div class="leaderboard-item">
+                        <div class="leaderboard-rank">
+                            <i data-lucide="award" style="width:14px; height:14px;"></i>
+                            RANK #${idx + 1}
+                        </div>
+                        <div class="leaderboard-name">${s.name}</div>
+                        <div class="leaderboard-meta">${s.designation} · ${s.company}</div>
+                        <div class="leaderboard-stats">
+                            <span class="leaderboard-score">Score: ${s.score}/${questions.length}</span>
+                            <span class="leaderboard-perc">Comp: ${s.completion}%</span>
+                        </div>
+                    </div>
+                `).join('');
+                lucide.createIcons();
+            }
+
+            function saveScore(isComplete) {
+                if (!currentUser.name) return;
+
+                const totalQ = currentQuestions.length;
+                let perc = isComplete ? 100 : Math.round((currentQIndex / totalQ) * 100);
+
+                const userData = {
+                    name: currentUser.name,
+                    designation: currentUser.designation,
+                    company: currentUser.company,
+                    score: correctAnswersCount,
+                    completion: perc,
+                    timestamp: Date.now()
+                };
+
+                const existingIndex = topScorers.findIndex(s => s.name === currentUser.name && s.company === currentUser.company);
+                if (existingIndex !== -1) {
+                    // Update only if new score is higher or same score but better completion
+                    if (userData.score > topScorers[existingIndex].score || 
+                       (userData.score === topScorers[existingIndex].score && userData.completion > topScorers[existingIndex].completion)) {
+                        topScorers[existingIndex] = userData;
+                    }
+                } else {
+                    topScorers.push(userData);
+                }
+
+                localStorage.setItem('navculus_topScorers_v2', JSON.stringify(topScorers));
+                updateLeaderboardUI();
+            }
+
+            function showSummary(isComplete = false) {
+                quizActive = false;
+                updateHeaderButton();
+                quizPanel.style.display = 'none';
+                summaryPanel.style.display = 'block';
+                
+                const totalQ = currentQuestions.length;
+                summaryScore.innerText = `${correctAnswersCount}/${totalQ}`;
+                
+                let perc = 0;
+                if (isComplete) {
+                    perc = 100;
+                    summaryTitle.innerText = "Congratulations!";
+                    summaryTitle.style.color = "var(--success)";
+                    summaryStatus.innerText = "You have successfully completed all the questions.";
+                } else if (lives <= 0) {
+                    perc = Math.round((currentQIndex / totalQ) * 100);
+                    summaryTitle.innerText = "Game Over";
+                    summaryTitle.style.color = "var(--error)";
+                    summaryStatus.innerText = "You ran out of lives. Better luck next time!";
+                } else {
+                    perc = Math.round((currentQIndex / totalQ) * 100);
+                    summaryTitle.innerText = "Quiz Ended";
+                    summaryTitle.style.color = "var(--primary)";
+                    summaryStatus.innerText = "You have ended the quiz early.";
+                }
+                summaryCompletion.innerText = `${perc}%`;
+                
+                saveScore(isComplete);
+            }
+
+            function renderQuestion() {
+                const q = currentQuestions[currentQIndex];
+                questionText.innerText = q.text;
+                optionsContainer.innerHTML = q.options.map((opt, idx) => `
+                    <div class="option" data-opt-index="${idx}">
+                        <div class="option-indicator"></div>
+                        ${opt}
+                    </div>
+                `).join('');
+
+                const optionDivs = document.querySelectorAll('.option');
+                optionDivs.forEach(div => {
+                    div.addEventListener('click', () => {
+                        if (!quizActive || answerLocked) return;
+                        optionDivs.forEach(opt => opt.classList.remove('selected'));
+                        div.classList.add('selected');
+                        selectedOptionIndex = parseInt(div.dataset.optIndex);
+                        nextBtn.disabled = false;
+                    });
+                });
+
+                nextBtn.disabled = true;
+                feedbackMsg.className = 'feedback-message';
+                updateProgress();
+            }
+
+            function handleNext() {
+                if (!quizActive || answerLocked || selectedOptionIndex === null) return;
+
+                const q = currentQuestions[currentQIndex];
+                const isCorrect = selectedOptionIndex === q.correct;
+                answerLocked = true;
+                nextBtn.disabled = true;
+
+                const optionDivs = document.querySelectorAll('.option');
+                optionDivs[selectedOptionIndex].classList.remove('selected');
+                
+                if (isCorrect) {
+                    correctAnswersCount++;
+                    optionDivs[selectedOptionIndex].classList.add('correct');
+                    feedbackMsg.innerText = 'Excellent! That is the correct answer.';
+                    feedbackMsg.classList.add('show', 'correct');
+                    setTimeout(moveToNextQuestion, 1200);
+                } else {
+                    optionDivs[selectedOptionIndex].classList.add('wrong');
+                    lives--;
+                    updateLivesUI();
+                    feedbackMsg.innerText = lives > 0 ? 'Not quite. Keep going!' : 'Quiz Over. Better luck next time!';
+                    feedbackMsg.classList.add('show', 'wrong');
+                    
+                    if (lives <= 0) {
+                        setTimeout(() => showSummary(false), 2000);
+                    } else {
+                        setTimeout(moveToNextQuestion, 1500);
+                    }
+                }
+            }
+
+            function moveToNextQuestion() {
+                if (currentQIndex === currentQuestions.length - 1) {
+                    progressBar.style.width = '100%';
+                    feedbackMsg.innerText = 'Congratulations! You have completed the quiz.';
+                    feedbackMsg.className = 'feedback-message show correct';
+                    setTimeout(() => showSummary(true), 2000);
+                    return;
+                }
+                currentQIndex++;
+                selectedOptionIndex = null;
+                answerLocked = false;
+                renderQuestion();
+            }
+
+            function resetToRegistration() {
+                quizActive = false;
+                updateHeaderButton();
+                regPanel.style.display = 'block';
+                quizPanel.style.display = 'none';
+                summaryPanel.style.display = 'none';
+                lives = 4;
+                currentQIndex = 0;
+                correctAnswersCount = 0;
+                selectedOptionIndex = null;
+                answerLocked = false;
+                progressBar.style.width = '0%';
+                updateLivesUI();
+                userNameInp.value = '';
+                userDesigInp.value = '';
+                userCompanyInp.value = '';
+            }
+
+            function startQuiz() {
+                const name = userNameInp.value.trim();
+                const desig = userDesigInp.value.trim();
+                const company = userCompanyInp.value.trim();
+
+                if (!name || !desig || !company) {
+                    alert('Please complete all fields to begin.');
+                    return;
+                }
+
+                currentUser = { name, designation: desig, company };
+                userBadge.querySelector('span').innerText = `${name} · ${company}`;
+                
+                regPanel.style.display = 'none';
+                quizPanel.style.display = 'block';
+                summaryPanel.style.display = 'none';
+                quizActive = true;
+                updateHeaderButton();
+                shuffleQuestions();
+                updateLivesUI();
+                renderQuestion();
+            }
+
+            // ---------- event listeners ----------
+            registerBtn.addEventListener('click', e => { e.preventDefault(); startQuiz(); });
+            headerActionBtn.addEventListener('click', () => {
+                if (quizActive) {
+                    showSummary(false);
+                } else {
+                    window.location.href = '../index.html';
+                }
+            });
+            restartBtn.addEventListener('click', () => {
+                summaryPanel.style.display = 'none';
+                lives = 4;
+                currentQIndex = 0;
+                correctAnswersCount = 0;
+                selectedOptionIndex = null;
+                answerLocked = false;
+                progressBar.style.width = '0%';
+                updateLivesUI();
+                quizActive = true;
+                updateHeaderButton();
+                shuffleQuestions();
+                quizPanel.style.display = 'block';
+                renderQuestion();
+            });
+            exitBtn.addEventListener('click', resetToRegistration);
+            nextBtn.addEventListener('click', e => { e.preventDefault(); handleNext(); });
+
+            [userNameInp, userDesigInp, userCompanyInp].forEach(inp => {
+                inp.addEventListener('keypress', e => {
+                    if (e.key === 'Enter') registerBtn.click();
+                });
+            });
+
+            // Initial setup
+            updateLeaderboardUI();
+        })();
+    </script>
+</body>
+</html>
