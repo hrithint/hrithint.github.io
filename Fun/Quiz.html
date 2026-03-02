@@ -1237,21 +1237,26 @@
             let answerLocked = false;
             let topScorers = [];
 
-            // Load leaderboard from external JSON file
-            async function loadLeaderboard() {
+            // Real-time synchronization using localStorage
+            function syncLeaderboard() {
                 try {
-                    const response = await fetch('leaderboard.json');
-                    if (response.ok) {
-                        topScorers = await response.json();
-                        updateLeaderboardUI();
-                    }
+                    const stored = localStorage.getItem('navculus_topScorers_v3');
+                    topScorers = stored ? JSON.parse(stored) : [];
+                    updateLeaderboardUI();
                 } catch (e) {
-                    console.log('Failed to load leaderboard.json');
+                    console.error('Failed to sync leaderboard');
                 }
             }
 
+            // Listen for updates from other tabs (local real-time sync)
+            window.addEventListener('storage', (e) => {
+                if (e.key === 'navculus_topScorers_v3') {
+                    syncLeaderboard();
+                }
+            });
+
             // Initial load
-            loadLeaderboard();
+            syncLeaderboard();
 
             // ---------- DOM elements ----------
             const regPanel = document.getElementById('regPanel');
@@ -1361,8 +1366,11 @@
                     timestamp: Date.now()
                 };
 
-                const existingIndex = topScorers.findIndex(s => s.name === currentUser.name && s.company === currentUser.company);
+                // Find if user already exists
+                const existingIndex = topScorers.findIndex(s => s.name === userData.name && s.company === userData.company);
+                
                 if (existingIndex !== -1) {
+                    // Update only if new score is higher or same score but better completion
                     if (userData.score > topScorers[existingIndex].score || 
                        (userData.score === topScorers[existingIndex].score && userData.completion > topScorers[existingIndex].completion)) {
                         topScorers[existingIndex] = userData;
@@ -1371,8 +1379,10 @@
                     topScorers.push(userData);
                 }
 
-                // Note: To automatically update the leaderboard.json file on a live server,
-                // a backend API (e.g., Node.js/Express) is required to handle file writes.
+                // Global persistence (browser level)
+                localStorage.setItem('navculus_topScorers_v3', JSON.stringify(topScorers));
+                
+                // Real-time UI update
                 updateLeaderboardUI();
             }
 
