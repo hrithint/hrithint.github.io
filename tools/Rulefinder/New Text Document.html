@@ -3,57 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Navculus Rulefinder | Local WebLLM</title>
+    <title>Navculus Rulefinder | Local WebLLM AI</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        :root { --navculus-green: #10b981; --bg-blue: #f1f4f9; }
+        :root { --navculus-green: #10b981; --bg-blue: #f1f4f9; --sidebar-width: 340px; }
         body { background: var(--bg-blue); font-family: 'Inter', sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-        .header { background: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ddd; }
+        
+        /* Layout */
+        .header { background: white; padding: 0.8rem 2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; }
         .main-container { display: flex; flex: 1; overflow: hidden; padding: 1rem; gap: 1rem; }
-        .sidebar { width: 320px; background: white; border-radius: 20px; padding: 1rem; display: flex; flex-direction: column; border: 1px solid #e2e8f0; }
+        .sidebar { width: var(--sidebar-width); background: white; border-radius: 20px; padding: 1.2rem; display: flex; flex-direction: column; border: 1px solid #e2e8f0; }
         .chat-area { flex: 1; background: white; border-radius: 20px; display: flex; flex-direction: column; border: 1px solid #e2e8f0; overflow: hidden; }
+
+        /* Progress UI */
+        .status-box { padding: 10px 15px; background: #f8fafc; border-radius: 12px; margin-bottom: 15px; border: 1px solid #e2e8f0; }
+        .progress-bar { height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; margin-top: 8px; }
+        .progress-fill { height: 100%; background: var(--navculus-green); width: 0%; transition: width 0.3s ease; }
+        
+        /* Chat UI */
         #chatWindow { flex: 1; padding: 1.5rem; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem; background: #f8fafc; }
-        .message { max-width: 85%; padding: 12px 16px; border-radius: 15px; font-size: 0.95rem; }
+        .message { max-width: 85%; padding: 12px 16px; border-radius: 15px; font-size: 0.95rem; line-height: 1.5; }
         .user-message { align-self: flex-end; background: var(--navculus-green); color: white; border-bottom-right-radius: 2px; }
         .ai-message { align-self: flex-start; background: white; color: #1e293b; border: 1px solid #e2e8f0; border-bottom-left-radius: 2px; }
-        .progress-container { margin-bottom: 10px; font-size: 0.8rem; display: none; }
-        .progress-bar { height: 6px; background: #eee; border-radius: 30px; overflow: hidden; }
-        .progress-fill { height: 100%; background: var(--navculus-green); width: 0%; transition: width 0.3s; }
-        .btn { background: var(--navculus-green); color: white; border: none; padding: 10px; border-radius: 10px; cursor: pointer; font-weight: 600; width: 100%; margin-bottom: 10px; }
-        .btn:disabled { background: #cbd5e1; }
-        .doc-item { padding: 10px; border-bottom: 1px solid #f1f5f9; cursor: pointer; font-size: 0.85rem; }
-        .doc-item.active { background: #f0fdf4; border-left: 4px solid var(--navculus-green); }
+
+        /* Document List */
+        .doc-list { flex: 1; overflow-y: auto; margin-top: 1rem; border-top: 1px solid #eee; padding-top: 10px; }
+        .doc-item { padding: 10px; margin-bottom: 5px; cursor: pointer; border-radius: 8px; font-size: 0.85rem; display: flex; align-items: center; gap: 10px; transition: 0.2s; }
+        .doc-item:hover { background: #f0fdf4; }
+        .doc-item.active { background: var(--navculus-green); color: white; }
+
+        /* Actions */
+        .btn { border: none; border-radius: 10px; cursor: pointer; font-weight: 600; padding: 10px; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-primary { background: var(--navculus-green); color: white; width: 100%; }
+        .btn-init { background: #3b82f6; color: white; width: 100%; margin-bottom: 10px; }
+        .btn:disabled { background: #cbd5e1; cursor: not-allowed; }
+        
+        input[type="text"] { width: 100%; padding: 12px 20px; border-radius: 30px; border: 1px solid #cbd5e1; outline: none; }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <h2 style="margin: 0;">Navculus <span style="color:var(--navculus-green)">Rulefinder</span> (WebLLM)</h2>
-    <div id="engineStatus" style="font-size: 0.85rem; font-weight: 600; color: #64748b;">System Initializing...</div>
+    <div style="display: flex; align-items: center; gap: 10px;">
+        <i class="fas fa-microchip" style="color: var(--navculus-green); font-size: 1.4rem;"></i>
+        <h2 style="margin: 0;">Navculus <span style="color:var(--navculus-green)">Rulefinder</span> <small style="font-size: 0.6rem; vertical-align: middle; color: #64748b;">LOCAL AI</small></h2>
+    </div>
+    <div id="engineStatus" style="font-size: 0.85rem; font-weight: 600;"><i class="fas fa-circle-notch fa-spin"></i> Initializing...</div>
 </div>
 
 <div class="main-container">
     <div class="sidebar">
-        <div id="loaderUI" class="progress-container">
-            <div id="loadMsg">Downloading Model...</div>
-            <div class="progress-bar"><div id="loadFill" class="progress-fill"></div></div>
+        <div id="statusBox" class="status-box">
+            <div id="statusLabel" style="font-size: 0.8rem; font-weight: 600;">Engine Status: Ready to Load</div>
+            <div class="progress-bar"><div id="progressFill" class="progress-fill"></div></div>
         </div>
-        
-        <button id="initBtn" class="btn" onclick="initializeAI()">Initialize Local AI Engine</button>
-        <button id="folderBtn" class="btn" style="background:#3b82f6" onclick="document.getElementById('fileInput').click()" disabled>Load Rules Folder</button>
+
+        <button id="initBtn" class="btn btn-init" onclick="loadEngine()">
+            <i class="fas fa-download"></i> Initialize Engine (First Time)
+        </button>
+
+        <button id="folderBtn" class="btn btn-primary" onclick="document.getElementById('fileInput').click()" disabled>
+            <i class="fas fa-folder-open"></i> Load Rules Folder
+        </button>
         <input type="file" id="fileInput" webkitdirectory directory multiple style="display:none">
         
-        <div id="docList" style="flex:1; overflow-y:auto; margin-top:10px;"></div>
+        <div class="doc-list" id="docList"></div>
     </div>
 
     <div class="chat-area">
         <div id="chatWindow">
-            <div class="message ai-message"><b>Local AI Mode:</b> Click "Initialize Local AI Engine" to download the brain to your browser. This stays on your machine and works without a server.</div>
+            <div class="message ai-message">
+                <b>Local Rule Analysis Mode</b><br>
+                1. Click "Initialize Engine" to load the AI model (Llama 3) into your browser memory.<br>
+                2. Once ready, load your folder of regulatory PDFs.<br>
+                3. Chat history is processed locally on your GPU for maximum speed and privacy.
+            </div>
         </div>
-        <div class="input-box" style="padding: 1rem; border-top: 1px solid #eee; display: flex; gap: 10px;">
-            <input type="text" id="userInput" placeholder="Wait for AI to initialize..." style="flex:1; padding: 12px; border-radius: 20px; border:1px solid #ddd;" disabled onkeypress="if(event.key==='Enter') sendMessage()">
-            <button id="sendBtn" class="btn" style="width: 60px; margin: 0;" onclick="sendMessage()" disabled><i class="fas fa-paper-plane"></i></button>
+        <div class="input-box" style="padding: 1.2rem; background: white; border-top: 1px solid #eee; display: flex; gap: 10px;">
+            <input type="text" id="userInput" placeholder="Wait for AI engine..." disabled onkeypress="if(event.key==='Enter') sendMessage()">
+            <button id="sendBtn" class="btn btn-primary" style="width: 50px; border-radius: 50%;" onclick="sendMessage()" disabled>
+                <i class="fas fa-paper-plane"></i>
+            </button>
         </div>
     </div>
 </div>
@@ -64,50 +95,58 @@
     let engine;
     let pdfDataset = [];
     let currentDoc = null;
-    const modelId = "Llama-3-8B-Instruct-v0.1-q4f32_1-MLC"; // Efficient 8B model
+   const modelId = "SmolLM-135M-Instruct-v0.2-q4f16_1-MLC";
 
-    window.initializeAI = async () => {
+    // --- AI Engine Management ---
+    window.loadEngine = async () => {
         document.getElementById('initBtn').disabled = true;
-        document.getElementById('loaderUI').style.display = 'block';
-        
-        const initProgress = (report) => {
+        const statusLabel = document.getElementById('statusLabel');
+        const progressFill = document.getElementById('progressFill');
+        const engineStatus = document.getElementById('engineStatus');
+
+        const callback = (report) => {
             const percent = Math.round(report.progress * 100);
-            document.getElementById('loadFill').style.width = percent + "%";
-            document.getElementById('loadMsg').innerText = report.text;
+            progressFill.style.width = percent + "%";
+            statusLabel.innerText = report.text;
         };
 
-        engine = await webllm.CreateMLCEngine(modelId, { initProgressCallback: initProgress });
-        
-        document.getElementById('engineStatus').innerText = "AI Online (Local)";
-        document.getElementById('folderBtn').disabled = false;
-        document.getElementById('loaderUI').style.display = 'none';
-        document.getElementById('userInput').placeholder = "AI Ready. Load rules to begin.";
+        try {
+            engine = await webllm.CreateMLCEngine(modelId, { initProgressCallback: callback });
+            engineStatus.innerHTML = '<i class="fas fa-check-circle" style="color:var(--navculus-green)"></i> Local Engine Online';
+            statusLabel.innerText = "Engine Loaded Successfully";
+            document.getElementById('folderBtn').disabled = false;
+        } catch (err) {
+            statusLabel.innerText = "Error: Check WebGPU compatibility";
+            console.error(err);
+        }
     };
 
-    // --- PDF Processing ---
+    // --- PDF Indexing ---
     document.getElementById('fileInput').addEventListener('change', async (e) => {
-        const files = Array.from(e.target.files).filter(f => f.name.endsWith('.pdf'));
+        const files = Array.from(e.target.files).filter(f => f.name.toLowerCase().endsWith('.pdf'));
         const list = document.getElementById('docList');
-        list.innerHTML = "Indexing...";
+        list.innerHTML = "Indexing technical data...";
         
+        pdfDataset = [];
         for (let file of files) {
             const text = await extractText(file);
             const idx = pdfDataset.push({ name: file.name, content: text }) - 1;
             
             const div = document.createElement('div');
             div.className = 'doc-item';
-            div.innerText = file.name;
-            div.onclick = () => selectDoc(idx, div);
+            div.innerHTML = `<i class="fas fa-file-pdf" style="color:#ef4444"></i> ${file.name}`;
+            div.onclick = () => selectDocument(idx, div);
             list.appendChild(div);
         }
-        list.firstChild.remove(); // Remove indexing text
+        if(list.firstChild.nodeType === 3) list.firstChild.remove();
     });
 
     async function extractText(file) {
         const arrayBuffer = await file.arrayBuffer();
         const pdf = await pdfjsLib.getDocument({data: arrayBuffer}).promise;
         let text = "";
-        for (let i = 1; i <= Math.min(pdf.numPages, 10); i++) {
+        // Extract first 15 pages for context
+        for (let i = 1; i <= Math.min(pdf.numPages, 15); i++) {
             const page = await pdf.getPage(i);
             const content = await page.getTextContent();
             text += content.items.map(it => it.str).join(" ") + " ";
@@ -115,31 +154,50 @@
         return text;
     }
 
-    window.selectDoc = (idx, el) => {
+    window.selectDocument = (idx, el) => {
         currentDoc = pdfDataset[idx];
         document.querySelectorAll('.doc-item').forEach(d => d.classList.remove('active'));
         el.classList.add('active');
+        
         document.getElementById('userInput').disabled = false;
         document.getElementById('sendBtn').disabled = false;
-        document.getElementById('userInput').placeholder = "Ask about " + currentDoc.name;
+        document.getElementById('userInput').placeholder = `Ask about ${currentDoc.name}...`;
+        
+        const win = document.getElementById('chatWindow');
+        win.innerHTML += `<div class="message ai-message"><b>Knowledge Base Updated:</b> Switched to <i>${currentDoc.name}</i>. How can I help with these specific rules?</div>`;
+        win.scrollTop = win.scrollHeight;
     };
 
+    // --- Chat Flow ---
     window.sendMessage = async () => {
         const input = document.getElementById('userInput');
         const win = document.getElementById('chatWindow');
-        const query = input.value;
+        const query = input.value.trim();
         if (!query) return;
 
         win.innerHTML += `<div class="message user-message">${query}</div>`;
         input.value = "";
-        
+        win.scrollTop = win.scrollHeight;
+
         const messages = [
-            { role: "system", content: "You are a marine engineer. Answer based on: " + currentDoc.content.substring(0, 5000) },
+            { 
+                role: "system", 
+                content: `You are a Naval Architect Expert. Use this rulebook text to answer concisely: ${currentDoc.content.substring(0, 6000)}` 
+            },
             { role: "user", content: query }
         ];
 
-        const response = await engine.chat.completions.create({ messages });
-        win.innerHTML += `<div class="message ai-message">${response.choices[0].message.content}</div>`;
+        try {
+            document.getElementById('engineStatus').innerHTML = '<i class="fas fa-brain fa-pulse"></i> Local AI Thinking...';
+            
+            const chunks = await engine.chat.completions.create({ messages });
+            const reply = chunks.choices[0].message.content;
+            
+            win.innerHTML += `<div class="message ai-message">${reply}</div>`;
+            document.getElementById('engineStatus').innerHTML = '<i class="fas fa-check-circle" style="color:var(--navculus-green)"></i> Local Engine Online';
+        } catch (err) {
+            win.innerHTML += `<div class="message ai-message" style="color:red">Error generating response. Ensure WebGPU is enabled.</div>`;
+        }
         win.scrollTop = win.scrollHeight;
     };
 </script>
