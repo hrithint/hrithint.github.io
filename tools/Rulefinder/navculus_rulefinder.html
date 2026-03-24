@@ -8,6 +8,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
   <!-- Font Awesome 6 (free icons) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Marked.js for markdown rendering -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <!-- Puter.js CDN for AI assistance & file system capabilities -->
   <script src="https://js.puter.com/v2/"></script>
   <style>
@@ -219,8 +221,99 @@
       border-radius: 20px 20px 20px 8px;
       max-width: 85%;
       font-size: 0.95rem;
-      line-height: 1.45;
+      line-height: 1.6;
       box-shadow: 0 1px 1px rgba(0,0,0,0.05);
+    }
+
+    .msg-bubble h1, .msg-bubble h2, .msg-bubble h3 {
+      margin: 0.5rem 0 0.3rem 0;
+      color: #0a2540;
+    }
+
+    .msg-bubble h1 { font-size: 1.1rem; }
+    .msg-bubble h2 { font-size: 1rem; }
+    .msg-bubble h3 { font-size: 0.95rem; }
+
+    .msg-bubble p {
+      margin: 0.4rem 0;
+    }
+
+    .msg-bubble ul, .msg-bubble ol {
+      margin: 0.4rem 0;
+      padding-left: 1.2rem;
+    }
+
+    .msg-bubble li {
+      margin: 0.2rem 0;
+    }
+
+    .msg-bubble strong {
+      color: #0a2540;
+      font-weight: 600;
+    }
+
+    .msg-bubble code {
+      background: rgba(0,166,196,0.15);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+    }
+
+    .msg-bubble pre {
+      background: #1a2a3a;
+      color: #eef3f9;
+      padding: 0.75rem;
+      border-radius: 10px;
+      overflow-x: auto;
+      margin: 0.5rem 0;
+    }
+
+    .msg-bubble pre code {
+      background: none;
+      padding: 0;
+      color: inherit;
+    }
+
+    .msg-bubble blockquote {
+      border-left: 3px solid #00a6c4;
+      margin: 0.5rem 0;
+      padding: 0.3rem 0.8rem;
+      background: rgba(0,166,196,0.08);
+      border-radius: 0 8px 8px 0;
+    }
+
+    .msg-bubble a {
+      color: #00a6c4;
+      text-decoration: underline;
+    }
+
+    .msg-bubble table {
+      border-collapse: collapse;
+      margin: 0.5rem 0;
+      width: 100%;
+      font-size: 0.85rem;
+    }
+
+    .msg-bubble th, .msg-bubble td {
+      border: 1px solid #cbdde6;
+      padding: 0.4rem 0.6rem;
+      text-align: left;
+    }
+
+    .msg-bubble th {
+      background: #eef3f9;
+      font-weight: 600;
+    }
+
+    .message.user .msg-bubble strong,
+    .message.user .msg-bubble h1,
+    .message.user .msg-bubble h2,
+    .message.user .msg-bubble h3 {
+      color: white;
+    }
+
+    .message.user .msg-bubble code {
+      background: rgba(255,255,255,0.2);
     }
 
     .msg-icon {
@@ -562,9 +655,18 @@
     const msgDiv = document.createElement('div');
     msgDiv.className = `message ${senderType}`;
     const icon = senderType === 'user' ? '<i class="fas fa-user"></i>' : '<i class="fas fa-robot"></i>';
+    
+    // Render markdown for bot messages, escape for user
+    let content;
+    if (senderType === 'user') {
+      content = escapeHtml(text);
+    } else {
+      content = marked.parse(text);
+    }
+    
     msgDiv.innerHTML = `
       <div class="msg-icon">${icon}</div>
-      <div class="msg-bubble">${escapeHtml(text)}</div>
+      <div class="msg-bubble">${content}</div>
     `;
     chatMessagesDiv.appendChild(msgDiv);
     scrollChat();
