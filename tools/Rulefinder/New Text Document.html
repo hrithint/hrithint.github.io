@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navculus Rulefinder | Interactive AI Chat</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://js.puter.com/v2/"></script>
+    <style>
+        :root { --navculus-green: #10b981; --bg-blue: #f1f4f9; --accent-blue: #3b82f6; }
+        body { background: var(--bg-blue); font-family: 'Inter', sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; }
+        
+        /* Header */
+        .header { background: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ddd; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .header-actions { display: flex; gap: 15px; align-items: center; }
+        
+        /* Main Layout */
+        .main-container { display: flex; flex: 1; overflow: hidden; padding: 1rem; gap: 1rem; }
+        .sidebar { width: 320px; background: white; border-radius: 20px; padding: 1rem; display: flex; flex-direction: column; border: 1px solid #e2e8f0; }
+        .chat-area { flex: 1; background: white; border-radius: 20px; display: flex; flex-direction: column; border: 1px solid #e2e8f0; overflow: hidden; position: relative; }
+
+        /* Document List */
+        .doc-list { flex: 1; overflow-y: auto; margin-top: 1rem; }
+        .doc-item { padding: 12px; border-bottom: 1px solid #f1f5f9; cursor: pointer; border-radius: 10px; transition: 0.2s; font-size: 0.9rem; display: flex; align-items: center; gap: 10px; }
+        .doc-item:hover { background: #f0fdf4; color: var(--navculus-green); }
+        .doc-item.active { background: var(--navculus-green); color: white; }
+
+        /* Chat Messages */
+        #chatWindow { flex: 1; padding: 1.5rem; overflow-y: auto; display: flex; flex-direction: column; gap: 1rem; background: #f8fafc; }
+        .message { max-width: 85%; padding: 12px 16px; border-radius: 15px; font-size: 0.95rem; line-height: 1.5; position: relative; }
+        .user-message { align-self: flex-end; background: var(--navculus-green); color: white; border-bottom-right-radius: 2px; }
+        .ai-message { align-self: flex-start; background: white; color: #1e293b; border: 1px solid #e2e8f0; border-bottom-left-radius: 2px; }
+        
+        /* Input Area */
+        .input-box { padding: 1.2rem; background: white; border-top: 1px solid #eee; display: flex; gap: 10px; }
+        input[type="text"] { flex: 1; padding: 12px 20px; border-radius: 30px; border: 1px solid #cbd5e1; outline: none; transition: 0.2s; }
+        input[type="text"]:focus { border-color: var(--navculus-green); box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1); }
+        
+        /* Buttons */
+        .btn { border: none; border-radius: 10px; cursor: pointer; font-weight: 600; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-primary { background: var(--navculus-green); color: white; padding: 10px 20px; }
+        .btn-blue { background: var(--accent-blue); color: white; padding: 8px 16px; border-radius: 30px; }
+        .btn-send { background: var(--navculus-green); color: white; width: 45px; height: 45px; border-radius: 50%; }
+        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+        .btn:disabled { background: #cbd5e1; cursor: not-allowed; }
+
+        #aiStatus { font-size: 0.85rem; font-weight: 500; }
+        .status-dot { height: 8px; width: 8px; background-color: #cbd5e1; border-radius: 50%; display: inline-block; }
+        .status-online { background-color: var(--navculus-green); }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div style="display: flex; align-items: center; gap: 12px;">
+        <i class="fas fa-anchor" style="color: var(--navculus-green); font-size: 1.5rem;"></i>
+        <h2 style="color: #0f172a; margin: 0;">Navculus <span style="color:var(--navculus-green)">Rulefinder</span></h2>
+    </div>
+    <div class="header-actions">
+        <div id="aiStatus"><span class="status-dot"></span> Offline</div>
+        <button id="loginBtn" class="btn btn-blue">
+            <i class="fas fa-plug"></i> Connect AI
+        </button>
+    </div>
+</div>
+
+<div class="main-container">
+    <div class="sidebar">
+        <button class="btn btn-primary" style="width: 100%;" onclick="document.getElementById('fileInput').click()">
+            <i class="fas fa-folder-open"></i> Load Rule Folder
+        </button>
+        <input type="file" id="fileInput" webkitdirectory directory multiple style="display:none">
+        
+        <div class="doc-list" id="docList">
+            <div style="text-align:center; color:#94a3b8; margin-top:30px; font-size: 0.9rem;">
+                <i class="fas fa-file-invoice" style="font-size: 2rem; display: block; margin-bottom: 10px; opacity: 0.5;"></i>
+                Select a folder to index PDFs
+            </div>
+        </div>
+    </div>
+
+    <div class="chat-area">
+        <div id="chatWindow">
+            <div class="message ai-message">
+                <b>Welcome, Maritime Engineer.</b><br>
+                1. Connect AI using the button above.<br>
+                2. Load your folder of regulations.<br>
+                3. Select a document from the sidebar to start a technical conversation.
+            </div>
+        </div>
+        <div class="input-box">
+            <input type="text" id="userInput" placeholder="Ask about specific rules or requirements..." disabled onkeypress="if(event.key==='Enter') sendMessage()">
+            <button id="sendBtn" class="btn btn-send" onclick="sendMessage()" disabled>
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+<script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
+    let pdfDataset = [];
+    let currentDoc = null;
+    let chatHistory = [];
+    let isConnected = false;
+
+    // --- 1. Puter Authentication Logic ---
+    const loginBtn = document.getElementById('loginBtn');
+    const aiStatus = document.getElementById('aiStatus');
+    const userInput = document.getElementById('userInput');
+    const sendBtn = document.getElementById('sendBtn');
+
+    loginBtn.addEventListener('click', async () => {
+        try {
+            aiStatus.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Handshaking...';
+            const user = await puter.auth.signIn();
+            
+            isConnected = true;
+            aiStatus.innerHTML = `<span class="status-dot status-online"></span> Connected: ${user.username}`;
+            loginBtn.style.display = 'none';
+            if(currentDoc) enableChat();
+        } catch (err) {
+            aiStatus.innerHTML = '<span class="status-dot" style="background:red"></span> Connection Failed';
+            console.error(err);
+        }
+    });
+
+    function enableChat() {
+        userInput.disabled = false;
+        sendBtn.disabled = false;
+        userInput.placeholder = `Ask about ${currentDoc.name}...`;
+    }
+
+    // --- 2. PDF Processing ---
+    document.getElementById('fileInput').addEventListener('change', async (e) => {
+        const files = Array.from(e.target.files).filter(f => f.name.toLowerCase().endsWith('.pdf'));
+        const list = document.getElementById('docList');
+        
+        aiStatus.innerHTML = `<i class="fas fa-cog fa-spin"></i> Indexing ${files.length} rules...`;
+        pdfDataset = [];
+        list.innerHTML = "";
+
+        for (let file of files) {
+            const text = await extractPdfText(file);
+            pdfDataset.push({ name: file.name, content: text });
+            
+            const div = document.createElement('div');
+            div.className = "doc-item";
+            div.innerHTML = `<i class="fas fa-file-pdf" style="color:#e11d48"></i> <span>${file.name}</span>`;
+            div.onclick = () => selectDocument(pdfDataset.length - 1, div);
+            list.appendChild(div);
+        }
+        aiStatus.innerHTML = isConnected ? `<span class="status-dot status-online"></span> AI Ready` : `Rules loaded. Connect AI to chat.`;
+    });
+
+    async function extractPdfText(file) {
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument({data: arrayBuffer}).promise;
+        let fullText = "";
+        // Limit to 20 pages for stability
+        for (let i = 1; i <= Math.min(pdf.numPages, 20); i++) {
+            const page = await pdf.getPage(i);
+            const content = await page.getTextContent();
+            fullText += content.items.map(it => it.str).join(" ") + " ";
+        }
+        return fullText;
+    }
+
+    // --- 3. Chat Logic ---
+    function selectDocument(index, element) {
+        currentDoc = pdfDataset[index];
+        document.querySelectorAll('.doc-item').forEach(d => d.classList.remove('active'));
+        element.classList.add('active');
+        
+        // Context-aware System Prompt
+        chatHistory = [
+            { 
+                role: "system", 
+                content: `You are a Maritime Rules Expert assistant for Navculus. 
+                Answer using the following technical text as your ONLY source: ${currentDoc.content.substring(0, 7000)}.
+                If the answer isn't in the text, say you cannot find it in this specific document.` 
+            }
+        ];
+        
+        const win = document.getElementById('chatWindow');
+        win.innerHTML = `<div class="message ai-message"><b>Document Loaded:</b> ${currentDoc.name}<br>I am ready to answer technical questions about these specific rules.</div>`;
+        
+        if(isConnected) enableChat();
+        else aiStatus.innerHTML = "Connect AI to chat with this document.";
+    }
+
+    async function sendMessage() {
+        const query = userInput.value.trim();
+        const win = document.getElementById('chatWindow');
+
+        if (!query) return;
+
+        // User Message UI
+        win.innerHTML += `<div class="message user-message">${query}</div>`;
+        userInput.value = "";
+        win.scrollTop = win.scrollHeight;
+
+        chatHistory.push({ role: "user", content: query });
+
+        try {
+            aiStatus.innerHTML = `<i class="fas fa-brain fa-pulse"></i> AI is analyzing...`;
+            
+            // Use streaming or standard chat
+            const response = await puter.ai.chat(chatHistory, { model: 'gpt-4o' });
+            
+            win.innerHTML += `<div class="message ai-message">${response}</div>`;
+            chatHistory.push({ role: "assistant", content: response });
+            
+            aiStatus.innerHTML = `<span class="status-dot status-online"></span> AI Ready`;
+        } catch (err) {
+            win.innerHTML += `<div class="message ai-message" style="border-color:red; color:red;">
+                <b>Connection Error:</b> The AI handshake failed. Please refresh and reconnect.
+            </div>`;
+        }
+        win.scrollTop = win.scrollHeight;
+    }
+</script>
+</body>
+</html>
