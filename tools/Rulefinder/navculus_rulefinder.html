@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Navculus Rulefinder | AI-Assisted Maritime Rules</title>
+  <!-- Google Fonts & simple CSS reset -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <!-- Font Awesome 6 (free icons) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Puter.js CDN for AI assistance & file system capabilities -->
+  <script src="https://js.puter.com/v2/"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f4f7fc;
+      color: #0a2540;
+      scroll-behavior: smooth;
+    }
+
+    /* ===== NAVCULUS INSPIRED STYLES ===== */
+    /* deep navy, teal accents, modern clean UI, generous spacing */
+
+    /* header / navigation (mirrors navculus.in vibe) */
+    .navbar {
+      background: #0a2540;
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      background: #00a6c4;
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 22px;
+      color: white;
+    }
+
+    .logo-text {
+      font-size: 1.7rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      color: white;
+    }
+
+    .logo-text span {
+      color: #00d4ff;
+      font-weight: 600;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: #e6f7ff;
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.2s;
+      font-size: 1rem;
+    }
+
+    .nav-links a:hover, .nav-links a.active {
+      color: #00d4ff;
+      border-bottom: 2px solid #00d4ff;
+      padding-bottom: 4px;
+    }
+
+    /* hero / rulefinder header */
+    .rulefinder-hero {
+      background: linear-gradient(135deg, #0f2c3f 0%, #124263 100%);
+      padding: 3rem 2rem;
+      text-align: center;
+      color: white;
+    }
+
+    .rulefinder-hero h1 {
+      font-size: 2.8rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    .rulefinder-hero h1 i {
+      color: #00d4ff;
+      margin-right: 12px;
+    }
+
+    .rulefinder-hero p {
+      font-size: 1.2rem;
+      max-width: 700px;
+      margin: 0 auto;
+      opacity: 0.9;
+    }
+
+    .badge-ai {
+      display: inline-block;
+      background: rgba(0,212,255,0.2);
+      backdrop-filter: blur(4px);
+      padding: 0.3rem 1rem;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-top: 1rem;
+      border: 1px solid rgba(0,212,255,0.5);
+    }
+
+    /* main container */
+    .container {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+
+    /* two column layout: chat + pdf library */
+    .dashboard {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+    }
+
+    .chat-panel {
+      flex: 1.2;
+      min-width: 280px;
+      background: white;
+      border-radius: 28px;
+      box-shadow: 0 20px 35px -12px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid rgba(0,166,196,0.2);
+    }
+
+    .pdf-panel {
+      flex: 0.9;
+      min-width: 280px;
+      background: white;
+      border-radius: 28px;
+      box-shadow: 0 20px 35px -12px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid rgba(0,166,196,0.2);
+    }
+
+    .panel-header {
+      background: #f8fafd;
+      padding: 1.2rem 1.5rem;
+      border-bottom: 1px solid #e2edf2;
+    }
+
+    .panel-header h2 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #0a2540;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .panel-header h2 i {
+      color: #00a6c4;
+    }
+
+    /* chat messages area */
+    .chat-messages {
+      flex: 1;
+      padding: 1.5rem;
+      overflow-y: auto;
+      max-height: 480px;
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .message {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      animation: fadeSlideUp 0.2s ease;
+    }
+
+    .message.user {
+      flex-direction: row-reverse;
+    }
+
+    .message.user .msg-bubble {
+      background: #0a2540;
+      color: white;
+      border-radius: 20px 20px 8px 20px;
+    }
+
+    .msg-bubble {
+      background: #eef3f9;
+      padding: 0.75rem 1.2rem;
+      border-radius: 20px 20px 20px 8px;
+      max-width: 85%;
+      font-size: 0.95rem;
+      line-height: 1.45;
+      box-shadow: 0 1px 1px rgba(0,0,0,0.05);
+    }
+
+    .msg-icon {
+      width: 34px;
+      height: 34px;
+      background: #e2edf2;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      color: #0a2540;
+    }
+
+    .message.user .msg-icon {
+      background: #00a6c4;
+      color: white;
+    }
+
+    .typing-indicator {
+      display: flex;
+      gap: 4px;
+      padding: 0.5rem 1rem;
+      background: #eef3f9;
+      width: fit-content;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      color: #2c6280;
+    }
+
+    /* chat input */
+    .chat-input-area {
+      padding: 1rem 1.5rem 1.5rem;
+      border-top: 1px solid #e2edf2;
+      background: white;
+    }
+
+    .input-wrapper {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      background: #f4f7fc;
+      border-radius: 60px;
+      padding: 0.3rem 0.3rem 0.3rem 1.2rem;
+      border: 1px solid #cbdde6;
+    }
+
+    .input-wrapper input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 0.8rem 0;
+      font-size: 0.95rem;
+      outline: none;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .input-wrapper button {
+      background: #00a6c4;
+      border: none;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      color: white;
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 1.2rem;
+    }
+
+    .input-wrapper button:hover {
+      background: #008ba3;
+      transform: scale(0.96);
+    }
+
+    /* pdf library grid */
+    .pdf-list {
+      padding: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+
+    .pdf-card {
+      background: #f9fdfe;
+      border-radius: 18px;
+      padding: 0.9rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border: 1px solid #dcebf0;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .pdf-card:hover {
+      background: #eef6fa;
+      border-color: #00a6c4;
+      transform: translateX(4px);
+    }
+
+    .pdf-icon {
+      font-size: 2rem;
+      color: #e25555;
+    }
+
+    .pdf-info {
+      flex: 1;
+    }
+
+    .pdf-info h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .pdf-info p {
+      font-size: 0.7rem;
+      color: #5f7f90;
+    }
+
+    .pdf-badge {
+      background: #eef2f5;
+      border-radius: 20px;
+      padding: 0.2rem 0.7rem;
+      font-size: 0.7rem;
+      font-weight: 500;
+    }
+
+    .empty-pdf {
+      text-align: center;
+      padding: 2rem;
+      color: #8aaec0;
+    }
+
+    /* add pdf mock button (just for demo - integrates with puter) */
+    .add-pdf-btn {
+      margin: 0 1.2rem 1.2rem auto;
+      background: #f0f4f9;
+      border: 1px dashed #00a6c4;
+      border-radius: 40px;
+      padding: 0.5rem 1rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      width: fit-content;
+      transition: 0.2s;
+    }
+
+    .add-pdf-btn i {
+      color: #00a6c4;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      background: #eef3f9;
+      margin-top: 2rem;
+      font-size: 0.85rem;
+      color: #3a6b8c;
+      border-top: 1px solid #cde0e8;
+    }
+
+    @keyframes fadeSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* responsive */
+    @media (max-width: 800px) {
+      .navbar {
+        flex-direction: column;
+        gap: 12px;
+      }
+      .rulefinder-hero h1 {
+        font-size: 2rem;
+      }
+      .dashboard {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar matching navculus.in style -->
+<nav class="navbar">
+  <div class="logo-area">
+    <div class="logo-icon">N</div>
+    <div class="logo-text">navculus<span>.</span></div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#">Home</a></li>
+    <li><a href="#">Solutions</a></li>
+    <li><a href="#">Resources</a></li>
+    <li><a href="#" class="active">Rulefinder</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- Rulefinder specific hero -->
+<div class="rulefinder-hero">
+  <h1><i class="fas fa-gavel"></i> Navculus Rulefinder</h1>
+  <p>AI-powered maritime & trade regulation assistant — chat with our intelligent agent to locate the exact PDF rules, guidelines, and compliance documents.</p>
+  <div class="badge-ai"><i class="fas fa-robot"></i> Powered by Puter.js AI & local PDF library</div>
+</div>
+
+<div class="container">
+  <div class="dashboard">
+    <!-- LEFT: AI Chat Panel -->
+    <div class="chat-panel">
+      <div class="panel-header">
+        <h2><i class="fas fa-comment-dots"></i> Rulefinder AI Assistant</h2>
+        <p style="font-size:0.8rem; margin-top:6px; color:#2c6280;">Ask about any regulation, rule number, or topic — AI suggests matching PDFs</p>
+      </div>
+      <div class="chat-messages" id="chatMessages">
+        <div class="message bot">
+          <div class="msg-icon"><i class="fas fa-robot"></i></div>
+          <div class="msg-bubble">Hello! I'm your Rulefinder AI. I can help you search through available maritime, customs, and compliance PDF rules. Try: "Show me SOLAS regulations" or "Latest MARPOL annex" or "I need ISM Code document".</div>
+        </div>
+      </div>
+      <div class="chat-input-area">
+        <div class="input-wrapper">
+          <input type="text" id="chatInput" placeholder="Ask about any rule, regulation, or PDF..." autocomplete="off">
+          <button id="sendBtn"><i class="fas fa-paper-plane"></i></button>
+        </div>
+        <div style="font-size:0.7rem; margin-top:10px; color:#6f9eb3;"><i class="fas fa-database"></i> AI matches your query to rule PDFs stored in /rules/ folder (host)</div>
+      </div>
+    </div>
+
+    <!-- RIGHT: PDF Library Panel (stored with HTML in host folder) -->
+    <div class="pdf-panel">
+      <div class="panel-header">
+        <h2><i class="fas fa-file-pdf"></i> Rule PDF Library</h2>
+        <p style="font-size:0.75rem; margin-top:4px;">Available rules — click to preview / download</p>
+      </div>
+      <div class="pdf-list" id="pdfListContainer">
+        <!-- PDF cards will be injected dynamically (from host folder manifest) -->
+        <div class="empty-pdf"><i class="fas fa-spinner fa-pulse"></i> Loading rule documents...</div>
+      </div>
+      <div class="add-pdf-btn" id="demoAddPdfBtn">
+        <i class="fas fa-upload"></i> + Add Sample Rule (Demo with Puter)
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <i class="fas fa-ship"></i> Navculus Rulefinder — AI-assisted compliance discovery. All hosted PDFs reside in the page's host folder. Use Puter.js to manage and chat.
+</footer>
+
+<script>
+  // ------------------------------
+  // MOCK PDF DATABASE: These represent PDF files saved in the host folder (relative paths)
+  // In real scenario, these files are physically stored as PDFs beside the html.
+  // We simulate fetching a list of PDF metadata. The user can also upload using puter fs.
+  // ------------------------------
+  let rulePdfs = [
+    { id: "pdf1", name: "SOLAS Consolidated Edition 2024", filename: "rules/solas_2024.pdf", description: "Safety of Life at Sea - latest amendments", tags: ["solas", "safety", "lifeboat"] },
+    { id: "pdf2", name: "MARPOL Annex VI", filename: "rules/marpol_annex6.pdf", description: "Air pollution prevention", tags: ["marpol", "emissions", "eexi"] },
+    { id: "pdf3", name: "ISM Code Guidelines", filename: "rules/ism_code.pdf", description: "International Safety Management", tags: ["ism", "safety management", "audit"] },
+    { id: "pdf4", name: "COLREGS 72 (Rules of the Road)", filename: "rules/colregs_72.pdf", description: "Navigation lights, steering rules", tags: ["colregs", "navigation", "collision"] },
+    { id: "pdf5", name: "MLC 2006 Maritime Labour", filename: "rules/mlc_2006.pdf", description: "Seafarer rights & working conditions", tags: ["mlc", "labour", "crew"] },
+    { id: "pdf6", name: "IMSBC Code (Cargoes)", filename: "rules/imsbc_code.pdf", description: "Solid bulk cargoes", tags: ["cargo", "imsbc", "bulk"] }
+  ];
+
+  // Puter.js initialization status & AI logic
+  let puterReady = false;
+  let aiInstance = null;
+
+  // UI Elements
+  const chatMessagesDiv = document.getElementById("chatMessages");
+  const chatInput = document.getElementById("chatInput");
+  const sendBtn = document.getElementById("sendBtn");
+  const pdfListContainer = document.getElementById("pdfListContainer");
+
+  // Helper: scroll chat to bottom
+  function scrollChat() {
+    const container = document.querySelector(".chat-messages");
+    if (container) container.scrollTop = container.scrollHeight;
+  }
+
+  // Render PDF cards (click to open PDF - hosted in folder)
+  function renderPdfList() {
+    if (!pdfListContainer) return;
+    if (rulePdfs.length === 0) {
+      pdfListContainer.innerHTML = `<div class="empty-pdf"><i class="fas fa-folder-open"></i> No rule PDFs found. Add using the button above.</div>`;
+      return;
+    }
+    pdfListContainer.innerHTML = rulePdfs.map(pdf => `
+      <div class="pdf-card" data-filename="${pdf.filename}" data-pdfname="${pdf.name}">
+        <div class="pdf-icon"><i class="fas fa-file-pdf"></i></div>
+        <div class="pdf-info">
+          <h4>${escapeHtml(pdf.name)}</h4>
+          <p>${escapeHtml(pdf.description)}</p>
+        </div>
+        <div class="pdf-badge"><i class="fas fa-download"></i> view</div>
+      </div>
+    `).join('');
+
+    // attach click event to open PDF (relative path from host folder)
+    document.querySelectorAll('.pdf-card').forEach(card => {
+      card.addEventListener('click', (e) => {
+        const filename = card.getAttribute('data-filename');
+        // open PDF in new tab (assuming file exists in the host folder)
+        if (filename) {
+          window.open(filename, '_blank');
+        } else {
+          addChatMessage("System", "⚠️ PDF file reference missing.", "bot");
+        }
+      });
+    });
+  }
+
+  // simple escape for safety
+  function escapeHtml(str) {
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+      return c;
+    });
+  }
+
+  // Add message to chat (type: 'user' or 'bot')
+  function addChatMessage(senderName, text, senderType = 'user') {
+    const msgDiv = document.createElement('div');
+    msgDiv.className = `message ${senderType}`;
+    const icon = senderType === 'user' ? '<i class="fas fa-user"></i>' : '<i class="fas fa-robot"></i>';
+    msgDiv.innerHTML = `
+      <div class="msg-icon">${icon}</div>
+      <div class="msg-bubble">${escapeHtml(text)}</div>
+    `;
+    chatMessagesDiv.appendChild(msgDiv);
+    scrollChat();
+  }
+
+  // Show typing indicator (temporary)
+  let typingIndicator = null;
+  function showTyping() {
+    if (typingIndicator) typingIndicator.remove();
+    typingIndicator = document.createElement('div');
+    typingIndicator.className = 'message bot';
+    typingIndicator.innerHTML = `<div class="msg-icon"><i class="fas fa-robot"></i></div><div class="typing-indicator"><span>●</span><span>●</span><span>●</span> AI thinking</div>`;
+    chatMessagesDiv.appendChild(typingIndicator);
+    scrollChat();
+  }
+  function hideTyping() {
+    if (typingIndicator) {
+      typingIndicator.remove();
+      typingIndicator = null;
+    }
+  }
+
+  // Core AI logic: uses simple keyword matching + Puter.ai if available (Puter.js)
+  async function processUserQuery(query) {
+    if (!query.trim()) return;
+    addChatMessage("You", query, "user");
+    chatInput.value = "";
+    showTyping();
+
+    try {
+      let answer = "";
+      // Try to leverage Puter.js AI if the environment supports it (Puter AI)
+      if (window.puter && window.puter.ai && window.puter.ai.chat) {
+        try {
+          const systemPrompt = `You are Navculus Rulefinder AI assistant. You help users find relevant maritime and trade rule PDFs. Available PDF rules: ${rulePdfs.map(p => p.name + " (" + p.tags.join(", ") + ")").join("; ")}. Answer concisely and suggest PDF filenames if relevant. If user asks about specific rule, recommend matching PDF from list.`;
+          const aiResponse = await window.puter.ai.chat([
+            { role: "system", content: systemPrompt },
+            { role: "user", content: query }
+          ], { model: "gpt-5-nano" });
+          if (aiResponse && aiResponse.message) {
+            answer = aiResponse.message.content;
+          } else if (typeof aiResponse === 'string') {
+            answer = aiResponse;
+          } else {
+            throw new Error("fallback");
+          }
+        } catch (aiErr) {
+          console.warn("Puter AI error, using smart fallback", aiErr);
+          answer = fallbackAiResponse(query);
+        }
+      } else {
+        // no puter AI available or not loaded yet -> fallback engine
+        answer = fallbackAiResponse(query);
+      }
+
+      hideTyping();
+      addChatMessage("Rulefinder AI", answer, "bot");
+
+      // additionally, if answer doesn't contain explicit PDF suggestion but we find related PDFs, offer recommendation
+      const lowerQuery = query.toLowerCase();
+      const matchedPdfs = rulePdfs.filter(pdf => 
+        pdf.name.toLowerCase().includes(lowerQuery) || 
+        pdf.tags.some(tag => lowerQuery.includes(tag)) ||
+        pdf.description.toLowerCase().includes(lowerQuery)
+      );
+      if (matchedPdfs.length > 0 && !answer.includes("PDF") && !answer.includes("document")) {
+        const suggestion = `\n\n📄 Based on your query, you may find: ${matchedPdfs.map(p => p.name).join(", ")}. Click on the PDF card to open.`;
+        addChatMessage("Rulefinder AI", suggestion, "bot");
+      } else if (matchedPdfs.length === 0 && rulePdfs.length > 0) {
+        // generic hint
+        addChatMessage("Rulefinder AI", "💡 Try keywords like SOLAS, MARPOL, ISM, COLREGS, or browse the PDF library on the right.", "bot");
+      }
+    } catch (err) {
+      hideTyping();
+      addChatMessage("Rulefinder AI", "⚠️ Sorry, I encountered an error. Please check your connection or try again.", "bot");
+      console.error(err);
+    }
+  }
+
+  // fallback smart keyword matcher
+  function fallbackAiResponse(query) {
+    const q = query.toLowerCase();
+    if (q.includes("solas") || q.includes("safety of life")) return "SOLAS (Safety of Life at Sea) is available as 'SOLAS Consolidated Edition 2024'. You can find it in the PDF library. Would you like me to highlight specific chapters?";
+    if (q.includes("marpol") || q.includes("annex") || q.includes("pollution")) return "MARPOL Annex VI (air pollution) and other annexes are listed in our rules. Check 'MARPOL Annex VI' PDF for emissions compliance.";
+    if (q.includes("ism") || q.includes("safety management")) return "The ISM Code Guidelines PDF provides detailed safety management system requirements for shipping companies.";
+    if (q.includes("colreg") || q.includes("navigation") || q.includes("lights")) return "COLREGS 1972 (Rules of the Road) is a critical document. Find it as 'COLREGS 72 (Rules of the Road)' in the rule library.";
+    if (q.includes("mlc") || q.includes("labour") || q.includes("seafarer")) return "Maritime Labour Convention, 2006 covers crew rights. PDF 'MLC 2006 Maritime Labour' is available.";
+    if (q.includes("cargo") || q.includes("imsbc")) return "IMSBC Code for solid bulk cargoes is stored in our library. Check 'IMSBC Code (Cargoes)' for loading & safety procedures.";
+    return "I can help you locate specific maritime regulations. Please try mentioning a rule acronym like SOLAS, MARPOL, ISM, COLREGS, or browse the PDFs on the right panel. You can also ask about specific rule sections!";
+  }
+
+  // Add new sample rule PDF using Puter FS (demonstrate integration)
+  async function handleAddDemoPdf() {
+    if (window.puter && window.puter.fs) {
+      try {
+        const newPdfName = `sample_rule_${new Date().getTime()}.pdf`;
+        const demoContent = "%PDF-1.4 (demo) Navculus Rulefinder Sample Document: This is a placeholder rule content. Replace with actual regulations.";
+        const filePath = `rules/${newPdfName}`;
+        await puter.fs.write(filePath, demoContent);
+        const newRule = {
+          id: "pdf"+Date.now(),
+          name: `Custom Rule ${rulePdfs.length+1}`,
+          filename: filePath,
+          description: "User-uploaded rule (via Puter.js)",
+          tags: ["custom", "upload"]
+        };
+        rulePdfs.push(newRule);
+        renderPdfList();
+        addChatMessage("System", `✅ New rule PDF "${newRule.name}" added to library.`, "bot");
+      } catch (err) {
+        console.error(err);
+        addDemoLocal("demo");
+      }
+    } else {
+      addDemoLocal("puter");
+    }
+  }
+
+  function addDemoLocal(mode) {
+    const newRule = {
+      id: "pdf"+Date.now(),
+      name: mode === "puter" ? "Demo Rule (No Puter FS)" : "Demo Rule (local)",
+      filename: "rules/demo_rule.pdf",
+      description: mode === "puter" ? "Puter.js FS error — demo only" : "Click to open (ensure file exists)",
+      tags: ["demo"]
+    };
+    rulePdfs.push(newRule);
+    renderPdfList();
+    addChatMessage("System", mode === "puter" ? "Demo card added. Puter.js FS not active." : "Demo PDF card added.", "bot");
+  }
+
+  // initial load: render PDFs & check if puter is ready
+  async function init() {
+    renderPdfList();
+    if (window.puter) {
+      puterReady = true;
+      console.log("Puter.js loaded successfully");
+    }
+    // attach event listeners
+    sendBtn.addEventListener("click", () => processUserQuery(chatInput.value));
+    chatInput.addEventListener("keypress", (e) => { if(e.key === 'Enter') processUserQuery(chatInput.value); });
+    document.getElementById("demoAddPdfBtn").addEventListener("click", handleAddDemoPdf);
+  }
+
+  init();
+</script>
+</body>
+</html>
