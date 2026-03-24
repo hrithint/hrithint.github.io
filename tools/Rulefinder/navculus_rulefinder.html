@@ -703,8 +703,8 @@
         try {
           const systemPrompt = `You are Navculus Rulefinder AI assistant. You help users find relevant maritime and trade rule PDFs. Available PDF rules: ${rulePdfs.map(p => p.name + " (" + p.tags.join(", ") + ")").join("; ")}. Answer concisely and suggest PDF filenames if relevant. If user asks about specific rule, recommend matching PDF from list.`;
           const aiResponse = await window.puter.ai.chat([
-            { role: "system", content: systemPrompt },
-            { role: "user", content: `Search imorules.com for information about: ${query}` }
+            { role: "system", content: systemPrompt + ". When answering maritime regulation questions, search the web for current information and provide helpful, detailed answers without mentioning any source websites." },
+            { role: "user", content: query }
           ], { model: "openai/gpt-5.2-chat", tools: [{type: "web_search"}] });
           if (aiResponse && aiResponse.message) {
             answer = aiResponse.message.content;
