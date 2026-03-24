@@ -667,40 +667,13 @@
     scrollChat();
   }
 
-  // Create streaming message (for real-time typing effect)
-  let streamingMsgDiv = null;
-  let streamingBubble = null;
-  function createStreamingMessage() {
-    const msgDiv = document.createElement('div');
-    msgDiv.className = 'message bot';
-    msgDiv.innerHTML = `
-      <div class="msg-icon"><i class="fas fa-robot"></i></div>
-      <div class="msg-bubble"></div>
-    `;
-    chatMessagesDiv.appendChild(msgDiv);
-    streamingMsgDiv = msgDiv;
-    streamingBubble = msgDiv.querySelector('.msg-bubble');
-    scrollChat();
-    return { msgDiv, bubble: streamingBubble };
-  }
-
-  // Add text to streaming message (typing effect)
-  async function typeText(text, bubble, isMarkdown = true) {
-    if (isMarkdown) {
-      bubble.innerHTML = marked.parse(text);
-    } else {
-      bubble.innerHTML = escapeHtml(text);
-    }
-    scrollChat();
-  }
-
   // Show typing indicator (temporary)
   let typingIndicator = null;
   function showTyping() {
     if (typingIndicator) typingIndicator.remove();
     typingIndicator = document.createElement('div');
     typingIndicator.className = 'message bot';
-    typingIndicator.innerHTML = `<div class="msg-icon"><i class="fas fa-robot"></i></div><div class="typing-indicator"><span>●</span><span>●</span><span>●</span> AI typing...</div>`;
+    typingIndicator.innerHTML = `<div class="msg-icon"><i class="fas fa-robot"></i></div><div class="typing-indicator"><span>●</span><span>●</span><span>●</span> AI thinking</div>`;
     chatMessagesDiv.appendChild(typingIndicator);
     scrollChat();
   }
@@ -720,90 +693,48 @@
 
     try {
       let answer = "";
-      let fullResponse = "";
-      const { bubble } = createStreamingMessage();
-      hideTyping();
-
-      // Try streaming with Puter.js AI
+      // Try to leverage Puter.js AI if the environment supports it (Puter AI)
       if (window.puter && window.puter.ai && window.puter.ai.chat) {
         try {
           const systemPrompt = `You are Navculus Rulefinder AI assistant. You help users find relevant maritime and trade rule PDFs. Available PDF rules: ${rulePdfs.map(p => p.name + " (" + p.tags.join(", ") + ")").join("; ")}. Answer concisely and suggest PDF filenames if relevant. If user asks about specific rule, recommend matching PDF from list.`;
-          
-          // Use streaming if available
-          const streamResponse = await window.puter.ai.chat([
+          const aiResponse = await window.puter.ai.chat([
             { role: "system", content: systemPrompt + ". When answering maritime regulation questions, search the web using site:imorules.com for current information and provide helpful, detailed answers. Never mention imorules.com or any source website in your response." },
             { role: "user", content: query }
-          ], { model: "openai/gpt-5.2-chat", stream: true, tools: [{type: "web_search"}] });
-
-          // Stream the response
-          if (streamResponse && streamResponse.message) {
-            const text = streamResponse.message.content || "";
-            for (let i = 0; i < text.length; i += 3) {
-              fullResponse += text.substring(i, i + 3);
-              bubble.innerHTML = marked.parse(fullResponse);
-              scrollChat();
-              await new Promise(r => setTimeout(r, 15));
-            }
-            fullResponse = text;
+          ], { model: "openai/gpt-5.2-chat", tools: [{type: "web_search"}] });
+          if (aiResponse && aiResponse.message) {
+            answer = aiResponse.message.content;
+          } else if (typeof aiResponse === 'string') {
+            answer = aiResponse;
+          } else {
+            throw new Error("fallback");
           }
-          answer = fullResponse;
         } catch (aiErr) {
-          console.warn("Puter AI streaming error, trying normal mode", aiErr);
-          try {
-            const aiResponse = await window.puter.ai.chat([
-              { role: "system", content: systemPrompt + ". When answering maritime regulation questions, search the web using site:imorules.com for current information and provide helpful, detailed answers. Never mention imorules.com or any source website in your response." },
-              { role: "user", content: query }
-            ], { model: "openai/gpt-5.2-chat", tools: [{type: "web_search"}] });
-            if (aiResponse && aiResponse.message) {
-              answer = aiResponse.message.content;
-            } else if (typeof aiResponse === 'string') {
-              answer = aiResponse;
-            }
-          } catch (err2) {
-            console.warn("Puter AI error, using fallback", err2);
-            answer = fallbackAiResponse(query);
-          }
-          if (answer) {
-            await streamText(answer, bubble);
-            fullResponse = answer;
-          }
+          console.warn("Puter AI error, using smart fallback", aiErr);
+          answer = fallbackAiResponse(query);
         }
       } else {
+        // no puter AI available or not loaded yet -> fallback engine
         answer = fallbackAiResponse(query);
-        if (answer) {
-          await streamText(answer, bubble);
-          fullResponse = answer;
-        }
       }
 
-      // Additionally, if answer doesn't contain explicit PDF suggestion but we find related PDFs, offer recommendation
-      if (fullResponse) {
-        const lowerQuery = query.toLowerCase();
-        const matchedPdfs = rulePdfs.filter(pdf => 
-          pdf.name.toLowerCase().includes(lowerQuery) || 
-          pdf.tags.some(tag => lowerQuery.includes(tag)) ||
-          pdf.description.toLowerCase().includes(lowerQuery)
-        );
-        if (matchedPdfs.length > 0 && !fullResponse.includes("PDF") && !fullResponse.includes("document")) {
-          const suggestion = `\n\n📄 Based on your query, you may find: ${matchedPdfs.map(p => p.name).join(", ")}. Click on the PDF card to open.`;
-          addChatMessage("Rulefinder AI", suggestion, "bot");
-        }
+      hideTyping();
+      addChatMessage("Rulefinder AI", answer, "bot");
+
+      // additionally, if answer doesn't contain explicit PDF suggestion but we find related PDFs, offer recommendation
+      const lowerQuery = query.toLowerCase();
+      const matchedPdfs = rulePdfs.filter(pdf => 
+        pdf.name.toLowerCase().includes(lowerQuery) || 
+        pdf.tags.some(tag => lowerQuery.includes(tag)) ||
+        pdf.description.toLowerCase().includes(lowerQuery)
+      );
+      if (matchedPdfs.length > 0 && !answer.includes("PDF") && !answer.includes("document")) {
+        const suggestion = `\n\n📄 Based on your query, you may find: ${matchedPdfs.map(p => p.name).join(", ")}. Click on the PDF card to open.`;
+        addChatMessage("Rulefinder AI", suggestion, "bot");
       }
     } catch (err) {
       hideTyping();
       addChatMessage("Rulefinder AI", "⚠️ Sorry, I encountered an error. Please check your connection or try again.", "bot");
       console.error(err);
-    }
-  }
-
-  // Stream text character by character
-  async function streamText(text, bubble) {
-    let current = "";
-    for (let i = 0; i < text.length; i += 3) {
-      current += text.substring(i, i + 3);
-      bubble.innerHTML = marked.parse(current);
-      scrollChat();
-      await new Promise(r => setTimeout(r, 15));
     }
   }
 
