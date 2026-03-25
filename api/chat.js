@@ -35,7 +35,7 @@ export default async function handler(req) {
       );
     }
 
-    const geminiModel = model || 'gemini-1.5-flash';
+    const geminiModel = model || 'gemini-2.5-flash';
     const geminiURL = `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:streamGenerateContent?alt=sse&key=${GEMINI_API_KEY}`;
 
     const geminiResponse = await fetch(geminiURL, {
