@@ -619,9 +619,8 @@
     { id: "pdf6", name: "IMSBC Code (Cargoes)", filename: "rules/imsbc_code.pdf", description: "Solid bulk cargoes", tags: ["cargo", "imsbc", "bulk"] }
   ];
 
-  // Gemini API configuration
-  const GEMINI_API_KEY = "AIzaSyAPDQbM5pyC9SkBRoH3hv9bhCl4GXGr1z8"; 
-  const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
+  // Vercel Serverless API configuration
+  const API_URL = "/api/chat";
   const MODEL_NAME = "gemini-1.5-flash"; // Fast Gemini model
 
   // Conversation history for context-aware follow-ups
@@ -833,22 +832,16 @@ RESPONSE FORMAT (IMPORTANT):
         { role: "user", content: query }
       ];
 
-      // Check if API key is configured
-      if (!GEMINI_API_KEY) {
-        bubble.innerHTML = marked.parse("⚠️ **API Key Required**\n\nPlease add an API key.");
-        scrollChat();
-        return;
-      }
+      // Note: API key is now securely handled by Vercel backend
 
       // Clear search message and start fresh
       bubble.innerHTML = "";
 
-      // Call Gemini API with streaming using OpenAI compatibility
-      const response = await fetch(GEMINI_API_URL, {
+      // Call Vercel Backend Proxy with streaming
+      const response = await fetch(API_URL, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${GEMINI_API_KEY}`
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           model: MODEL_NAME,
