@@ -72,12 +72,14 @@ export default async function handler(req) {
     const stream = new ReadableStream({
       async start(controller) {
         try {
+          let buffer = '';
           while (true) {
             const { done, value } = await reader.read();
             if (done) break;
 
-            const chunk = decoder.decode(value);
-            const lines = chunk.split('\n');
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split('\n');
+            buffer = lines.pop(); // Keep the incomplete line in the buffer
 
             for (const line of lines) {
               if (line.startsWith('data: ')) {
