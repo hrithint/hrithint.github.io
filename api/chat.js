@@ -1,27 +1,19 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
-
 export const config = {
-  runtime: 'edge', // Edge runtime for streaming
+  runtime: 'edge', // Fast streaming runtime (zero dependencies)
 };
 
 export default async function handler(req) {
-  if (req.method !== 'POST') {
-    return new Response(JSON.stringify({ error: { message: 'Method not allowed' } }), { status: 405 });
-  }
+  if (req.method !== 'POST') return new Response('Method not allowed', { status: 405 });
 
   try {
     const { messages, model } = await req.json();
     const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
     if (!GEMINI_API_KEY) {
-      return new Response(JSON.stringify({ error: { message: 'API key is missing in Vercel Environment Variables.' } }), { status: 500 });
+      return new Response(JSON.stringify({ error: { message: 'API key is missing in Vercel.' } }), { status: 500 });
     }
 
-    // Initialize official Google Generative AI SDK
-    const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-    const geminiModel = genAI.getGenerativeModel({ model: model || 'gemini-1.5-flash' });
-
-    // Convert standard OpenAI messages array into Gemini SDK format
+    // Convert standard OpenAI messages into Gemini REST format
     let contents = [];
     let systemInstruction = "";
 
@@ -36,7 +28,6 @@ export default async function handler(req) {
       }
     }
 
-    // If there is a system prompt, prepend it as a simulated initial prompt
     if (systemInstruction) {
       contents.unshift(
         { role: 'user', parts: [{ text: "System Instructions: " + systemInstruction }] },
@@ -44,26 +35,57 @@ export default async function handler(req) {
       );
     }
 
-    // Call Gemini API Stream securely
-    const streamResult = await geminiModel.generateContentStream({ contents });
+    const geminiModel = model || 'gemini-1.5-flash';
+    const geminiURL = `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:streamGenerateContent?alt=sse&key=${GEMINI_API_KEY}`;
 
-    // Transform Gemini chunks into OpenAI SSE format so frontend HTML doesn't break
+    const geminiResponse = await fetch(geminiURL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ contents }),
+    });
+
+    if (!geminiResponse.ok) {
+      const errHtml = await geminiResponse.text();
+      return new Response(JSON.stringify({ error: { message: `Google API Error: ${geminiResponse.status} ${errHtml}` } }), { status: 500 });
+    }
+
+    // Transform Gemini SEE stream into OpenAI SSE stream format
+    const reader = geminiResponse.body.getReader();
+    const decoder = new TextDecoder();
+    
     const stream = new ReadableStream({
       async start(controller) {
         try {
-          for await (const chunk of streamResult.stream) {
-            const chunkText = chunk.text();
-            if (chunkText) {
-              const openAiPayload = {
-                choices: [{ delta: { content: chunkText } }]
-              };
-              controller.enqueue(new TextEncoder().encode(`data: ${JSON.stringify(openAiPayload)}\n\n`));
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+
+            const chunk = decoder.decode(value);
+            const lines = chunk.split('\n');
+
+            for (const line of lines) {
+              if (line.startsWith('data: ')) {
+                const dataStr = line.slice(6);
+                if (dataStr === '[DONE]') continue;
+
+                try {
+                  const parsed = JSON.parse(dataStr);
+                  // Gemini payload: {"candidates": [{"content": {"parts": [{"text": "Hello"}]}}]}
+                  const chunkText = parsed.candidates?.[0]?.content?.parts?.[0]?.text;
+                  
+                  if (chunkText) {
+                    const openAiPayload = { choices: [{ delta: { content: chunkText } }] };
+                    controller.enqueue(new TextEncoder().encode(`data: ${JSON.stringify(openAiPayload)}\n\n`));
+                  }
+                } catch (err) {
+                  // Skip incomplete JSON chunks
+                }
+              }
             }
           }
           controller.enqueue(new TextEncoder().encode('data: [DONE]\n\n'));
           controller.close();
         } catch (err) {
-          console.error("Stream Error:", err);
           controller.error(err);
         }
       }
@@ -78,8 +100,7 @@ export default async function handler(req) {
     });
 
   } catch (error) {
-    console.error("Vercel Backend Error:", error);
-    return new Response(JSON.stringify({ error: { message: `Google API Error: ${error.message}` } }), {
+    return new Response(JSON.stringify({ error: { message: `Server Error: ${error.message}` } }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     });
