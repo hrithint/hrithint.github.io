@@ -620,25 +620,9 @@
   ];
 
   // Gemini API configuration
-  let GEMINI_API_KEY = ""; 
+  const GEMINI_API_KEY = "AIzaSyAPDQbM5pyC9SkBRoH3hv9bhCl4GXGr1z8"; 
   const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
   const MODEL_NAME = "gemini-1.5-flash"; // Fast Gemini model
-  
-  // Fetch API key from local text file
-  async function loadApiKey() {
-    try {
-      // Add cache-busting timestamp to prevent browser from caching old keys locally
-      const response = await fetch('navculusimoai.txt?t=' + new Date().getTime());
-      if (response.ok) {
-        const text = await response.text();
-        GEMINI_API_KEY = text.trim();
-      } else {
-        console.warn("Could not load navculusimoai.txt. Ensure the file exists beside the HTML.");
-      }
-    } catch (e) {
-      console.warn("Error fetching navculusimoai.txt:", e);
-    }
-  }
 
   // Conversation history for context-aware follow-ups
   let conversationHistory = [];
@@ -851,7 +835,7 @@ RESPONSE FORMAT (IMPORTANT):
 
       // Check if API key is configured
       if (!GEMINI_API_KEY) {
-        bubble.innerHTML = marked.parse("⚠️ **API Key Required**\n\nCould not load the API key from `navculusimoai.txt`. Please make sure the file is uploaded to GitHub alongside this HTML file and contains your Gemini API key.");
+        bubble.innerHTML = marked.parse("⚠️ **API Key Required**\n\nPlease add an API key.");
         scrollChat();
         return;
       }
@@ -952,8 +936,7 @@ RESPONSE FORMAT (IMPORTANT):
   }
 
   // Initial load
-  async function init() {
-    await loadApiKey();
+  function init() {
     renderPdfList();
     updateModelStatus("AI Ready", "ready");
     
