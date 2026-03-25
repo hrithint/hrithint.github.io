@@ -6,7 +6,7 @@ export default async function handler(req) {
   if (req.method !== 'POST') return new Response('Method not allowed', { status: 405 });
 
   try {
-    const { messages, model } = await req.json();
+    const { messages, model, temperature, max_tokens } = await req.json();
     const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
     if (!GEMINI_API_KEY) {
@@ -15,11 +15,11 @@ export default async function handler(req) {
 
     // Convert standard OpenAI messages into Gemini REST format
     let contents = [];
-    let systemInstruction = "";
+    let systemInstructionText = "";
 
     for (const msg of messages) {
       if (msg.role === 'system') {
-        systemInstruction += msg.content + "\n";
+        systemInstructionText += msg.content + "\n";
       } else {
         contents.push({
           role: msg.role === 'assistant' ? 'model' : 'user',
@@ -28,11 +28,18 @@ export default async function handler(req) {
       }
     }
 
-    if (systemInstruction) {
-      contents.unshift(
-        { role: 'user', parts: [{ text: "System Instructions: " + systemInstruction }] },
-        { role: 'model', parts: [{ text: "Understood." }] }
-      );
+    const payload = {
+      contents: contents,
+      generationConfig: {
+        temperature: temperature !== undefined ? temperature : 0.7,
+        maxOutputTokens: max_tokens || 2048
+      }
+    };
+
+    if (systemInstructionText.trim() !== "") {
+      payload.systemInstruction = {
+        parts: [{ text: systemInstructionText.trim() }]
+      };
     }
 
     const geminiModel = model || 'gemini-2.5-flash';
@@ -41,7 +48,7 @@ export default async function handler(req) {
     const geminiResponse = await fetch(geminiURL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ contents }),
+      body: JSON.stringify(payload),
     });
 
     if (!geminiResponse.ok) {
