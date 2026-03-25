@@ -46,7 +46,16 @@ export default async function handler(req) {
 
     if (!geminiResponse.ok) {
       const errHtml = await geminiResponse.text();
-      return new Response(JSON.stringify({ error: { message: `Google API Error: ${geminiResponse.status} ${errHtml}` } }), { status: 500 });
+      let allowed = "";
+      try {
+        const modelsRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${GEMINI_API_KEY}`);
+        const modelsData = await modelsRes.json();
+        if (modelsData.models) {
+          allowed = " | ACTUAL ALLOWED MODELS For Your Key: " + modelsData.models.map(m => m.name.replace('models/', '')).filter(m => m.includes('gemini')).join(', ');
+        }
+      } catch (e) {}
+
+      return new Response(JSON.stringify({ error: { message: `Google API Error: ${errHtml}${allowed}` } }), { status: 500 });
     }
 
     // Transform Gemini SEE stream into OpenAI SSE stream format
