@@ -18,7 +18,7 @@ export default async function handler(req) {
     const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
     if (!GEMINI_API_KEY) {
-      return new Response(JSON.stringify({ error: 'API key not configured on Vercel' }), {
+      return new Response(JSON.stringify({ error: { message: 'API key is missing in Vercel Environment Variables. Please double check that you added GEMINI_API_KEY and clicked Redeploy.' } }), {
         status: 500,
         headers: { 'Content-Type': 'application/json' },
       });
@@ -49,7 +49,7 @@ export default async function handler(req) {
 
   } catch (error) {
     console.error("Vercel Proxy Error:", error);
-    return new Response(JSON.stringify({ error: 'Failed to process request on server' }), {
+    return new Response(JSON.stringify({ error: { message: `Vercel Server Crash: ${error.message}` } }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     });
