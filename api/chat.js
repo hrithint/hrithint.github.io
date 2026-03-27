@@ -7,66 +7,38 @@ export default async function handler(req) {
 
   try {
     const { messages, model, temperature, max_tokens } = await req.json();
-    const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+    const GROQ_API_KEY = process.env.GROQ_API_KEY;
 
-    if (!GEMINI_API_KEY) {
-      return new Response(JSON.stringify({ error: { message: 'API key is missing in Vercel.' } }), { status: 500 });
+    if (!GROQ_API_KEY) {
+      return new Response(JSON.stringify({ error: { message: 'GROQ_API_KEY is missing in Vercel.' } }), { status: 500 });
     }
 
-    // Convert standard OpenAI messages into Gemini REST format
-    let contents = [];
-    let systemInstructionText = "";
-
-    for (const msg of messages) {
-      if (msg.role === 'system') {
-        systemInstructionText += msg.content + "\n";
-      } else {
-        contents.push({
-          role: msg.role === 'assistant' ? 'model' : 'user',
-          parts: [{ text: msg.content }]
-        });
-      }
-    }
+    const groqModel = model || 'llama-3.1-8b-instant';
+    const groqURL = 'https://api.groq.com/openai/v1/chat/completions';
 
     const payload = {
-      contents: contents,
-      generationConfig: {
-        temperature: temperature !== undefined ? temperature : 0.7,
-        maxOutputTokens: max_tokens || 2048
-      }
+      messages: messages,
+      model: groqModel,
+      temperature: temperature !== undefined ? temperature : 0.7,
+      max_tokens: max_tokens || 2048,
+      stream: true
     };
 
-    if (systemInstructionText.trim() !== "") {
-      payload.systemInstruction = {
-        parts: [{ text: systemInstructionText.trim() }]
-      };
-    }
-
-    const geminiModel = model || 'gemini-2.5-flash';
-    const geminiURL = `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:streamGenerateContent?alt=sse&key=${GEMINI_API_KEY}`;
-
-    const geminiResponse = await fetch(geminiURL, {
+    const groqResponse = await fetch(groqURL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Authorization': `Bearer ${GROQ_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify(payload),
     });
 
-    if (!geminiResponse.ok) {
-      const errHtml = await geminiResponse.text();
-      let allowed = "";
-      try {
-        const modelsRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${GEMINI_API_KEY}`);
-        const modelsData = await modelsRes.json();
-        if (modelsData.models) {
-          allowed = " | ACTUAL ALLOWED MODELS For Your Key: " + modelsData.models.map(m => m.name.replace('models/', '')).filter(m => m.includes('gemini')).join(', ');
-        }
-      } catch (e) {}
-
-      return new Response(JSON.stringify({ error: { message: `Google API Error: ${errHtml}${allowed}` } }), { status: 500 });
+    if (!groqResponse.ok) {
+      const errJson = await groqResponse.json();
+      return new Response(JSON.stringify({ error: { message: `Groq API Error: ${errJson.error?.message || errJson}` } }), { status: 500 });
     }
 
-    // Transform Gemini SEE stream into OpenAI SSE stream format
-    const reader = geminiResponse.body.getReader();
+    const reader = groqResponse.body.getReader();
     const decoder = new TextDecoder();
     
     const stream = new ReadableStream({
@@ -79,7 +51,7 @@ export default async function handler(req) {
 
             buffer += decoder.decode(value, { stream: true });
             const lines = buffer.split('\n');
-            buffer = lines.pop(); // Keep the incomplete line in the buffer
+            buffer = lines.pop();
 
             for (const line of lines) {
               if (line.startsWith('data: ')) {
@@ -88,16 +60,13 @@ export default async function handler(req) {
 
                 try {
                   const parsed = JSON.parse(dataStr);
-                  // Gemini payload: {"candidates": [{"content": {"parts": [{"text": "Hello"}]}}]}
-                  const chunkText = parsed.candidates?.[0]?.content?.parts?.[0]?.text;
+                  const chunkText = parsed.choices?.[0]?.delta?.content;
                   
                   if (chunkText) {
                     const openAiPayload = { choices: [{ delta: { content: chunkText } }] };
                     controller.enqueue(new TextEncoder().encode(`data: ${JSON.stringify(openAiPayload)}\n\n`));
                   }
-                } catch (err) {
-                  // Skip incomplete JSON chunks
-                }
+                } catch (err) {}
               }
             }
           }
