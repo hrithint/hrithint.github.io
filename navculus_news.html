@@ -414,13 +414,12 @@
     }
 
     .developer-credit {
-      font-weight: 500;
-      letter-spacing: 0.3px;
-      background: rgba(255,255,255,0.05);
-      padding: 6px 16px;
-      border-radius: 60px;
+      font-size: 0.75rem;
+      font-weight: 400;
+      letter-spacing: 0.2px;
       display: inline-block;
       margin-top: 8px;
+      color: #8899aa;
     }
 
     @media (max-width: 768px) {
@@ -475,10 +474,7 @@
       <span class="news-badge">NEWS</span>
     </div>
     <div class="nav-links">
-      <a href="#" class="active">Home</a>
-      <a href="#">Insights</a>
-      <a href="#">Trends</a>
-      <a href="#">Innovation</a>
+      <a href="/" class="active">Home</a>
     </div>
   </div>
 </div>
@@ -487,7 +483,7 @@
   <div class="container">
     <div class="page-headline">
       <h1>Navculus NEWS</h1>
-      <p>Navigate the future with intelligence — deep tech, AI shifts, and breakthrough stories.</p>
+      <p>Maritime insights, offshore energy, shipbuilding & naval architecture updates.</p>
     </div>
 
     <!-- Featured News Section -->
@@ -531,15 +527,13 @@
 <footer class="site-footer">
   <div class="container footer-content">
     <div class="footer-logo">navculus <span style="font-weight:400">·</span> NEWS</div>
+      <span class="developer-credit">Developed by Hrithin</span>
     <div class="footer-links">
-      <a href="#">About Navculus</a>
-      <a href="#">Press & Media</a>
-      <a href="#">Privacy</a>
-      <a href="#">Contact</a>
+      <a href="/about.html">About Navculus</a>
+      <a href="/contact.html">Contact</a>
     </div>
     <div class="copyright">
       <span>© 2026 Navculus — Navigating the frontier of intelligence.</span>
-      <span class="developer-credit"><i class="fas fa-code"></i> Developed by Hrithin</span>
     </div>
   </div>
 </footer>
@@ -555,57 +549,57 @@
   const fallbackArticles = [
     {
       id: 1,
-      category: "AI & INTELLIGENCE",
-      title: "Generative AI reshapes R&D cycles at Navculus Labs",
+      category: "SHIPBUILDING",
+      title: "Next-generation LNG carriers set new standards in maritime efficiency",
       date: "Mar 28, 2026",
-      readTime: "4 min read",
-      excerpt: "New diffusion models cut product design time by 60%, accelerating innovation in materials science and hardware simulation.",
-      iconClass: "fas fa-brain"
+      readTime: "5 min read",
+      excerpt: "Major shipyards unveil designs for ultra-efficient LNG carriers featuring advanced propulsion systems and eco-friendly technologies.",
+      iconClass: "fas fa-ship"
     },
     {
       id: 2,
-      category: "CLOUD & EDGE",
-      title: "Navculus hybrid cloud mesh: redefining data sovereignty",
+      category: "OFFSHORE",
+      title: "Floating wind farms transform offshore energy landscape",
       date: "Mar 25, 2026",
-      readTime: "5 min read",
-      excerpt: "Introducing a zero-trust framework that unifies edge nodes with major cloud providers while preserving compliance.",
-      iconClass: "fas fa-cloud-arrow-up"
+      readTime: "6 min read",
+      excerpt: "New floating offshore wind platforms enable renewable energy generation in deeper waters previously inaccessible.",
+      iconClass: "fas fa-wind"
     },
     {
       id: 3,
-      category: "CYBERSECURITY",
-      title: "Post-quantum cryptography roadmap unveiled",
+      category: "NAVAL ARCHITECTURE",
+      title: "AI-driven hull optimization reduces vessel fuel consumption by 15%",
       date: "Mar 20, 2026",
-      readTime: "3 min read",
-      excerpt: "Navculus partners with NIST to deliver quantum-resistant encryption modules for critical infrastructure sectors.",
-      iconClass: "fas fa-shield-haltered"
+      readTime: "4 min read",
+      excerpt: "Computational fluid dynamics combined with machine learning revolutionizes ship design and hydrodynamic efficiency.",
+      iconClass: "fas fa-drafting-compass"
     },
     {
       id: 4,
-      category: "AUTOMOTIVE TECH",
-      title: "Autonomous mobility stack passes level-4 validation",
+      category: "MARINE TECH",
+      title: "Autonomous port operations reach new milestone",
       date: "Mar 18, 2026",
-      readTime: "7 min read",
-      excerpt: "Navculus-powered sensor fusion achieves 99.97% decision accuracy in extreme weather conditions.",
-      iconClass: "fas fa-car-side"
+      readTime: "5 min read",
+      excerpt: "Fully automated container terminals demonstrate 40% efficiency gains with zero-emission electric fleet.",
+      iconClass: "fas fa-anchor"
     },
     {
       id: 5,
-      category: "SUSTAINABILITY",
-      title: "Green compute initiative: carbon-negative data centers",
+      category: "BOATS",
+      title: "Electric pleasure boats gain popularity in coastal resorts",
       date: "Mar 15, 2026",
-      readTime: "4 min read",
-      excerpt: "New liquid immersion cooling and renewable integration cuts PUE below 1.05, setting industry benchmarks.",
-      iconClass: "fas fa-leaf"
+      readTime: "3 min read",
+      excerpt: "Silent, emission-free electric boats emerge as preferred choice for sustainable tourism and recreational boating.",
+      iconClass: "fas fa-sailboat"
     },
     {
       id: 6,
-      category: "STRATEGY",
-      title: "Navculus Ventures: $200M fund for deep tech startups",
+      category: "OFFSHORE",
+      title: "Deep-sea mining vessels equipped with eco-conscious extraction tech",
       date: "Mar 10, 2026",
-      readTime: "5 min read",
-      excerpt: "Fueling early-stage breakthroughs in neuromorphic computing, biotech AI, and space-grade electronics.",
-      iconClass: "fas fa-rocket"
+      readTime: "7 min read",
+      excerpt: "New regulations drive innovation in sustainable deep-sea resource extraction with minimal environmental impact.",
+      iconClass: "fas fa-water"
     }
   ];
 
