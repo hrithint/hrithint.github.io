@@ -669,15 +669,18 @@
   // Fetch real-time news from serverless API
   async function fetchRealTimeNews() {
     try {
+      console.log('↻ Fetching news from API...');
       const url = `${API_BASE_URL}/news`;
 
       const response = await fetch(url);
+      console.log('Response status:', response.status);
       
       if (!response.ok) {
         throw new Error(`API error: ${response.status}`);
       }
 
       const data = await response.json();
+      console.log('API Response:', data);
       
       // Check if response has error
       if (data.error) {
@@ -686,6 +689,7 @@
       
       // Extract articles - handle both wrapped and unwrapped responses
       const articles = data.articles || data;
+      console.log('Articles found:', articles?.length || 0);
       
       if (articles && articles.length > 0) {
         newsArticles = articles.map((article, index) => ({
@@ -705,16 +709,13 @@
         updateFeaturedArticle(newsArticles[0]);
         
         console.log('✓ Loaded', newsArticles.length, 'articles from API');
+        renderNewsGrid();
       } else {
-        console.log('⚠ No articles found, using fallback');
-        newsArticles = [...fallbackArticles];
+        console.log('⚠ No articles found, keeping fallback');
       }
-      
-      renderNewsGrid();
     } catch (error) {
-      console.error('Failed to fetch news:', error);
-      newsArticles = [...fallbackArticles];
-      renderNewsGrid();
+      console.error('✗ Failed to fetch news:', error);
+      console.log('↩ Using fallback articles');
     }
   }
 
@@ -966,9 +967,13 @@
 
   // init all
   function init() {
-    fetchRealTimeNews(); // Fetch real-time news from GNews API
+    // Render fallback immediately
+    newsArticles = [...fallbackArticles];
+    renderNewsGrid();
+    
+    // Then fetch real-time news
+    fetchRealTimeNews();
     bindGlobalEvents();
-    // optional extra: add hover effect or any polishing
   }
   init();
 </script>
