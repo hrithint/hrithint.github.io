@@ -669,20 +669,26 @@
   // Fetch real-time news from serverless API
   async function fetchRealTimeNews() {
     try {
-      const topic = 'technology';
-      const lang = 'en';
-      const max = 20;
-      const url = `${API_BASE_URL}/news?topic=${topic}&lang=${lang}&max=${max}`;
+      const url = `${API_BASE_URL}/news`;
 
       const response = await fetch(url);
+      
       if (!response.ok) {
         throw new Error(`API error: ${response.status}`);
       }
 
       const data = await response.json();
       
-      if (data.articles && data.articles.length > 0) {
-        newsArticles = data.articles.map((article, index) => ({
+      // Check if response has error
+      if (data.error) {
+        throw new Error(data.error);
+      }
+      
+      // Extract articles - handle both wrapped and unwrapped responses
+      const articles = data.articles || data;
+      
+      if (articles && articles.length > 0) {
+        newsArticles = articles.map((article, index) => ({
           id: index + 1,
           category: article.category ? getMarineCategory(article.category) : 'MARINE',
           title: article.title,
@@ -697,12 +703,16 @@
         
         // Update featured article with latest news
         updateFeaturedArticle(newsArticles[0]);
+        
+        console.log('✓ Loaded', newsArticles.length, 'articles from API');
+      } else {
+        console.log('⚠ No articles found, using fallback');
+        newsArticles = [...fallbackArticles];
       }
       
       renderNewsGrid();
     } catch (error) {
       console.error('Failed to fetch news:', error);
-      showToast('📡 Real-time news unavailable. Showing cached articles.');
       newsArticles = [...fallbackArticles];
       renderNewsGrid();
     }
