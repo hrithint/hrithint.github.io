@@ -138,6 +138,12 @@
             opacity: 0.92;
         }
 
+        .button-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
         /* AI BUTTON STYLES */
         .ai-button-container {
             position: relative;
@@ -195,6 +201,65 @@
             font-family: monospace;
             letter-spacing: 0.3px;
             border-left: 3px solid var(--highlight-blue);
+        }
+
+        /* NEWS BUTTON STYLES */
+        .news-button-container {
+            position: relative;
+            display: inline-block;
+            margin-left: 5px;
+        }
+
+        .news-nav-btn {
+            background: linear-gradient(135deg, #2d5a27, #4a7c43);
+            border: none;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(2px);
+        }
+
+        .news-nav-btn i {
+            font-size: 1rem;
+            color: #b8e1ff;
+        }
+
+        .news-nav-btn:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, #3a6b33, #5a9c53);
+            box-shadow: 0 4px 12px rgba(45, 90, 39, 0.4);
+            border-color: #6cb75a;
+        }
+
+        .news-tooltip {
+            position: absolute;
+            bottom: 125%;
+            right: 0;
+            background-color: #1e2a3a;
+            color: #f0f9ff;
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 0.4rem 0.9rem;
+            border-radius: 24px;
+            white-space: nowrap;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.2);
+            pointer-events: none;
+            z-index: 150;
+            transition: opacity 0.2s ease;
+            opacity: 0;
+            visibility: hidden;
+            font-family: monospace;
+            letter-spacing: 0.3px;
+            border-left: 3px solid #5a9c43;
         }
 
         .ai-button-container:hover .ai-tooltip {
@@ -560,9 +625,12 @@
                 flex-direction: column;
                 align-items: flex-start;
             }
-            .ai-button-container {
+            .button-group {
                 align-self: flex-end;
                 margin-top: 5px;
+            }
+            .ai-button-container {
+                margin-top: 0;
             }
             .ai-tooltip {
                 white-space: normal;
@@ -610,11 +678,19 @@
                 <div class="tagline-text">
                     Precision engineering for marine design and analysis
                 </div>
-                <div class="ai-button-container">
-                    <button id="navculusAiBtn" class="ai-nav-btn">
-                        <i class="fas fa-robot"></i> Navculus AI
-                    </button>
-                    <span class="ai-tooltip">Lets talk about marine rules</span>
+                <div class="button-group">
+                    <div class="ai-button-container">
+                        <button id="navculusAiBtn" class="ai-nav-btn">
+                            <i class="fas fa-robot"></i> Navculus AI
+                        </button>
+                        <span class="ai-tooltip">Lets talk about marine rules</span>
+                    </div>
+                    <div class="news-button-container">
+                        <button id="navculusNewsBtn" class="news-nav-btn">
+                            <i class="fas fa-newspaper"></i> NEWS
+                        </button>
+                        <span class="news-tooltip">Latest maritime news & updates</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -779,6 +855,13 @@
             if(aiBtn) {
                 aiBtn.addEventListener('click', () => {
                     window.location.href = 'tools/Rulefinder/navculus_rulefinder.html';
+                });
+            }
+            // Navculus NEWS button click: open navculus_news.html
+            const newsBtn = document.getElementById('navculusNewsBtn');
+            if(newsBtn) {
+                newsBtn.addEventListener('click', () => {
+                    window.location.href = 'navculus_news.html';
                 });
             }
             // smooth anchors
