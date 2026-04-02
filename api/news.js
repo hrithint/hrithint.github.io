@@ -1,12 +1,17 @@
 import { Redis } from '@upstash/redis';
 
-const redis = new Redis({
-  url: process.env.KV_REST_API_URL,
-  token: process.env.KV_REST_API_TOKEN,
-});
-
 const CACHE_KEY = 'marine_news_cache';
-const CACHE_TTL = 4 * 60 * 60; // 4 hours in seconds
+const CACHE_TTL = 4 * 60 * 60;
+
+function getRedisClient() {
+  if (!process.env.KV_REST_API_URL || !process.env.KV_REST_API_TOKEN) {
+    return null;
+  }
+  return new Redis({
+    url: process.env.KV_REST_API_URL,
+    token: process.env.KV_REST_API_TOKEN,
+  });
+}
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
@@ -19,17 +24,25 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'GNews API key not configured' });
   }
 
+  const redis = getRedisClient();
+
   try {
-    // Check cache first
-    const cachedData = await redis.get(CACHE_KEY);
-    
-    if (cachedData) {
-      console.log('Serving from cache');
-      return res.status(200).json(cachedData);
+    if (redis) {
+      const cachedData = await redis.get(CACHE_KEY);
+      
+      if (cachedData) {
+        console.log('✓ Serving from Upstash cache');
+        return res.status(200).json({
+          ...cachedData,
+          _cached: true,
+          _cachedAt: cachedData._cachedAt || 'unknown'
+        });
+      }
+    } else {
+      console.log('⚠ Redis not configured');
     }
 
-    // Fetch fresh data from GNews API
-    console.log('Fetching fresh data from GNews API');
+    console.log('↻ Fetching fresh data from GNews API');
     const lang = 'en';
     const max = 20;
     
@@ -46,13 +59,17 @@ export default async function handler(req, res) {
 
     const data = await response.json();
     
-    // Store in cache with 4-hour TTL
-    await redis.set(CACHE_KEY, data, { ex: CACHE_TTL });
-    console.log('Data cached for 4 hours');
+    data._cached = false;
+    data._cachedAt = new Date().toISOString();
+    
+    if (redis) {
+      await redis.set(CACHE_KEY, data, { ex: CACHE_TTL });
+      console.log('✓ Cached at:', data._cachedAt);
+    }
     
     return res.status(200).json(data);
   } catch (error) {
-    console.error('News API error:', error);
-    return res.status(500).json({ error: 'Failed to fetch news' });
+    console.error('✗ Error:', error.message);
+    return res.status(500).json({ error: error.message });
   }
 }
