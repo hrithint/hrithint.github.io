@@ -921,23 +921,7 @@
       });
     }
 
-    // optional additional link handling for header mock
-    const headerLinks = document.querySelectorAll('.nav-links a');
-    headerLinks.forEach(link => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        showToast(`🔍 Navigate to ${link.innerText} section (demo interface).`);
-      });
-    });
 
-    // any footer link mock
-    const footerAnchors = document.querySelectorAll('.footer-links a');
-    footerAnchors.forEach(link => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        showToast(`📄 ${link.innerText} — information hub coming soon.`);
-      });
-    });
   }
 
   // init all
