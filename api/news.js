@@ -10,9 +10,13 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { topic = 'technology', lang = 'en', max = 10 } = req.query;
+    const lang = 'en';
+    const max = 10;
     
-    const url = `https://gnews.io/api/v4/top-headlines?topic=${topic}&lang=${lang}&max=${max}&apikey=${apiKey}`;
+    const searchTerms = ['marine', 'offshore', 'shipbuilding', 'naval architecture', 'ships', 'boats'];
+    const q = searchTerms.join(' OR ');
+    
+    const url = `https://gnews.io/api/v4/search?q=${encodeURIComponent(q)}&lang=${lang}&max=${max}&apikey=${apiKey}`;
     
     const response = await fetch(url);
     
