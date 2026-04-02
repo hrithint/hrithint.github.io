@@ -883,31 +883,6 @@
       }
     }
   }
-    
-    newsArticles.forEach((article, index) => {
-      const card = document.createElement('div');
-      card.className = 'news-card';
-      
-      const imageHtml = article.image 
-        ? `<div class="card-img" style="background-image: url(${article.image}); background-size: cover; background-position: center;"></div>`
-        : `<div class="card-img"><i class="${article.iconClass || 'fas fa-newspaper'}" style="font-size: 3rem; color: #2c6e9e;"></i></div>`;
-      
-      card.innerHTML = `
-        ${imageHtml}
-        <div class="card-content">
-          <span class="card-category">${article.category || 'NEWS'}</span>
-          <h3>${article.title}</h3>
-          <div class="card-meta">
-            <span><i class="far fa-calendar-alt"></i> ${article.date}</span>
-            <span><i class="far fa-hourglass-half"></i> ${article.readTime || '3 min read'}</span>
-          </div>
-          <p class="card-excerpt">${article.excerpt || ''}</p>
-          <a href="${article.url || '#'}" target="_blank" class="card-link" data-index="${index}">Read more <i class="fas fa-chevron-right"></i></a>
-        </div>
-      `;
-      gridContainer.appendChild(card);
-    });
-  }
 
   // toast function
   let toastTimeout;
