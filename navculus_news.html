@@ -225,8 +225,8 @@
 
     .news-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-      gap: 32px;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 24px;
       margin-bottom: 64px;
     }
 
@@ -249,7 +249,7 @@
 
     .card-img {
       background: #eef2fa;
-      height: 180px;
+      height: 160px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -508,10 +508,16 @@
 
     <!-- Recent & Top News Grid -->
     <div class="section-title">
-      <i class="fas fa-newspaper" style="margin-right: 10px; color:#1e6bb8;"></i> Latest intelligence
+      <i class="fas fa-newspaper" style="margin-right: 10px; color:#1e6bb8;"></i> Latest News
     </div>
     <div class="news-grid" id="newsGrid">
       <!-- news items will be generated with JS, but also hardcoded content for direct viewing -->
+    </div>
+
+    <div style="text-align: center; margin-bottom: 48px;">
+      <button class="btn-outline" id="loadMoreBtn" style="display: none;">
+        <i class="fas fa-plus"></i> Load More
+      </button>
     </div>
 
     <!-- Insight / Industry pulse -->
@@ -611,7 +617,7 @@
     try {
       const topic = 'technology';
       const lang = 'en';
-      const max = 10;
+      const max = 20;
       const url = `${API_BASE_URL}/news?topic=${topic}&lang=${lang}&max=${max}`;
 
       const response = await fetch(url);
@@ -719,9 +725,15 @@
     }
   }
 
+  // Pagination settings
+  let displayedCount = 6;
+  const initialCount = 6;
+  const loadMoreCount = 6;
+
   // Function to render news grid
   function renderNewsGrid() {
     const gridContainer = document.getElementById('newsGrid');
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
     if (!gridContainer) return;
     gridContainer.innerHTML = '';
     
@@ -730,6 +742,65 @@
       gridContainer.innerHTML = '<p style="text-align:center; padding:40px; color:#666;">Loading news...</p>';
       return;
     }
+    
+    displayedCount = initialCount;
+    renderCards(0, displayedCount);
+    
+    // Show/hide Load More button
+    if (loadMoreBtn) {
+      if (displayedCount < newsArticles.length) {
+        loadMoreBtn.style.display = 'inline-flex';
+      } else {
+        loadMoreBtn.style.display = 'none';
+      }
+    }
+  }
+
+  function renderCards(start, end) {
+    const gridContainer = document.getElementById('newsGrid');
+    if (!gridContainer) return;
+    
+    const articlesToShow = newsArticles.slice(start, end);
+    
+    articlesToShow.forEach((article, index) => {
+      const card = document.createElement('div');
+      card.className = 'news-card';
+      
+      const imageHtml = article.image 
+        ? `<div class="card-img" style="background-image: url(${article.image}); background-size: cover; background-position: center;"></div>`
+        : `<div class="card-img"><i class="${article.iconClass || 'fas fa-newspaper'}" style="font-size: 3rem; color: #2c6e9e;"></i></div>`;
+      
+      card.innerHTML = `
+        ${imageHtml}
+        <div class="card-content">
+          <span class="card-category">${article.category || 'NEWS'}</span>
+          <h3>${article.title}</h3>
+          <div class="card-meta">
+            <span><i class="far fa-calendar-alt"></i> ${article.date}</span>
+            <span><i class="far fa-clock"></i> ${article.readTime || '3 min read'}</span>
+          </div>
+          <p class="card-excerpt">${article.excerpt || ''}</p>
+          <a href="${article.url || '#'}" target="_blank" class="card-link">Read more <i class="fas fa-chevron-right"></i></a>
+        </div>
+      `;
+      gridContainer.appendChild(card);
+    });
+  }
+
+  function loadMoreCards() {
+    const gridContainer = document.getElementById('newsGrid');
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
+    
+    displayedCount += loadMoreCount;
+    renderCards(displayedCount - loadMoreCount, displayedCount);
+    
+    // Update Load More button visibility
+    if (loadMoreBtn) {
+      if (displayedCount >= newsArticles.length) {
+        loadMoreBtn.style.display = 'none';
+      }
+    }
+  }
     
     newsArticles.forEach((article, index) => {
       const card = document.createElement('div');
@@ -782,6 +853,14 @@
     if (subscribeBtn) {
       subscribeBtn.addEventListener('click', () => {
         showToast('📬 Navigator Brief demo — thank you! Stay tuned for official newsletter launch.');
+      });
+    }
+
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
+    if (loadMoreBtn) {
+      loadMoreBtn.addEventListener('click', () => {
+        loadMoreCards();
+        showToast('📰 Loading more articles...');
       });
     }
 
