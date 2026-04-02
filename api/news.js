@@ -31,7 +31,7 @@ export default async function handler(req, res) {
     // Fetch fresh data from GNews API
     console.log('Fetching fresh data from GNews API');
     const lang = 'en';
-    const max = 10;
+    const max = 20;
     
     const searchTerms = ['marine', 'offshore', 'shipbuilding', 'naval architecture', 'ships', 'boats'];
     const q = searchTerms.join(' OR ');
