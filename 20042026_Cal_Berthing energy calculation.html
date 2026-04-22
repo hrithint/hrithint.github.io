@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Berthing Energy Calculator | PIANC WG33 | Auto Velocity</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #eef2f7 0%, #d9e2ec 100%);
+            padding: 30px 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .master-container {
+            max-width: 1500px;
+            width: 100%;
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+        }
+
+        .calc-header {
+            background: linear-gradient(135deg, #0f2b3d 0%, #1b4f72 100%);
+            color: white;
+            padding: 28px 32px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .calc-header::before {
+            content: "⚓";
+            font-size: 140px;
+            position: absolute;
+            bottom: -30px;
+            right: -20px;
+            opacity: 0.1;
+        }
+
+        .header-title h1 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-title p {
+            opacity: 0.85;
+            margin-top: 8px;
+        }
+
+        .credit-badge {
+            position: absolute;
+            top: 24px;
+            right: 28px;
+            background: rgba(255,255,255,0.18);
+            backdrop-filter: blur(6px);
+            padding: 6px 16px;
+            border-radius: 60px;
+            font-size: 0.85rem;
+        }
+
+        .tabs-nav {
+            display: flex;
+            background: #f4f8fe;
+            border-bottom: 1px solid #cfdfed;
+            padding-left: 20px;
+            gap: 8px;
+        }
+
+        .tab-btn {
+            padding: 16px 32px;
+            font-weight: 700;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            color: #2c5a7a;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tab-btn.active {
+            color: #0f2b3d;
+            border-bottom: 3px solid #1b4f72;
+            background: white;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .tab-pane {
+            display: none;
+            padding: 30px 28px;
+            background: white;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        .two-columns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 32px;
+        }
+
+        .input-panel {
+            flex: 1.2;
+            min-width: 340px;
+            background: #fefefe;
+            border-radius: 24px;
+            border: 1px solid #e2edf7;
+            padding: 24px;
+        }
+
+        .output-panel {
+            flex: 1.8;
+            min-width: 380px;
+        }
+
+        .section-card {
+            background: #ffffff;
+            border-radius: 20px;
+            border: 1px solid #e9f0f5;
+            margin-bottom: 28px;
+            overflow: hidden;
+        }
+
+        .section-title {
+            background: #f8fbfe;
+            padding: 16px 22px;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: #1a4b6e;
+            border-bottom: 1px solid #e2edf7;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 18px;
+            padding: 20px 22px;
+        }
+
+        .input-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .input-field label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #2c3e4e;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        input, select {
+            padding: 10px 14px;
+            border: 1px solid #cbdde9;
+            border-radius: 14px;
+            font-size: 0.9rem;
+            background: white;
+        }
+
+        input:focus, select:focus {
+            border-color: #1f6392;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(31,99,146,0.1);
+        }
+
+        .info-hint {
+            font-size: 0.7rem;
+            color: #5f7f9a;
+            margin-top: 4px;
+        }
+
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .result-table th, .result-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid #e9edf2;
+        }
+
+        .result-table th {
+            background-color: #fafdff;
+            font-weight: 700;
+            color: #1f4e6e;
+        }
+
+        .energy-box {
+            background: linear-gradient(115deg, #eef4fc 0%, #e2edf7 100%);
+            border-radius: 24px;
+            padding: 20px;
+            text-align: center;
+            margin-top: 12px;
+        }
+
+        .energy-value {
+            font-size: 2.4rem;
+            font-weight: 800;
+            color: #0f3b5c;
+        }
+
+        button.calc-primary {
+            background: linear-gradient(100deg, #1b5a7e, #124263);
+            border: none;
+            padding: 14px 22px;
+            border-radius: 40px;
+            font-weight: bold;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: 0.2s;
+            margin-top: 10px;
+        }
+
+        button.calc-primary:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(100deg, #236e98, #103a57);
+        }
+
+        .velocity-mode {
+            background: #f0f6fa;
+            border-radius: 20px;
+            padding: 12px 16px;
+            margin-bottom: 10px;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        .radio-group label {
+            font-weight: normal;
+            gap: 6px;
+            cursor: pointer;
+        }
+        .footnote {
+            font-size: 0.7rem;
+            text-align: center;
+            margin-top: 20px;
+            color: #6b8eaa;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 30px;
+            background: #e0f2e9;
+            color: #1f6e43;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+<div class="master-container">
+    <div class="calc-header">
+        <div class="header-title">
+            <h1>Berthing Energy Calculator</h1>
+            <p>PIANC WG33 • BS 6349: Part 4</p>
+        </div>
+        <div class="credit-badge">Developed by Hrithin</div>
+        <a href="index.html" style="position: absolute; bottom: 28px; right: 28px; color: white; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 6px;"><i class="fas fa-home"></i> Home</a>
+    </div>
+
+    <div class="tabs-nav">
+        <button class="tab-btn active" data-tab="inputs"><i class="fas fa-edit"></i> Inputs & Energy</button>
+        <button class="tab-btn" data-tab="results"><i class="fas fa-chart-line"></i> Coefficients & Details</button>
+    </div>
+
+    <!-- INPUTS TAB -->
+    <div id="inputs-tab" class="tab-pane active">
+        <div class="two-columns">
+            <div class="input-panel">
+                <div class="section-title"><i class="fas fa-ship"></i> Vessel & Berthing Parameters</div>
+                <div class="input-grid">
+                    <div class="input-field">
+                        <label><i class="fas fa-anchor"></i> Vessel type</label>
+                        <select id="vessel-type">
+                            <option value="Tanker (large)">Tanker (large)</option>
+                            <option value="Tanker (small)">Tanker (small)</option>
+                            <option value="Bulk (large)">Bulk (large)</option>
+                            <option value="Bulk (small)">Bulk (small)</option>
+                            <option value="Container (large)">Container (large)</option>
+                            <option value="Container (small)" selected>Container (small)</option>
+                            <option value="General cargo">General cargo</option>
+                            <option value="RoRo">RoRo</option>
+                            <option value="Ferries">Ferries</option>
+                            <option value="Tugs">Tugs</option>
+                            <option value="Workboats">Workboats</option>
+                        </select>
+                        <div class="info-hint">Determines Factor of Safety</div>
+                    </div>
+                    <div class="input-field">
+                        <label><i class="fas fa-weight-hanging"></i> Displacement (Tonnes)</label>
+                        <input type="number" id="displacement" value="26000" step="500">
+                    </div>
+                    <div class="input-field">
+                        <label><i class="fas fa-ruler-combined"></i> Length Overall, LOA (m)</label>
+                        <input type="number" id="loa" value="160" step="1">
+                    </div>
+                    <div class="input-field">
+                        <label><i class="fas fa-ruler"></i> Length between perpendicular, LBP (m)</label>
+                        <input type="number" id="lbp" value="148" step="1">
+                    </div>
+                    <div class="input-field">
+                        <label><i class="fas fa-arrows-alt-h"></i> Breadth moulded B (m)</label>
+                        <input type="number" id="breadth" value="25" step="0.5">                
+                    </div>
+                    <div class="input-field">
+                        <label><i class="fas fa-water"></i> Breadth at waterline (m)</label>
+                        <input type="number" id="breadth-waterline" value="24.5" step="0.5">
+                    </div>
+                    <div class="input-field">
+                        <label><i class="fas fa-water"></i> Draft DL (m)</label>
+                        <input type="number" id="draft" value="8" step="0.2">
+                    </div>
+                    <div class="input-field">
+                        <label><i class="fas fa-map-marker-alt"></i> Distance from contact point to bow (m)</label>
+                        <input type="number" id="contact-bow" value="25" step="1">
+                    </div>
+                    <div class="input-field">
+                        <label><i class="fas fa-draw-polygon"></i> Berth configuration</label>
+                        <select id="berth-config">
+                            <option value="Solid">Solid (continuous quay)</option>
+                            <option value="Partly Closed">Partly Closed</option>
+                            <option value="Open Pile" selected>Open Pile</option>
+                        </select>
+                    </div>
+                    <div class="input-field">
+                        <label><i class="fas fa-directions"></i> Type of Berthing</label>
+                        <select id="berth-type">
+                            <option value="Side berthing" selected>Side berthing</option>
+                            <option value="End berthing">End berthing</option>
+                        </select>
+                    </div>
+                    <div class="input-field">
+                        <label><i class="fas fa-anchor"></i> Berthing angle α (deg)</label>
+                        <input type="number" id="berth-angle" value="5" step="1" min="0" max="90">
+                        <div class="info-hint">Angle of approach</div>
+                    </div>
+                    <div class="input-field">
+                        <label><i class="fas fa-hand-peace"></i> Fender hardness</label>
+                        <select id="fender-hardness">
+                            <option value="Hard">Hard fender (CS=0.9)</option>
+                            <option value="Soft">Soft fender (CS=1.0)</option>
+                        </select>
+                    </div>
+                    <div class="input-field">
+                        <label><i class="fas fa-water"></i> Water depth (m)</label>
+                        <input type="number" id="water-depth" value="12" step="0.5">
+                    </div>
+                    <div class="input-field">
+                        <label><i class="fas fa-flask"></i> Water density (t/m³)</label>
+                        <input type="number" id="water-density" value="1.025" step="0.005">
+                    </div>
+                </div>
+            </div>
+
+            <div class="output-panel">
+                <div class="section-card">
+                    <div class="section-title"><i class="fas fa-tachometer-alt"></i> Berthing Speed Configuration</div>
+                    <div style="padding: 20px;">
+                        <div class="velocity-mode">
+                            <div><i class="fas fa-cog"></i> <strong>Velocity mode</strong></div>
+                            <div class="radio-group">
+                                <label><input type="radio" name="velMode" value="auto" checked> <i class="fas fa-cog"></i> Automatic</label>
+                                <label><input type="radio" name="velMode" value="manual"> <i class="fas fa-pen"></i> Manual input</label>
+                            </div>
+                        </div>
+                        <div id="auto-velocity-panel">
+                            <div class="input-field">
+                                <label><i class="fas fa-cloud-sun"></i> Berthing condition</label>
+                                <select id="berthing-condition">
+                                    <option value="a) Easy, sheltered">a) Easy, sheltered</option>
+                                    <option value="b) Difficult, sheltered" selected>b) Difficult, sheltered</option>
+                                    <option value="c) Easy, exposed">c) Easy, exposed</option>
+                                    <option value="d) Good, exposed">d) Good, exposed</option>
+                                    <option value="e) Difficult, exposed">e) Difficult, exposed</option>
+                                </select>
+                            </div>
+                            <div class="input-field">
+                                <label><i class="fas fa-tug"></i> Tug assistance</label>
+                                <select id="tug-assist">
+                                    <option value="Yes">Yes (tug assisted)</option>
+                                    <option value="No, favourable">No, favourable</option>
+                                    <option value="No, unfavourable">No, unfavourable</option>
+                                </select>
+                                <div class="info-hint">Yes → V = Vbase ; No,favourable → V = 3×Vbase ; No,unfavourable → V = 2.3×Vbase</div>
+                            </div>
+                        </div>
+                        <div id="manual-velocity-panel" style="display: none;">
+                            <div class="input-field">
+                                <label><i class="fas fa-tachometer-alt"></i> Berthing Speed (m/s)</label>
+                                <input type="number" id="manual-speed" value="0.35" step="0.01">
+                                <div class="info-hint">User-defined berthing velocity</div>
+                            </div>
+                        </div>
+                        <div class="info-hint" style="margin-top: 12px; background:#eef2fa; padding: 8px; border-radius: 16px;">
+                            <i class="fas fa-chart-line"></i> <strong id="display-effective-speed">--</strong> m/s (effective berthing speed)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <div class="section-title"><i class="fas fa-charging-station"></i> Berthing Energy</div>
+                    <div style="padding: 20px;">
+                        <table class="result-table">
+                            <tr><th>Normal Energy EN (kJ)</th><td id="en-preview" style="font-weight:800;">-- kJ</td></tr>
+                            <tr><th>Safety Factor </th><td id="fos-preview">2.0</td></tr>
+                            <tr><th>Abnormal Energy EA (kJ)</th><td id="ea-preview" style="font-weight:800;">-- kJ</td></tr>
+                        </table>
+                        <div class="energy-box">
+                            <div><strong>⚡ Design Berthing Energy (EA)</strong></div>
+                            <div class="energy-value" id="design-preview">-- kJ</div>
+                            <div class="info-hint">EA = EN × FoS (abnormal condition)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="calc-primary" id="recalcBtn"><i class="fas fa-sync-alt"></i> Recalculate All</button>
+        <div class="footnote"><i class="fas fa-line-chart"></i> Base velocity interpolated from PIANC - Displacement vs Velocity Curves for various berthing conditions matrix.</div>
+    </div>
+
+    <!-- RESULTS & COEFFICIENTS TAB -->
+    <div id="results-tab" class="tab-pane">
+        <div class="two-columns">
+            <div class="input-panel">
+                <div class="section-title"><i class="fas fa-microchip"></i> Hydrodynamic & Eccentricity</div>
+                <div style="padding: 20px;">
+                    <table class="result-table">
+                        <tr><td>Block coefficient (Cb)</td><td id="cb-coeff">--</td></tr>
+                        <tr><td>Added mass PIANC (CM1)</td><td id="add-pianc">--</td></tr>
+                        <tr><td>Added mass Ueda (CM2)</td><td id="add-ueda">--</td></tr>
+                        <tr><td>Added mass Costa (CM3)</td><td id="add-costa">--</td></tr>
+                        <tr><td><strong>Final Added mass CM</strong></td><td id="final-cm">--</td></tr>
+                        <tr><td><strong>Eccentricity factor CE</strong></td><td id="ecc-factor">--</td></tr>
+                        <tr><td>Berth config factor CC</td><td id="berth-factor">--</td></tr>
+                        <tr><td>Softness factor CS</td><td id="soft-factor">--</td></tr>
+                    </table>
+                </div>
+                <div class="section-title"><i class="fas fa-ruler"></i> Derived geometry</div>
+                <div style="padding: 20px;">
+                    <table class="result-table">
+                        <tr><td>Underkeel clearance KC</td><td id="kc-val">--</td></tr>
+                        <tr><td>KC/DL ratio</td><td id="kc-ratio">--</td></tr>
+                        <tr><td>Distance R (CoG-contact)</td><td id="dist-r">--</td></tr>
+                        <tr><td>Angle γ</td><td id="angle-gamma">--</td></tr>
+                        <tr><td>Radius gyration K</td><td id="radius-gyration">--</td></tr>
+                    </table>
+                </div>
+            </div>
+            <div class="output-panel">
+                <div class="section-card">
+                    <div class="section-title"><i class="fas fa-calculator"></i> Energy breakdown</div>
+                    <div style="padding: 20px;">
+                        <table class="result-table">
+                            <tr><td>Base velocity (Vbase)</td><td id="base-velocity-display">--</td></tr>
+                            <tr><td>Effective Vb</td><td id="effective-vb-display">--</td></tr>
+                            <tr><td>Normal Energy EN</td><td id="en-detailed">--</td></tr>
+                            <tr><td><strong>Abnormal EA (FoS=2.0)</strong></td><td id="ea-detailed">--</td></tr>
+                        </table>
+                        <div class="status-badge" style="margin-top: 12px;">Formula: EN = 0.5 × D × Vb² × CM × CE × CC × CS</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ---------- VELOCITY LOOKUP TABLE (DWT vs condition) from image data ----------
+    // Columns: a) Easy sheltered, b) Difficult sheltered, c) Easy exposed, d) Good exposed, e) Difficult exposed
+    const dwtTablePoints = [1000, 2000, 3000, 4000, 5000, 10000, 20000, 30000, 40000, 50000, 100000, 200000, 300000, 400000, 500000];
+    const velMatrix = {
+        a: [0.179,0.151,0.136,0.125,0.117,0.094,0.08,0.08,0.08,0.08,0.08,0.08,0.08,0.08,0.08],
+        b: [0.343,0.296,0.269,0.25,0.236,0.192,0.153,0.133,0.119,0.11,0.083,0.08,0.08,0.08,0.08],
+        c: [0.517,0.445,0.404,0.374,0.352,0.287,0.228,0.198,0.178,0.164,0.126,0.095,0.08,0.08,0.08],
+        d: [0.669,0.577,0.524,0.487,0.459,0.377,0.303,0.264,0.239,0.221,0.171,0.131,0.111,0.099,0.09],
+        e: [0.865,0.726,0.649,0.597,0.558,0.448,0.355,0.308,0.279,0.258,0.201,0.158,0.137,0.124,0.115]
+    };
+
+    function interpolateVelocity(dwt, conditionKey) {
+        let arr = velMatrix[conditionKey];
+        if (!arr) return 0.08;
+        if (dwt <= dwtTablePoints[0]) return Math.max(0.08, arr[0]);
+        if (dwt >= dwtTablePoints[dwtTablePoints.length-1]) return Math.max(0.08, arr[arr.length-1]);
+        for (let i = 0; i < dwtTablePoints.length-1; i++) {
+            if (dwt >= dwtTablePoints[i] && dwt <= dwtTablePoints[i+1]) {
+                let x1 = dwtTablePoints[i], x2 = dwtTablePoints[i+1];
+                let y1 = arr[i], y2 = arr[i+1];
+                let result = y1 + (dwt - x1) * (y2 - y1) / (x2 - x1);
+                return Math.max(0.08, result);
+            }
+        }
+        return 0.08;
+    }
+
+    function getBaseVelocityFromCondition(dwt, conditionStr) {
+        let key = 'b'; // default
+        if (conditionStr.includes('Easy, sheltered')) key = 'a';
+        else if (conditionStr.includes('Difficult, sheltered')) key = 'b';
+        else if (conditionStr.includes('Easy, exposed')) key = 'c';
+        else if (conditionStr.includes('Good, exposed')) key = 'd';
+        else if (conditionStr.includes('Difficult, exposed')) key = 'e';
+        return interpolateVelocity(dwt, key);
+    }
+
+    // Helper
+    function getNum(id, def=0) { let v = parseFloat(document.getElementById(id)?.value); return isNaN(v) ? def : v; }
+
+    function computeAll() {
+        // --- inputs
+        let D = getNum('displacement', 26000);
+        let LOA = getNum('loa', 160);
+        let LBP = getNum('lbp', 148);
+        let B = getNum('breadth', 25);
+        let Bw = getNum('breadth-waterline', 24.5);
+        let DL = getNum('draft', 8);
+        let x_contact = getNum('contact-bow', 25);
+        let WD = getNum('water-depth', 12);
+        let rho = getNum('water-density', 1.025);
+        let berthConfig = document.getElementById('berth-config').value;
+        let hardness = document.getElementById('fender-hardness').value;
+        
+        // Velocity mode & tug
+        let velMode = document.querySelector('input[name="velMode"]:checked').value;
+        let tugOption = document.getElementById('tug-assist').value;
+        let conditionSelect = document.getElementById('berthing-condition').value;
+        let baseVelocity = 0.3;
+        let effectiveVb = 0.3;
+        
+        if (velMode === 'auto') {
+            baseVelocity = getBaseVelocityFromCondition(D, conditionSelect);
+            if (tugOption === 'Yes') effectiveVb = baseVelocity;
+            else if (tugOption === 'No, favourable') effectiveVb = baseVelocity * 3.0;
+            else if (tugOption === 'No, unfavourable') effectiveVb = baseVelocity * 2.3;
+            else effectiveVb = baseVelocity;
+        } else {
+            let manualSp = getNum('manual-speed', 0.35);
+            effectiveVb = manualSp;
+            baseVelocity = effectiveVb; // for display
+        }
+        
+        // update displays
+        document.getElementById('display-effective-speed').innerHTML = effectiveVb.toFixed(3) + " m/s";
+        document.getElementById('effective-vb-display').innerHTML = effectiveVb.toFixed(3) + " m/s";
+        document.getElementById('base-velocity-display').innerHTML = (velMode==='auto'?baseVelocity.toFixed(3) + " m/s":'manual');
+        
+        // --- Block coefficient
+        let volumeDisp = D / rho;
+        let Cb = volumeDisp / (LBP * Bw * DL);
+        if (isNaN(Cb) || Cb <=0) Cb = 0.6;
+        document.getElementById('cb-coeff').innerText = Cb.toFixed(3);
+        
+        // --- Underkeel & added mass
+        let KC = WD - DL;
+        let KC_ratio = KC / DL;
+        document.getElementById('kc-val').innerText = KC.toFixed(2) + " m";
+        document.getElementById('kc-ratio').innerText = KC_ratio.toFixed(3);
+        
+        let cm_pianc;
+        if (KC_ratio <= 0.1) cm_pianc = 1.8;
+        else if (KC_ratio >= 0.5) cm_pianc = 1.5;
+        else cm_pianc = 1.875 - 0.75 * KC_ratio;
+        let cm_ueda = 1 + (Math.PI * DL) / (2 * Cb * B);
+        let cm_costa = 1 + 2 * DL / B;
+        let finalCM = Math.max(cm_pianc, cm_ueda, cm_costa);
+        document.getElementById('add-pianc').innerText = cm_pianc.toFixed(3);
+        document.getElementById('add-ueda').innerText = cm_ueda.toFixed(3);
+        document.getElementById('add-costa').innerText = cm_costa.toFixed(3);
+        document.getElementById('final-cm').innerText = finalCM.toFixed(3);
+        
+        // --- Eccentricity CE
+        let berthType = document.getElementById('berth-type').value;
+        let dist_x = (LBP / 2) - x_contact;
+        let R = Math.sqrt(dist_x*dist_x + (B/2)*(B/2));
+        let ban = getNum('berth-angle', 5);
+        let angleGammaRad = Math.asin(Math.min(1, B/(2*R)));
+        let angleGamma = 90 - ban - (Math.abs(angleGammaRad * 180/Math.PI));
+        if (isNaN(angleGamma)) angleGamma = 30;
+        let K_gyr = (0.19 * Cb + 0.11) * LBP;
+        let CE;
+        if (berthType === "Side berthing") {
+            CE = (Math.pow(K_gyr,2) + Math.pow(R,2) * Math.pow(Math.cos(angleGamma * Math.PI/180),2)) / (Math.pow(R,2) + Math.pow(K_gyr,2));
+            CE = Math.min(1.0, Math.max(0.5, CE));
+        } else {
+            CE = 1.0;
+        }
+        document.getElementById('dist-r').innerText = R.toFixed(3) + " m";
+        document.getElementById('angle-gamma').innerText = angleGamma.toFixed(1) + " °";
+        document.getElementById('radius-gyration').innerText = K_gyr.toFixed(3) + " m";
+        document.getElementById('ecc-factor').innerText = CE.toFixed(4);
+        
+        // --- Berth config factor CC (based on PIANC WG33)
+        // CC depends on: structure type, KC/DL ratio, and berthing angle
+        let berthAngle = getNum('berth-angle', 5);
+        let kc_dl_ratio = KC / DL;
+        let ccValue = 1.0;
+        
+        if (berthConfig === "Open Pile") {
+            ccValue = 1.0;
+        } else if (berthConfig === "Solid") {
+            if (berthAngle > 5) {
+                ccValue = 1.0;
+            } else {
+                ccValue = (kc_dl_ratio <= 0.5) ? 0.8 : 0.9;
+            }
+        } else if (berthConfig === "Partly Closed") {
+            if (berthAngle > 5) {
+                ccValue = 1.0;
+            } else {
+                ccValue = (kc_dl_ratio <= 0.5) ? 0.9 : 1.0;
+            }
+        }
+        document.getElementById('berth-factor').innerText = ccValue.toFixed(2);
+        
+        // --- Softness CS
+        let csValue = (hardness === "Hard") ? 0.9 : 1.0;
+        document.getElementById('soft-factor').innerText = csValue;
+        
+        // --- Energy calculation
+        let EN = 0.5 * D * Math.pow(effectiveVb, 2) * finalCM * CE * ccValue * csValue;
+        
+        // Factor of Safety based on vessel type (PIANC WG33)
+        let vesselType = document.getElementById('vessel-type').value;
+        let fos = 2.0;
+        switch(vesselType) {
+            case "Tanker (large)": fos = 1.25; break;
+            case "Tanker (small)": fos = 1.75; break;
+            case "Bulk (large)": fos = 1.25; break;
+            case "Bulk (small)": fos = 1.75; break;
+            case "Container (large)": fos = 1.5; break;
+            case "Container (small)": fos = 2.0; break;
+            case "General cargo": fos = 1.75; break;
+            case "RoRo": fos = 2.2; break;
+            case "Ferries": fos = 2.2; break;
+            case "Tugs": fos = 2.0; break;
+            case "Workboats": fos = 2.0; break;
+        }
+        let EA = EN * fos;
+        
+        // update all UI fields
+        document.getElementById('en-preview').innerHTML = EN.toFixed(2) + " kJ";
+        document.getElementById('ea-preview').innerHTML = EA.toFixed(2) + " kJ";
+        document.getElementById('design-preview').innerHTML = EA.toFixed(2) + " kJ";
+        document.getElementById('en-detailed').innerHTML = EN.toFixed(2) + " kJ";
+        document.getElementById('ea-detailed').innerHTML = EA.toFixed(2) + " kJ";
+        
+        // Additional minor previews
+        document.getElementById('fos-preview').innerText = fos;
+    }
+    
+    // UI toggle between manual/auto
+    function toggleVelocityPanels() {
+        let mode = document.querySelector('input[name="velMode"]:checked').value;
+        let autoPanel = document.getElementById('auto-velocity-panel');
+        let manualPanel = document.getElementById('manual-velocity-panel');
+        if (mode === 'auto') {
+            autoPanel.style.display = 'block';
+            manualPanel.style.display = 'none';
+        } else {
+            autoPanel.style.display = 'none';
+            manualPanel.style.display = 'block';
+        }
+        computeAll();
+    }
+    
+    // event binding
+    function bindEvents() {
+        const inputs = ['vessel-type','displacement','loa','lbp','breadth','breadth-waterline','draft','contact-bow','water-depth','water-density','berth-config','berth-type','berth-angle','fender-hardness','berthing-condition','tug-assist','manual-speed'];
+        inputs.forEach(id => {
+            let el = document.getElementById(id);
+            if (el) el.addEventListener('input', computeAll);
+            if (el && el.tagName === 'SELECT') el.addEventListener('change', computeAll);
+        });
+        document.querySelectorAll('input[name="velMode"]').forEach(radio => radio.addEventListener('change', () => { toggleVelocityPanels(); computeAll(); }));
+        document.getElementById('recalcBtn')?.addEventListener('click', computeAll);
+        document.getElementById('tug-assist')?.addEventListener('change', computeAll);
+        document.getElementById('berthing-condition')?.addEventListener('change', computeAll);
+    }
+    
+    // Tab switching
+    function initTabs() {
+        const tabs = document.querySelectorAll('.tab-btn');
+        const panes = document.querySelectorAll('.tab-pane');
+        tabs.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.getAttribute('data-tab');
+                tabs.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                panes.forEach(pane => pane.classList.remove('active'));
+                document.getElementById(`${tabId}-tab`).classList.add('active');
+                computeAll();
+            });
+        });
+    }
+    
+    initTabs();
+    bindEvents();
+    toggleVelocityPanels();
+    computeAll();
+</script>
+</body>
+</html>
