@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Navculus Units | Precision Converter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: radial-gradient(circle at 10% 20%, #f6f9fc, #eef2f5);
+            font-family: 'Inter', 'Segoe UI', 'SF Pro Text', system-ui, -apple-system, 'BlinkMacSystemFont', 'Roboto', sans-serif;
+            padding: 2rem 1.5rem;
+            color: #1f2e3a;
+        }
+
+        /* smooth glassmorphic container */
+        .app-container {
+            max-width: 1440px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.82);
+            backdrop-filter: blur(12px);
+            border-radius: 2.5rem;
+            box-shadow: 0 30px 50px -20px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255,255,255,0.6) inset;
+            overflow: hidden;
+            padding: 1.8rem 2rem 2.2rem;
+            transition: all 0.3s ease;
+        }
+
+        /* header area */
+        .header-flex {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(60, 90, 110, 0.2);
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .title-section h1 {
+            font-size: 2.3rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(130deg, #1A4C6E, #2F7A9E, #145c7c);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+
+        .title-section p {
+            font-size: 0.85rem;
+            color: #346f8c;
+            font-weight: 450;
+            margin-top: 6px;
+            letter-spacing: 0.2px;
+        }
+
+        .home-btn {
+            background: rgba(255,255,240,0.7);
+            backdrop-filter: blur(8px);
+            border: 1px solid #cfe2ef;
+            padding: 0.7rem 1.6rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #155c7e;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: inherit;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+
+        .home-btn:hover {
+            background: white;
+            border-color: #2f7a9e;
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+            color: #0e4b68;
+        }
+
+        /* category grid */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 1.8rem;
+        }
+
+        /* card */
+        .unit-card {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(4px);
+            border-radius: 1.8rem;
+            box-shadow: 0 12px 28px -10px rgba(0, 32, 48, 0.08);
+            padding: 1.4rem 1.3rem 1.6rem;
+            transition: all 0.25s ease;
+            border: 1px solid rgba(220, 235, 245, 0.8);
+        }
+
+        .unit-card:hover {
+            background: white;
+            box-shadow: 0 20px 35px -12px rgba(20, 70, 100, 0.18);
+            transform: translateY(-3px);
+            border-color: #cde0ec;
+        }
+
+        .card-header {
+            font-size: 1.35rem;
+            font-weight: 620;
+            background: linear-gradient(95deg, #1f5777, #317a9b);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            border-left: 4px solid #2f88b0;
+            padding-left: 14px;
+            margin-bottom: 1.2rem;
+            letter-spacing: -0.2px;
+        }
+
+        /* converter rows */
+        .converter-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 18px;
+            align-items: flex-end;
+        }
+
+        .input-group {
+            flex: 2;
+            min-width: 130px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: #54738f;
+            margin-bottom: 5px;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 18px;
+            border: 1px solid #d4e2ed;
+            background: #ffffff;
+            font-size: 0.9rem;
+            font-weight: 500;
+            font-family: 'Inter', 'SF Mono', monospace;
+            color: #112f41;
+            transition: all 0.2s;
+            outline: none;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            border-color: #3b8db5;
+            box-shadow: 0 0 0 3px rgba(59, 141, 181, 0.2);
+        }
+
+        .swap-icon {
+            font-size: 1.7rem;
+            cursor: pointer;
+            background: #ecf3f9;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 60px;
+            transition: 0.2s;
+            user-select: none;
+            color: #2c6f8f;
+            margin-bottom: 4px;
+        }
+
+        .swap-icon:hover {
+            background: #deeaf3;
+            transform: rotate(15deg) scale(1.05);
+            color: #0f5b7a;
+        }
+
+        .result-field, input[readonly] {
+            background: #f1f6fb;
+            font-weight: 600;
+            color: #005073;
+            cursor: default;
+            border-color: #caddf0;
+        }
+
+        .subnote {
+            font-size: 0.7rem;
+            color: #6186a2;
+            margin-top: 4px;
+            font-weight: 450;
+        }
+
+        hr {
+            margin: 10px 0;
+            border-color: #e2edf5;
+        }
+
+        footer {
+            margin-top: 2.5rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #436f8b;
+            border-top: 1px solid #d0e2ef;
+            padding-top: 1.4rem;
+            font-weight: 450;
+            letter-spacing: 0.3px;
+        }
+
+        @media (max-width: 780px) {
+            body {
+                padding: 1rem;
+            }
+            .app-container {
+                padding: 1.2rem;
+            }
+            .converter-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .swap-icon {
+                align-self: center;
+                margin: 8px 0;
+            }
+            .card-header {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="app-container" id="appRoot">
+    <div class="header-flex">
+        <div class="title-section">
+            <h1>Navculus Units</h1>
+            <p>Precision engineering · 20+ categories · full unit names</p>
+        </div>
+        <button class="home-btn" id="homeButton">🏠 Home</button>
+    </div>
+    <div class="categories-grid" id="categoriesContainer"></div>
+    <footer>Developed by Hrithin · Real-time smart conversions · Elegant precision</footer>
+</div>
+
+<script>
+    // --------------------------------------------------------------
+    // All unit definitions with DISPLAY NAMES (full name) and internal factor
+    // LENGTH
+    const lengthUnits = {
+        "Nanometer (nm)": 1e-9, "Micrometer (μm)": 1e-6, "Millimeter (mm)": 0.001, "Centimeter (cm)": 0.01,
+        "Meter (m)": 1.0, "Kilometer (km)": 1000.0, "Inch (in)": 0.0254, "Foot (ft)": 0.3048,
+        "Yard (yd)": 0.9144, "Mile (mi)": 1609.344, "Nautical Mile (NM)": 1852.0
+    };
+    // WEIGHT & MASS
+    const massUnits = {
+        "Microgram (μg)": 1e-9, "Milligram (mg)": 1e-6, "Gram (g)": 0.001, "Kilogram (kg)": 1.0,
+        "Metric Ton (t)": 1000.0, "Ounce (oz)": 0.028349523125, "Pound (lb)": 0.45359237,
+        "Stone (st)": 6.35029318, "US Ton (short ton)": 907.18474
+    };
+    // AREA (base m²)
+    const areaUnits = {
+        "Square Millimeter (mm²)": 1e-6, "Square Centimeter (cm²)": 0.0001, "Square Meter (m²)": 1.0,
+        "Hectare (ha)": 10000.0, "Square Kilometer (km²)": 1e6, "Square Inch (in²)": 0.00064516,
+        "Square Foot (ft²)": 0.09290304, "Acre (ac)": 4046.8564224, "Square Mile (mi²)": 2589988.110336
+    };
+    // VOLUME (base Liter)
+    const volumeUnits = {
+        "Milliliter (ml)": 0.001, "Liter (l)": 1.0, "Cubic Meter (m³)": 1000.0, "Cubic Inch (in³)": 0.016387064,
+        "Cubic Foot (ft³)": 28.316846592, "US Gallon (gal)": 3.785411784, "Imperial Gallon (imp gal)": 4.54609,
+        "Fluid Ounce (fl oz)": 0.0295735295625
+    };
+    // PRESSURE (Pascal base)
+    const pressureUnits = {
+        "Pascal (Pa)": 1.0, "Kilopascal (kPa)": 1000.0, "Bar (bar)": 1e5, "PSI (psi)": 6894.75729,
+        "Atmosphere (atm)": 101325.0, "Torr (mmHg)": 133.322368421
+    };
+    // FORCE
+    const forceUnits = { "Newton (N)": 1.0, "Kilonewton (kN)": 1000.0, "Pound-force (lbf)": 4.4482216152605, "Kilogram-force (kgf)": 9.80665 };
+    // ENERGY
+    const energyUnits = {
+        "Joule (J)": 1.0, "Kilojoule (kJ)": 1000.0, "Calorie (cal)": 4.184, "Kilocalorie (kcal)": 4184.0,
+        "Watt-hour (Wh)": 3600.0, "Kilowatt-hour (kWh)": 3.6e6, "British Thermal Unit (BTU)": 1055.05585262
+    };
+    // POWER
+    const powerUnits = { "Watt (W)": 1.0, "Kilowatt (kW)": 1000.0, "Megawatt (MW)": 1e6, "Horsepower (hp)": 745.69987158227 };
+    // SPEED
+    const speedUnits = {
+        "Meter per second (m/s)": 1.0, "Kilometer per hour (km/h)": 0.27777777777778,
+        "Mile per hour (mph)": 0.44704, "Knot (kn)": 0.51444444444444
+    };
+    // TIME
+    const timeUnits = {
+        "Millisecond (ms)": 0.001, "Second (s)": 1.0, "Minute (min)": 60.0, "Hour (h)": 3600.0,
+        "Day (d)": 86400.0, "Week (wk)": 604800.0, "Month (mo)": 2629800.0, "Year (yr)": 31557600.0
+    };
+    // ANGLE (base degree)
+    const angleUnits = { "Degree (°)": 1.0, "Radian (rad)": 57.29577951308232, "Gradian (grad)": 0.9 };
+    // DIGITAL DATA (Byte base)
+    const dataUnits = {
+        "Bit (b)": 0.125, "Byte (B)": 1.0, "Kilobyte (KB)": 1000.0, "Megabyte (MB)": 1e6, "Gigabyte (GB)": 1e9,
+        "Terabyte (TB)": 1e12, "Petabyte (PB)": 1e15, "Kibibyte (KiB)": 1024.0, "Mebibyte (MiB)": 1048576.0
+    };
+    // DATA TRANSFER RATE
+    const transferUnits = {
+        "Bits per second (bps)": 1.0, "Kilobits per second (Kbps)": 1000.0, "Megabits per second (Mbps)": 1e6,
+        "Gigabits per second (Gbps)": 1e9, "Terabits per second (Tbps)": 1e12
+    };
+    // ILLUMINANCE
+    const illuminanceUnits = {
+        "Lux (lx)": 1.0, "Foot-candle (fc)": 10.76391041671, "Phot (ph)": 10000.0, "Nox": 0.001,
+        "Lumen per square meter (lm/m²)": 1.0
+    };
+    // TORQUE
+    const torqueUnits = {
+        "Newton-meter (N·m)": 1.0, "KiloNewton-meter (kN·m)": 1000.0, "Pound-foot (lb-ft)": 1.3558179483314,
+        "Kilogram-force meter (kgf·m)": 9.80665
+    };
+    // DENSITY
+    const densityUnits = {
+        "Kilogram per cubic meter (kg/m³)": 1.0, "Gram per cubic centimeter (g/cm³)": 1000.0,
+        "Pound per cubic foot (lb/ft³)": 16.018463374, "Metric Ton per cubic meter (t/m³)": 1000.0
+    };
+    // FREQUENCY
+    const freqUnits = {
+        "Hertz (Hz)": 1.0, "Kilohertz (kHz)": 1000.0, "Megahertz (MHz)": 1e6, "Gigahertz (GHz)": 1e9,
+        "Revolutions per minute (RPM)": 1/60.0
+    };
+
+    // ---- categories metadata with full names ----
+    const categories = [
+        { name: "Length", units: lengthUnits, type: "linear" },
+        { name: "Weight & Mass", units: massUnits, type: "linear" },
+        { name: "Area", units: areaUnits, type: "linear" },
+        { name: "Volume", units: volumeUnits, type: "linear" },
+        { name: "Temperature", type: "temp" },
+        { name: "Pressure", units: pressureUnits, type: "linear" },
+        { name: "Force", units: forceUnits, type: "linear" },
+        { name: "Energy & Work", units: energyUnits, type: "linear" },
+        { name: "Power", units: powerUnits, type: "linear" },
+        { name: "Speed", units: speedUnits, type: "linear" },
+        { name: "Time", units: timeUnits, type: "linear" },
+        { name: "Angle", units: angleUnits, type: "linear" },
+        { name: "Digital Data", units: dataUnits, type: "linear" },
+        { name: "Data Transfer", units: transferUnits, type: "linear" },
+        { name: "Fuel Economy", type: "fuel" },
+        { name: "Illuminance", units: illuminanceUnits, type: "linear" },
+        { name: "Torque", units: torqueUnits, type: "linear" },
+        { name: "Density", units: densityUnits, type: "linear" },
+        { name: "Frequency", units: freqUnits, type: "linear" },
+        { name: "Radiation", type: "radio" }
+    ];
+
+    // Helper: linear conversion
+    function convertLinear(value, fromKey, toKey, unitMap) {
+        if (value === "" || isNaN(value)) return "";
+        let num = parseFloat(value);
+        let baseVal = num * unitMap[fromKey];
+        let result = baseVal / unitMap[toKey];
+        return result;
+    }
+
+    // Temperature conversion (full names used in selects)
+    function convertTemp(value, fromLabel, toLabel) {
+        let c;
+        if (fromLabel === "Celsius (°C)") c = parseFloat(value);
+        else if (fromLabel === "Fahrenheit (°F)") c = (parseFloat(value) - 32) * 5/9;
+        else if (fromLabel === "Kelvin (K)") c = parseFloat(value) - 273.15;
+        if (isNaN(c)) return "";
+        if (toLabel === "Celsius (°C)") return c;
+        if (toLabel === "Fahrenheit (°F)") return c * 9/5 + 32;
+        if (toLabel === "Kelvin (K)") return c + 273.15;
+        return "";
+    }
+
+    // Fuel economy: using full names
+    function convertFuel(value, fromLabel, toLabel) {
+        if (value === "" || isNaN(value)) return "";
+        let v = parseFloat(value);
+        let kmPerLiter;
+        if (fromLabel === "Miles per Gallon (US) (mpg)") kmPerLiter = v * 0.425143707;
+        else if (fromLabel === "Miles per Gallon (UK) (mpg)") kmPerLiter = v * 0.354006;
+        else if (fromLabel === "Kilometers per Liter (km/L)") kmPerLiter = v;
+        else if (fromLabel === "Liters per 100 Kilometers (L/100km)") kmPerLiter = 100 / v;
+        else if (fromLabel === "Grams per Kilowatt-hour (g/kWh)") return "special";
+        else return "";
+        if (toLabel === "Miles per Gallon (US) (mpg)") return kmPerLiter / 0.425143707;
+        if (toLabel === "Miles per Gallon (UK) (mpg)") return kmPerLiter / 0.354006;
+        if (toLabel === "Kilometers per Liter (km/L)") return kmPerLiter;
+        if (toLabel === "Liters per 100 Kilometers (L/100km)") return 100 / kmPerLiter;
+        return "";
+    }
+
+    // Radioactivity Bq/Ci + Sv/Gy (full names)
+    function convertBqCi(value, fromLabel, toLabel) {
+        let bq;
+        if (fromLabel === "Becquerel (Bq)") bq = parseFloat(value);
+        else if (fromLabel === "Curie (Ci)") bq = parseFloat(value) * 3.7e10;
+        else return "";
+        if (toLabel === "Becquerel (Bq)") return bq;
+        if (toLabel === "Curie (Ci)") return bq / 3.7e10;
+        return "";
+    }
+    function convertSvGy(value, fromLabel, toLabel) {
+        if (isNaN(parseFloat(value))) return "";
+        let sv = parseFloat(value);
+        if (toLabel === "Sievert (Sv)" || fromLabel === "Sievert (Sv)") return sv;
+        if (toLabel === "Gray (Gy)" || fromLabel === "Gray (Gy)") return sv;
+        return "";
+    }
+
+    // Render dynamic UI
+    const container = document.getElementById("categoriesContainer");
+
+    function buildUI() {
+        container.innerHTML = "";
+        categories.forEach(cat => {
+            const card = document.createElement("div");
+            card.className = "unit-card";
+            card.innerHTML = `<div class="card-header">${cat.name}</div>`;
+
+            if (cat.type === "linear") {
+                const unitKeys = Object.keys(cat.units);
+                const row = document.createElement("div");
+                row.className = "converter-row";
+                row.innerHTML = `
+                    <div class="input-group"><label>From</label><select class="from-unit"></select></div>
+                    <div class="input-group"><label>Value</label><input type="number" class="from-val" placeholder="Enter value" step="any"></div>
+                    <div class="swap-icon">⇄</div>
+                    <div class="input-group"><label>To</label><select class="to-unit"></select></div>
+                    <div class="input-group"><label>Result</label><input type="text" class="result-field" readonly placeholder="converted value"></div>
+                `;
+                const fromSel = row.querySelector(".from-unit");
+                const toSel = row.querySelector(".to-unit");
+                unitKeys.forEach(u => { fromSel.add(new Option(u, u)); toSel.add(new Option(u, u)); });
+                if (unitKeys.length > 1) toSel.selectedIndex = Math.min(1, unitKeys.length-1);
+                const fromVal = row.querySelector(".from-val");
+                const resultField = row.querySelector(".result-field");
+                const update = () => {
+                    let val = fromVal.value;
+                    let fromU = fromSel.value;
+                    let toU = toSel.value;
+                    if (val === "") { resultField.value = ""; return; }
+                    let res = convertLinear(val, fromU, toU, cat.units);
+                    resultField.value = (res !== "" && !isNaN(res)) ? res.toExponential(10) : "invalid";
+                };
+                fromVal.addEventListener("input", update);
+                fromSel.addEventListener("change", update);
+                toSel.addEventListener("change", update);
+                row.querySelector(".swap-icon").addEventListener("click", () => {
+                    let tmp = fromSel.value;
+                    fromSel.value = toSel.value;
+                    toSel.value = tmp;
+                    update();
+                });
+                card.appendChild(row);
+            }
+            else if (cat.type === "temp") {
+                const tempOptions = ["Celsius (°C)", "Fahrenheit (°F)", "Kelvin (K)"];
+                const row = document.createElement("div");
+                row.className = "converter-row";
+                row.innerHTML = `
+                    <div class="input-group"><label>From</label><select class="from-temp">${tempOptions.map(o=>`<option>${o}</option>`).join('')}</select></div>
+                    <div class="input-group"><label>Value</label><input type="number" class="temp-val" step="any"></div>
+                    <div class="swap-icon">⇄</div>
+                    <div class="input-group"><label>To</label><select class="to-temp">${tempOptions.map(o=>`<option>${o}</option>`).join('')}</select></div>
+                    <div class="input-group"><label>Result</label><input type="text" class="temp-res" readonly></div>
+                `;
+                const fromSel = row.querySelector(".from-temp");
+                const toSel = row.querySelector(".to-temp");
+                const valInp = row.querySelector(".temp-val");
+                const resField = row.querySelector(".temp-res");
+                const update = () => { let r = convertTemp(valInp.value, fromSel.value, toSel.value); resField.value = (r !== "" && !isNaN(r)) ? r.toFixed(6) : ""; };
+                valInp.addEventListener("input", update);
+                fromSel.addEventListener("change", update);
+                toSel.addEventListener("change", update);
+                row.querySelector(".swap-icon").addEventListener("click", () => { let t = fromSel.value; fromSel.value = toSel.value; toSel.value = t; update(); });
+                card.appendChild(row);
+            }
+            else if (cat.type === "fuel") {
+                const fuelList = ["Miles per Gallon (US) (mpg)", "Miles per Gallon (UK) (mpg)", "Kilometers per Liter (km/L)", "Liters per 100 Kilometers (L/100km)", "Grams per Kilowatt-hour (g/kWh)"];
+                const row = document.createElement("div");
+                row.className = "converter-row";
+                row.innerHTML = `
+                    <div class="input-group"><label>From</label><select class="fuel-from">${fuelList.map(f=>`<option>${f}</option>`).join('')}</select></div>
+                    <div class="input-group"><label>Value</label><input type="number" class="fuel-val" step="any"></div>
+                    <div class="swap-icon">⇄</div>
+                    <div class="input-group"><label>To</label><select class="fuel-to">${fuelList.map(f=>`<option>${f}</option>`).join('')}</select></div>
+                    <div class="input-group"><label>Result</label><input type="text" class="fuel-res" readonly></div>
+                `;
+                const fromSel = row.querySelector(".fuel-from");
+                const toSel = row.querySelector(".fuel-to");
+                const valInp = row.querySelector(".fuel-val");
+                const resField = row.querySelector(".fuel-res");
+                const update = () => {
+                    let val = valInp.value;
+                    let fromU = fromSel.value;
+                    let toU = toSel.value;
+                    if (val === "") { resField.value = ""; return; }
+                    if (fromU === "Grams per Kilowatt-hour (g/kWh)" || toU === "Grams per Kilowatt-hour (g/kWh)") {
+                        resField.value = "ⓘ g/kWh requires test-cell data (not linear)";
+                        return;
+                    }
+                    let result = convertFuel(val, fromU, toU);
+                    resField.value = (result !== "" && !isNaN(result)) ? result.toExponential(8) : "error";
+                };
+                valInp.addEventListener("input", update);
+                fromSel.addEventListener("change", update);
+                toSel.addEventListener("change", update);
+                row.querySelector(".swap-icon").addEventListener("click", () => { let tmp = fromSel.value; fromSel.value = toSel.value; toSel.value = tmp; update(); });
+                card.appendChild(row);
+            }
+            else if (cat.type === "radio") {
+                const radRowDiv = document.createElement("div");
+                radRowDiv.innerHTML = `<div style="font-size:0.75rem; font-weight:600; margin: 6px 0 4px;">☢️ Radioactivity</div>`;
+                const conv1 = document.createElement("div");
+                conv1.className = "converter-row";
+                conv1.innerHTML = `
+                    <div class="input-group"><select class="rad-from"><option>Becquerel (Bq)</option><option>Curie (Ci)</option></select></div>
+                    <div class="input-group"><input type="number" class="rad-val" placeholder="value"></div>
+                    <div class="swap-icon">⇄</div>
+                    <div class="input-group"><select class="rad-to"><option>Curie (Ci)</option><option>Becquerel (Bq)</option></select></div>
+                    <div class="input-group"><input type="text" class="rad-res" readonly></div>
+                `;
+                const doseTitle = document.createElement("div");
+                doseTitle.innerHTML = `<div style="font-size:0.75rem; font-weight:600; margin: 14px 0 4px;">⚕️ Absorbed / Equivalent Dose</div>`;
+                const conv2 = document.createElement("div");
+                conv2.className = "converter-row";
+                conv2.innerHTML = `
+                    <div class="input-group"><select class="dose-from"><option>Sievert (Sv)</option><option>Gray (Gy)</option></select></div>
+                    <div class="input-group"><input type="number" class="dose-val" placeholder="value"></div>
+                    <div class="swap-icon">⇄</div>
+                    <div class="input-group"><select class="dose-to"><option>Gray (Gy)</option><option>Sievert (Sv)</option></select></div>
+                    <div class="input-group"><input type="text" class="dose-res" readonly></div>
+                `;
+                card.appendChild(radRowDiv);
+                card.appendChild(conv1);
+                card.appendChild(doseTitle);
+                card.appendChild(conv2);
+                const radFrom = conv1.querySelector(".rad-from"), radTo = conv1.querySelector(".rad-to");
+                const radVal = conv1.querySelector(".rad-val"), radRes = conv1.querySelector(".rad-res");
+                const radUpdate = () => { let r = convertBqCi(radVal.value, radFrom.value, radTo.value); radRes.value = (r !== "" && !isNaN(r)) ? r.toExponential(8) : ""; };
+                radVal.addEventListener("input", radUpdate);
+                radFrom.addEventListener("change", radUpdate);
+                radTo.addEventListener("change", radUpdate);
+                conv1.querySelector(".swap-icon").addEventListener("click", () => { let tmp = radFrom.value; radFrom.value = radTo.value; radTo.value = tmp; radUpdate(); });
+                const doseFrom = conv2.querySelector(".dose-from"), doseTo = conv2.querySelector(".dose-to");
+                const doseVal = conv2.querySelector(".dose-val"), doseRes = conv2.querySelector(".dose-res");
+                const doseUpdate = () => { let r = convertSvGy(doseVal.value, doseFrom.value, doseTo.value); doseRes.value = (r !== "" && !isNaN(r)) ? r.toFixed(8) : ""; };
+                doseVal.addEventListener("input", doseUpdate);
+                doseFrom.addEventListener("change", doseUpdate);
+                doseTo.addEventListener("change", doseUpdate);
+                conv2.querySelector(".swap-icon").addEventListener("click", () => { let tmp = doseFrom.value; doseFrom.value = doseTo.value; doseTo.value = tmp; doseUpdate(); });
+            }
+            container.appendChild(card);
+        });
+    }
+
+    function resetAll() {
+        document.querySelectorAll("input[type='number'], input.result-field, input.temp-res, input.fuel-res, input.rad-res, input.dose-res").forEach(inp => {
+            if (inp.readOnly || inp.classList.contains("result-field") || inp.classList.contains("temp-res") || inp.classList.contains("fuel-res") || inp.classList.contains("rad-res") || inp.classList.contains("dose-res")) inp.value = "";
+            else if (inp.type === "number") inp.value = "";
+        });
+    }
+
+    document.getElementById("homeButton").addEventListener("click", () => { window.location.href = "../index.html"; });
+    buildUI();
+</script>
+</body>
+</html>
