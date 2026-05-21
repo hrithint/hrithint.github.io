@@ -363,6 +363,12 @@
         { name: "Radiation", type: "radio" }
     ];
 
+    // Format decimal without scientific notation
+    function formatDecimal(num) {
+        if (num === "" || isNaN(num)) return "";
+        return Number(num).toFixed(10).replace(/\.?0+$/, '');
+    }
+
     // Helper: linear conversion
     function convertLinear(value, fromKey, toKey, unitMap) {
         if (value === "" || isNaN(value)) return "";
@@ -454,7 +460,7 @@
                     let toU = toSel.value;
                     if (val === "") { resultField.value = ""; return; }
                     let res = convertLinear(val, fromU, toU, cat.units);
-                    resultField.value = (res !== "" && !isNaN(res)) ? res.toExponential(10) : "invalid";
+                    resultField.value = (res !== "" && !isNaN(res)) ? formatDecimal(res) : "invalid";
                 };
                 fromVal.addEventListener("input", update);
                 fromSel.addEventListener("change", update);
@@ -514,7 +520,7 @@
                         return;
                     }
                     let result = convertFuel(val, fromU, toU);
-                    resField.value = (result !== "" && !isNaN(result)) ? result.toExponential(8) : "error";
+                    resField.value = (result !== "" && !isNaN(result)) ? formatDecimal(result) : "error";
                 };
                 valInp.addEventListener("input", update);
                 fromSel.addEventListener("change", update);
@@ -551,7 +557,7 @@
                 card.appendChild(conv2);
                 const radFrom = conv1.querySelector(".rad-from"), radTo = conv1.querySelector(".rad-to");
                 const radVal = conv1.querySelector(".rad-val"), radRes = conv1.querySelector(".rad-res");
-                const radUpdate = () => { let r = convertBqCi(radVal.value, radFrom.value, radTo.value); radRes.value = (r !== "" && !isNaN(r)) ? r.toExponential(8) : ""; };
+                const radUpdate = () => { let r = convertBqCi(radVal.value, radFrom.value, radTo.value); radRes.value = (r !== "" && !isNaN(r)) ? formatDecimal(r) : ""; };
                 radVal.addEventListener("input", radUpdate);
                 radFrom.addEventListener("change", radUpdate);
                 radTo.addEventListener("change", radUpdate);
