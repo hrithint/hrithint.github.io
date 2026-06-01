@@ -1,0 +1,18 @@
+# Clear the way for all standard search engines
+User-agent: *
+Allow: /
+
+# Specifically welcome ChatGPT's web crawler
+User-agent: GPTBot
+Allow: /
+
+# Specifically welcome ChatGPT's live search assistant
+User-agent: OAI-SearchBot
+Allow: /
+
+# Block broken or malicious bots that waste your Vercel bandwidth
+User-agent: Amazonbot
+Disallow: /
+
+# Link to your sitemap to help bots navigate (Replace with your actual GoDaddy domain)
+Sitemap: https://navculus.in/sitemap.xml
