@@ -15,4 +15,4 @@ User-agent: Amazonbot
 Disallow: /
 
 # Link to your sitemap to help bots navigate (Replace with your actual GoDaddy domain)
-Sitemap: https://navculus.in/sitemap.xml
+Sitemap: https://www.navculus.in/sitemap.xml
