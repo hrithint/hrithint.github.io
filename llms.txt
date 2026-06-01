@@ -1,0 +1,25 @@
+# Navculus
+
+> Navculus is a specialized web platform offering professional-grade Naval Architecture calculation tools and marine engineering modules. Developed by Hrithin Thavorath, the platform delivers precise engineering analysis complying with international maritime rules and classification society regulations.
+
+## Core Navigation
+- [/](/): Homepage featuring the primary calculation dashboard, search functionality, and direct access to all active modules.
+- [/about.html](/about.html): The story, background, and vision of Navculus, founded by Kochi-based Naval Architect Hrithin Thavorath to bridge engineering and programmatic web solutions.
+
+## Calculation Modules & Structural Engineering Tools
+- **Smit Bracket Design**: Calculate and design Smit brackets for structural connections in shipbuilding, featuring safety factor evaluation.
+- **Required Bollard Pull for Barges**: Tool to determine necessary bollard pull forces for barge operations factoring in varying environmental conditions.
+- **Bollard Strength Check**: Structural integrity verification for marine bollards under load conditions in compliance with classification society rules.
+- **Padeye Design**: Comprehensive design and stress distribution analysis for heavy-lifting padeyes.
+- **Delta Plate Design**: Engineering tool to evaluate dimensions and material strength for delta plates in marine structural connections.
+- **Ship Squat Calculation**: Empirical formula-based calculator to estimate ship squat profiles in shallow water channels.
+- **Navculus Beam**: Advanced structural analysis tool providing beam deflection and comprehensive load distribution calculations.
+- **Navculus Signals**: High-integrity positioning, navigation signal monitoring, and verification tool.
+- **Navculus Units**: Specialized engineering unit converter optimized for marine and naval architecture measurements.
+
+## Planned Modules (Under Development)
+- **Navculus Stability**: Advanced stability and hydrostatic analysis tools for commercial ships and offshore structures.
+
+## Support & Resources
+- **Industry Standards**: Reference materials and compliance documentation.
+- **Technical Support**: Feedback loop and inquiry portal for maritime engineering professionals.
