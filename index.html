@@ -131,7 +131,7 @@
             height: 48px;
             max-width: 90px;
             display: block;
-            filter: none; /* No filter as requested */
+            filter: none;
         }
 
         .logo-text h1 {
@@ -688,13 +688,24 @@
             </div>
         </section>
 
-        <!-- Navculus Fun Section -->
+        <!-- Navculus Fun Section (UPDATED: Added "Know the Ship?" box) -->
         <section class="modules-section fun-section">
             <div class="section-title"><h2>Navculus Fun</h2></div>
             <div class="tools-info">Test your naval architecture knowledge with fun quizzes and interactive challenges</div>
             <div class="modules-grid">
-                <div class="module-card fun-card"><div class="module-header"><div class="module-icon"><i class="fas fa-question-circle"></i></div><h3 class="module-title">Naval Architecture Quiz</h3></div><div class="module-content"><p class="module-description">Test your knowledge of naval architecture covering ship design, stability, structures, and marine engineering.</p><a href="Fun/Quiz.html" class="quiz-button"><i class="fas fa-play"></i> Start Quiz</a></div></div>
-                <div class="module-card fun-card"><div class="module-header"><div class="module-icon"><i class="fas fa-puzzle-piece"></i></div><h3 class="module-title">More Fun Activities <span class="coming-soon">Coming Soon</span></h3></div><div class="module-content"><p class="module-description">Additional interactive games, puzzles, and learning activities related to naval architecture.</p><button class="quiz-button under-development" disabled><i class="fas fa-hourglass-half"></i> Under Development</button></div></div>
+                <div class="module-card fun-card">
+                    <div class="module-header"><div class="module-icon"><i class="fas fa-question-circle"></i></div><h3 class="module-title">Naval Architecture Quiz</h3></div>
+                    <div class="module-content"><p class="module-description">Test your knowledge of naval architecture covering ship design, stability, structures, and marine engineering.</p><a href="Fun/Quiz.html" class="quiz-button"><i class="fas fa-play"></i> Start Quiz</a></div>
+                </div>
+                <!-- NEW BOX: Know the Ship? -->
+                <div class="module-card fun-card">
+                    <div class="module-header"><div class="module-icon"><i class="fas fa-ship"></i></div><h3 class="module-title">Know the Ship? <span class="coming-soon">3D Challenge</span></h3></div>
+                    <div class="module-content"><p class="module-description">Interactive 3D ship model identification. Explore and identify key ship parts, from bow to stern, in an immersive visual quiz.</p><a href="Fun/know_the_ship.html" class="quiz-button"><i class="fas fa-cube"></i> Explore 3D Model</a></div>
+                </div>
+                <div class="module-card fun-card">
+                    <div class="module-header"><div class="module-icon"><i class="fas fa-puzzle-piece"></i></div><h3 class="module-title">More Fun Activities <span class="coming-soon">Coming Soon</span></h3></div>
+                    <div class="module-content"><p class="module-description">Additional interactive games, puzzles, and learning activities related to naval architecture.</p><button class="quiz-button under-development" disabled><i class="fas fa-hourglass-half"></i> Under Development</button></div>
+                </div>
             </div>
         </section>
     </main>
