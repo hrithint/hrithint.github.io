@@ -213,6 +213,122 @@
             color: var(--text-muted);
             font-size: 0.9rem;
         }
+        /* Completion Card */
+        .completion-card {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 40px;
+            border-radius: 28px;
+            z-index: 200;
+            border: 2px solid var(--accent);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            max-width: 620px;
+            width: calc(100% - 60px);
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
+            display: none;
+            text-align: left;
+            line-height: 1.6;
+        }
+
+        .completion-card h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin: 0 0 4px 0;
+            text-align: center;
+        }
+
+        .completion-card .subtitle {
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .completion-card h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.1rem;
+            color: var(--primary);
+            margin: 20px 0 8px 0;
+            border-bottom: 2px solid rgba(7, 74, 134, 0.1);
+            padding-bottom: 6px;
+        }
+
+        .completion-card p {
+            font-size: 0.9rem;
+            color: var(--text-main);
+            margin: 0 0 12px 0;
+        }
+
+        .completion-card ul {
+            margin: 8px 0 12px 0;
+            padding-left: 20px;
+        }
+
+        .completion-card li {
+            font-size: 0.9rem;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .completion-card li b {
+            color: var(--primary);
+        }
+
+        .completion-card .fun-fact {
+            background: rgba(255, 159, 28, 0.1);
+            border-left: 4px solid var(--accent);
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            margin: 16px 0 20px 0;
+            color: var(--text-main);
+        }
+
+        .completion-card .btn-row {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .completion-card .btn-row button {
+            padding: 12px 28px;
+            font-size: 0.85rem;
+        }
+
+        #homeBtn {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        #homeBtn:hover {
+            background: #053a6a;
+        }
+
+        #restartBtn {
+            background: white;
+            color: var(--primary);
+        }
+
+        #restartBtn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(7, 74, 134, 0.2); border-radius: 3px; }
     </style>
 </head>
 <body>
@@ -233,6 +349,33 @@
         <div style="display: flex; gap: 10px; justify-content: center; margin-top: 16px;">
             <button id="hintBtn" style="margin-top: 0;">Show Hint</button>
             <button id="skipBtn" style="margin-top: 0;">Skip Part</button>
+        </div>
+    </div>
+
+    <div class="completion-card" id="completionCard">
+        <h2>🎉 Congratulations!</h2>
+        <div class="subtitle">You Identified Every Part of the Ship</div>
+        <p style="text-align:center; font-size:1rem;">You've mastered the vessel — now meet the vessel itself.</p>
+
+        <h3>Bulk Carrier: The Workhorse of the Sea</h3>
+        <p>A bulk carrier is a merchant ship specifically designed to transport large quantities of unpackaged "dry bulk" cargo—goods that are poured or shoveled directly into the ship's massive, open cargo holds rather than being packed into containers, crates, or barrels.</p>
+
+        <h3>Key Characteristics</h3>
+        <ul>
+            <li><b>The Cargo:</b> They carry raw materials essential for the global economy, most notably iron ore, coal, grain, cement, and bauxite.</li>
+            <li><b>The Design:</b> These ships are easily identifiable by their large, box-shaped cargo holds covered by heavy-duty hatch covers. This design allows for rapid loading and unloading using specialized shore-side equipment like conveyors, cranes, and "grabs."</li>
+            <li><b>Size Versatility:</b> Bulk carriers come in a wide range of sizes, from small "Handysize" vessels that can navigate smaller ports to the colossal "Valemax" ships, which are among the largest vessels currently sailing the ocean.</li>
+            <li><b>Deck Cranes:</b> Many bulk carriers (known as "geared" vessels) feature their own cranes mounted on deck, allowing them to discharge cargo even in ports that lack sophisticated unloading infrastructure.</li>
+        </ul>
+
+        <h3>Why They Matter</h3>
+        <p>Bulk carriers are the foundation of international trade. Without them, the massive quantities of resources needed to build infrastructure, power electricity grids, and feed populations could not be moved efficiently across the globe. They are essentially the massive "moving trucks" of the maritime world, keeping global industry moving one load at a time.</p>
+
+        <div class="fun-fact"><b>Fun Fact:</b> Because bulk carriers are designed to carry incredibly dense cargo like iron ore, they are built with double hulls and exceptionally strong structural framing to handle the immense weight pressing against the sides of the ship.</div>
+
+        <div class="btn-row">
+            <button id="homeBtn">🏠 Home</button>
+            <button id="restartBtn">🔄 Play Again</button>
         </div>
     </div>
     
@@ -380,14 +523,18 @@
         
         let currentWord = "";
         let currentScore = 0;
-        let canSelect = true;          // prevent double clicking same word before next
+        let canSelect = true;
         let isLoading = true;
+        const completedWords = new Set();
+        const totalParts = shipPartsVocabulary.length;
         
         const scoreSpan = document.getElementById("scoreValue");
         const wordLabel = document.getElementById("currentWordLabel");
         const feedbackDiv = document.getElementById("feedbackMsg");
         const skipBtn = document.getElementById("skipBtn");
         const hintBtn = document.getElementById("hintBtn");
+        const completionCard = document.getElementById("completionCard");
+        const wordCard = document.getElementById("wordCard");
         
         function setNewWord() {
             if (availableWords.length === 0) {
@@ -409,22 +556,38 @@
             scoreSpan.textContent = currentScore;
         }
         
+        function showGameComplete() {
+            wordCard.style.display = "none";
+            completionCard.style.display = "block";
+            document.getElementById("homeBtn").addEventListener("click", () => {
+                window.location.href = "https://navculus.in";
+            });
+            document.getElementById("restartBtn").addEventListener("click", () => {
+                location.reload();
+            });
+        }
+
         function handleCorrectSelection(partName) {
             if (!canSelect) return false;
             if (partName.toLowerCase() === currentWord.toLowerCase()) {
                 currentScore++;
                 updateScoreUI();
+                completedWords.add(currentWord);
                 const definition = shipPartsData[currentWord] || "Great job identifying this part!";
                 feedbackDiv.innerHTML = `<b style="color:var(--primary)">✅ ${currentWord}:</b> ${definition}`;
                 canSelect = false;
-                // play subtle visual flash (word card)
                 const card = document.getElementById("wordCard");
                 card.style.transform = "translateX(-50%) scale(1.02)";
                 setTimeout(() => { card.style.transform = "translateX(-50%) scale(1)"; }, 200);
-                // move to next word after brief pause
-                setTimeout(() => {
-                    setNewWord();
-                }, 2500); // Increased delay to allow reading the definition
+                if (completedWords.size === totalParts) {
+                    setTimeout(() => {
+                        showGameComplete();
+                    }, 2500);
+                } else {
+                    setTimeout(() => {
+                        setNewWord();
+                    }, 2500);
+                }
                 return true;
             } else {
                 feedbackDiv.innerHTML = `❌ Not "${currentWord}". That's the ${partName}. Try again!`;
