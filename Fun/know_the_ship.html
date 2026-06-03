@@ -571,8 +571,9 @@
                         const matName = (child.material && child.material.name) ? child.material.name.toLowerCase().trim() : "";
                         const combinedSearch = (meshName + " " + matName).replace(/[_-]/g, ' ');
 
+                        const sortedVocab = [...shipPartsVocabulary].sort((a, b) => b.length - a.length);
                         let matchedPart = null;
-                        for (let part of shipPartsVocabulary) {
+                        for (let part of sortedVocab) {
                             const partKeywords = part.toLowerCase().split(' ');
                             if (combinedSearch.includes(part.toLowerCase()) || 
                                 (partKeywords.length > 1 && partKeywords.every(kw => combinedSearch.includes(kw)))) {
@@ -640,6 +641,20 @@
             bow.rotation.x = 0;
             bow.userData = { partName: "Bow" };
             group.add(bow);
+            
+            // Bow Thrusters
+            const btGeo = new THREE.CylinderGeometry(0.2, 0.2, 0.4, 8);
+            const btMat = new THREE.MeshStandardMaterial({ color: 0x666666, metalness: 0.6 });
+            const btLeft = new THREE.Mesh(btGeo, btMat);
+            btLeft.rotation.z = Math.PI / 2;
+            btLeft.position.set(-1.7, -0.1, 2.3);
+            btLeft.userData = { partName: "Bow Thrusters" };
+            group.add(btLeft);
+            const btRight = new THREE.Mesh(btGeo, btMat);
+            btRight.rotation.z = Math.PI / 2;
+            btRight.position.set(1.7, -0.1, 2.3);
+            btRight.userData = { partName: "Bow Thrusters" };
+            group.add(btRight);
             
             // Stern decoration (small box)
             const sternGeo = new THREE.BoxGeometry(1.4, 0.8, 1.2);
@@ -711,6 +726,18 @@
             bridge.position.set(0, 1.1, -1.8);
             bridge.userData = { partName: "Bridge" };
             group.add(bridge);
+            
+            // Bridge Wing (both sides)
+            const bwGeo = new THREE.BoxGeometry(0.7, 0.08, 1.0);
+            const bwMat = new THREE.MeshStandardMaterial({ color: 0xbc9e6f });
+            const bwLeft = new THREE.Mesh(bwGeo, bwMat);
+            bwLeft.position.set(-1.05, 1.1, -1.8);
+            bwLeft.userData = { partName: "Bridge Wing" };
+            group.add(bwLeft);
+            const bwRight = new THREE.Mesh(bwGeo, bwMat);
+            bwRight.position.set(1.05, 1.1, -1.8);
+            bwRight.userData = { partName: "Bridge Wing" };
+            group.add(bwRight);
             
             // Cabin
             const cabinGeo = new THREE.BoxGeometry(1.2, 0.8, 1.4);
