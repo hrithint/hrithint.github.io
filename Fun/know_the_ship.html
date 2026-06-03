@@ -431,6 +431,8 @@
         // ----- Controls -----
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true;
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 1.5;
         controls.dampingFactor = 0.05;
         controls.rotateSpeed = 1.0;
         controls.zoomSpeed = 1.2;
@@ -665,6 +667,7 @@
                     }
                 });
                 scene.add(shipGroup);
+                shipGroup.userData.baseY = shipGroup.position.y;
                 isLoading = false;
                 setNewWord();
                 controls.target.set(0, 1.5, 0);
@@ -721,6 +724,7 @@
                 shipGroup.position.x = -center.x * scale;
                 shipGroup.position.y = -center.y * scale; 
                 shipGroup.position.z = -center.z * scale;
+                shipGroup.userData.baseY = shipGroup.position.y;
 
                 let matchCount = 0;
                 let totalMeshes = 0;
@@ -1002,7 +1006,13 @@
         // Animation Loop
         function animate() {
             requestAnimationFrame(animate);
-            controls.update(); // update orbit
+
+            // Gentle bobbing
+            if (shipGroup && shipGroup.userData.baseY !== undefined) {
+                shipGroup.position.y = shipGroup.userData.baseY + Math.sin(Date.now() * 0.001 * 0.6) * 0.1;
+            }
+
+            controls.update();
             renderer.render(scene, camera);
         }
         animate();
