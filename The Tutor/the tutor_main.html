@@ -899,7 +899,13 @@
     }
 
     function onPlayerReady(event) {
-        // Player is ready
+        // Autoplay muted when page loads
+        player.mute();
+        player.playVideo();
+        
+        // Hide the custom play overlay
+        const overlay = document.getElementById('customPlayOverlay');
+        overlay.classList.add('hidden');
     }
 
     // Custom play overlay click handler
