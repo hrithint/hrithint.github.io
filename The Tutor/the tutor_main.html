@@ -190,6 +190,21 @@
             box-shadow: 0 12px 25px -8px rgba(0,0,0,0.2);
         }
 
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            border-radius: 1.2rem;
+            overflow: hidden;
+            background: #000;
+            margin-bottom: 1rem;
+            box-shadow: 0 12px 25px -8px rgba(0,0,0,0.2);
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
         .video-wrapper iframe {
             position: absolute;
             top: 0;
@@ -197,6 +212,49 @@
             width: 100%;
             height: 100%;
             border: 0;
+            pointer-events: auto;
+        }
+
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .custom-video-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .custom-video-controls button {
+            background: rgba(29, 122, 92, 0.9);
+            border: none;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.25s ease;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .custom-video-controls button:hover {
+            background: rgba(24, 111, 82, 1);
+            transform: translateY(-2px);
         }
 
         .restriction-note {
@@ -573,16 +631,20 @@
 
     <!-- video preview -->
     <div class="video-card">
-        <div class="video-wrapper" oncontextmenu="return false;">
+        <div class="video-wrapper" id="videoWrapper" oncontextmenu="return false;">
+            <div class="video-overlay"></div>
             <iframe 
-                src="https://www.youtube.com/embed/7oNP3EZxQU4?modestbranding=1&rel=0&showinfo=0&controls=1&playsinline=1" 
+                id="youtubePlayer"
+                src="https://www.youtube.com/embed/7oNP3EZxQU4?modestbranding=1&rel=0&controls=0&showinfo=0&fs=0&playsinline=1&disablekb=1&iv_load_policy=3&enablejsapi=1" 
                 title="Navculus Demo - Intro to Naval Architecture" 
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                referrerpolicy="strict-origin-when-cross-origin" 
-                allowfullscreen>
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                referrerpolicy="strict-origin-when-cross-origin">
             </iframe>
+            <div class="custom-video-controls">
+                <button id="playButton"><i class="fas fa-play"></i> Play</button>
+                <button id="pauseButton"><i class="fas fa-pause"></i> Pause</button>
+            </div>
         </div>
-
     </div>
 
     <!-- WHY NAVCULUS SECTION (anchor id) -->
@@ -747,6 +809,58 @@
             }
         });
     });
+
+    // Disable right-click and context menu
+    document.addEventListener('contextmenu', function(e) {
+        if (e.target.closest('.video-wrapper')) {
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    // Disable keyboard shortcuts that could reveal video info
+    document.addEventListener('keydown', function(e) {
+        // Disable Ctrl+U, Ctrl+S, F12, etc.
+        if ((e.ctrlKey && (e.key === 'u' || e.key === 's' || e.key === 'c')) || 
+            e.key === 'F12' || 
+            (e.ctrlKey && e.shiftKey && e.key === 'I')) {
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    // YouTube Player API
+    let player;
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('youtubePlayer', {
+            events: {
+                'onReady': onPlayerReady
+            }
+        });
+    }
+
+    function onPlayerReady(event) {
+        // Player is ready
+    }
+
+    // Custom play/pause controls
+    document.getElementById('playButton').addEventListener('click', function() {
+        if (player && player.playVideo) {
+            player.playVideo();
+        }
+    });
+
+    document.getElementById('pauseButton').addEventListener('click', function() {
+        if (player && player.pauseVideo) {
+            player.pauseVideo();
+        }
+    });
+
+    // Load YouTube API
+    const tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    const firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 </script>
 </body>
 </html>
