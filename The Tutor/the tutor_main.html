@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Navculus: The Tutor | Professional’s Edge in Naval Architecture</title>
+    <!-- Google Fonts: clean & modern -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 (free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #FFFFFF;
+            font-family: 'Inter', sans-serif;
+            color: #1A2C3E;
+            line-height: 1.5;
+            scroll-behavior: smooth;
+        }
+
+        /* Sticky Header + Navigation */
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+        }
+
+        .header-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0.8rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo-area h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(120deg, #0F5B3A, #1A6D8F);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+        }
+
+        .logo-area p {
+            font-size: 0.7rem;
+            color: #4B6A8B;
+            margin-top: 2px;
+            font-weight: 500;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.8rem;
+            list-style: none;
+        }
+
+        .nav-links li a {
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #1F5A48;
+            transition: all 0.2s ease;
+            padding: 0.5rem 0;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav-links li a:hover {
+            color: #1A7F60;
+            border-bottom-color: #2A9D7A;
+        }
+
+        .nav-button .btn-outline {
+            background: transparent;
+            border: 2px solid #1D7A5C;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            color: #1D7A5C;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+        }
+
+        .nav-button .btn-outline:hover {
+            background: #1D7A5C;
+            color: white;
+            box-shadow: 0 8px 18px rgba(29, 122, 92, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Main container spacing */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* hero section */
+        .hero {
+            text-align: center;
+            padding: 3rem 0 2rem 0;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(29, 122, 92, 0.1);
+            backdrop-filter: blur(2px);
+            padding: 0.4rem 1.2rem;
+            border-radius: 60px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #1A6D4E;
+            margin-bottom: 1.8rem;
+            border: 1px solid rgba(35, 154, 110, 0.3);
+        }
+
+        h1 {
+            font-size: 3.6rem;
+            font-weight: 800;
+            background: linear-gradient(125deg, #0E4E35, #1B6F8F);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+        }
+
+        .tagline {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2C5A6E;
+            margin-top: 0.25rem;
+            border-bottom: 3px solid #86C8A8;
+            display: inline-block;
+            padding-bottom: 0.4rem;
+        }
+
+        .hero-desc {
+            max-width: 720px;
+            margin: 1.5rem auto 0;
+            font-size: 1.1rem;
+            color: #2F4858;
+            font-weight: 400;
+        }
+
+        /* video card */
+        .video-card {
+            margin: 2rem 0 3rem;
+            background: linear-gradient(115deg, #EFFAF5 0%, #E5F2FC 100%);
+            border-radius: 2rem;
+            padding: 1.8rem;
+            box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            border-radius: 1.2rem;
+            overflow: hidden;
+            background: #000;
+            margin-bottom: 1rem;
+            box-shadow: 0 12px 25px -8px rgba(0,0,0,0.2);
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        .restriction-note {
+            background: #FFFFFFCC;
+            backdrop-filter: blur(8px);
+            border-radius: 1rem;
+            padding: 0.8rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #1C5A46;
+            border: 1px solid rgba(30, 120, 80, 0.3);
+        }
+
+        /* Why Navculus Section */
+        .why-navculus {
+            margin: 4rem 0 4rem;
+            background: linear-gradient(125deg, #F0F7F4 0%, #EAF3FA 100%);
+            border-radius: 2rem;
+            padding: 3rem 2.5rem;
+            box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.06);
+            border: 1px solid #DCEBE6;
+            scroll-margin-top: 100px;
+        }
+
+        .why-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .why-header h2 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #116D4E, #1C6E89);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 0.75rem;
+        }
+
+        .why-header .why-subhead {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #2F6A5C;
+            max-width: 700px;
+            margin: 0 auto;
+            font-style: italic;
+        }
+
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.8rem;
+            margin-top: 2rem;
+        }
+
+        .why-card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.8rem 1.5rem;
+            transition: all 0.25s ease;
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.02);
+            border: 1px solid #E2EDE8;
+        }
+
+        .why-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 30px -12px rgba(31, 100, 70, 0.12);
+            border-color: #BED9CF;
+        }
+
+        .why-icon {
+            font-size: 2.2rem;
+            background: linear-gradient(145deg, #1C8565, #1F7188);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .why-card h3 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #1B4E3F;
+            margin-bottom: 0.8rem;
+        }
+
+        .why-card p {
+            font-size: 0.93rem;
+            color: #2C5568;
+            line-height: 1.5;
+        }
+
+        .bottom-why-note {
+            margin-top: 2.5rem;
+            text-align: center;
+            background: #FFFFFFCC;
+            border-radius: 1rem;
+            padding: 1.2rem;
+            font-weight: 600;
+            color: #1D7056;
+            border-left: 4px solid #269E78;
+            font-size: 0.95rem;
+        }
+
+        /* Courses Section */
+        .courses-section {
+            margin: 4rem 0 3rem;
+            scroll-margin-top: 100px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: #1C3B4F;
+        }
+
+        .section-title i {
+            font-size: 2rem;
+            background: linear-gradient(145deg, #248F68, #1B6A8A);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .course-landscape-card {
+            display: flex;
+            flex-wrap: wrap;
+            background: #FFFFFF;
+            border-radius: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.02);
+            transition: transform 0.25s ease, box-shadow 0.3s ease;
+            overflow: hidden;
+            border: 1px solid #E2EDF2;
+        }
+
+        .course-landscape-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 25px 35px -12px rgba(31, 112, 78, 0.15);
+            border-color: #C3E0D0;
+        }
+
+        .course-icon-large {
+            background: linear-gradient(125deg, #EAF8F0, #E1F2FC);
+            min-width: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #257A60;
+            border-right: 1px solid #DEEAE8;
+            padding: 1.8rem;
+        }
+
+        .course-content {
+            flex: 1;
+            padding: 1.8rem 2rem;
+        }
+
+        .course-content h3 {
+            font-size: 1.9rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #226653, #2F7D6F);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+        }
+
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        .topic-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 0.95rem;
+            color: #2C4E66;
+            font-weight: 500;
+        }
+
+        .topic-item i {
+            color: #329D72;
+            font-size: 1rem;
+            margin-top: 0.2rem;
+            min-width: 18px;
+        }
+
+        .topic-item strong {
+            color: #134B39;
+            font-weight: 700;
+        }
+
+        /* About Us Section */
+        .about-section {
+            margin: 4rem 0 3rem;
+            background: linear-gradient(115deg, #F9FDFB, #F2F8FC);
+            border-radius: 2rem;
+            padding: 2.5rem 2rem;
+            border: 1px solid #DDE9E5;
+            scroll-margin-top: 100px;
+        }
+
+        .about-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .about-content h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #116D4E, #1C6E89);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .about-content p {
+            font-size: 1rem;
+            color: #2A5A6E;
+            line-height: 1.6;
+        }
+
+        .about-highlight {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .about-highlight span {
+            background: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 60px;
+            font-weight: 600;
+            color: #1C7059;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            border: 1px solid #CEE3DB;
+        }
+
+        /* CTA */
+        .cta-wrapper {
+            text-align: center;
+            margin: 4rem 0 3rem;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(95deg, #186F52, #1F7F75);
+            padding: 1rem 2.2rem;
+            border-radius: 48px;
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+            text-decoration: none;
+            transition: all 0.25s;
+            box-shadow: 0 8px 20px rgba(29, 112, 80, 0.25);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            background: linear-gradient(95deg, #0F5A41, #166B62);
+            box-shadow: 0 15px 25px -5px rgba(24, 111, 82, 0.4);
+        }
+
+        /* footer */
+        .footer {
+            text-align: center;
+            padding: 2.5rem 1rem 2rem;
+            border-top: 1px solid #E2ECF0;
+            margin-top: 2rem;
+            background: #FFFFFF;
+        }
+
+        .powered {
+            font-weight: 700;
+            font-size: 1.05rem;
+            background: linear-gradient(115deg, #1E6B53, #1A6A86);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        /* animations */
+        @keyframes fadeSlideUp {
+            0% { opacity: 0; transform: translateY(25px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .course-landscape-card, .why-card {
+            opacity: 0;
+            animation: fadeSlideUp 0.6s ease forwards;
+        }
+
+        .course-landscape-card:nth-child(1) { animation-delay: 0.05s; }
+        .course-landscape-card:nth-child(2) { animation-delay: 0.15s; }
+        .course-landscape-card:nth-child(3) { animation-delay: 0.25s; }
+        .course-landscape-card:nth-child(4) { animation-delay: 0.35s; }
+        .why-card:nth-child(1) { animation-delay: 0.05s; }
+        .why-card:nth-child(2) { animation-delay: 0.1s; }
+        .why-card:nth-child(3) { animation-delay: 0.15s; }
+        .why-card:nth-child(4) { animation-delay: 0.2s; }
+        .why-card:nth-child(5) { animation-delay: 0.25s; }
+        .why-card:nth-child(6) { animation-delay: 0.3s; }
+
+        @media (max-width: 800px) {
+            .container { padding: 0 1.5rem; }
+            .header-container { padding: 0.8rem 1.5rem; flex-direction: column; text-align: center; }
+            .nav-menu { flex-direction: column; gap: 0.8rem; }
+            .nav-links { gap: 1.2rem; flex-wrap: wrap; justify-content: center; }
+            h1 { font-size: 2.5rem; }
+            .tagline { font-size: 1.2rem; }
+            .course-icon-large { min-width: 80px; font-size: 2.2rem; padding: 1rem; }
+            .course-content h3 { font-size: 1.5rem; }
+            .why-navculus { padding: 2rem 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- STICKY HEADER + MENU BAR (always visible) -->
+<div class="sticky-header">
+    <div class="header-container">
+        <div class="logo-area">
+            <h2>Navculus: The Tutor</h2>
+            <p>The Professional’s Edge in Naval Architecture</p>
+        </div>
+        <div class="nav-menu">
+            <ul class="nav-links">
+                <li><a href="#why-navculus-section">Why Navculus: The Tutor</a></li>
+                <li><a href="#curriculum-section">Curriculum</a></li>
+                <li><a href="#about-us-section">About us</a></li>
+            </ul>
+            <div class="nav-button">
+                <a href="https://www.navculus.in" target="_blank" class="btn-outline" rel="noopener noreferrer">
+                    <i class="fas fa-external-link-alt"></i> Visit navculus.in
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- hero area -->
+    <div class="hero">
+        <div class="badge">Learning Platform</div>
+        <h1>Navculus: The Tutor</h1>
+        <div class="tagline">The Professional’s Edge in Naval Architecture</div>
+        <p class="hero-desc">
+            Master the essentials of naval architecture—from hydrodynamics and stability to complex offshore engineering. Study industry-standard methodologies through our exclusive, expert-led video platform.
+        </p>
+    </div>
+
+    <!-- video preview -->
+    <div class="video-card">
+        <div class="video-wrapper" oncontextmenu="return false;">
+            <iframe 
+                src="https://www.youtube.com/embed/7oNP3EZxQU4?modestbranding=1&rel=0&showinfo=0&controls=1&playsinline=1" 
+                title="Navculus Demo - Intro to Naval Architecture" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                referrerpolicy="strict-origin-when-cross-origin" 
+                allowfullscreen>
+            </iframe>
+        </div>
+
+    </div>
+
+    <!-- WHY NAVCULUS SECTION (anchor id) -->
+    <div id="why-navculus-section" class="why-navculus">
+        <div class="why-header">
+            <h2>Why Navculus: The Tutor?</h2>
+            <div class="why-subhead">Bridging the gap between academic theory and the pulse of the maritime industry.</div>
+        </div>
+        <p style="text-align: center; font-size: 1rem; max-width: 800px; margin: 0 auto 1rem auto; color: #2F6B58;">
+            At Navculus, we believe that true expertise is forged when rigorous theory meets real-world application. 
+            We have built an immersive learning environment that mirrors the professional workplace, transforming how 
+            you master naval architecture and maritime engineering.
+        </p>
+        <div class="why-grid">
+            <div class="why-card">
+                <div class="why-icon"><i class="fas fa-chalkboard-user"></i></div>
+                <h3>Taught by Active Professionals</h3>
+                <p>Forget static, outdated curriculum. Learn directly from industry experts who are solving real engineering challenges today. Our instructors bring years of frontline experience and technical insight into every module.</p>
+            </div>
+            <div class="why-card">
+                <div class="why-icon"><i class="fas fa-briefcase"></i></div>
+                <h3>Practical, On-Job Insights</h3>
+                <p>Move beyond the textbook. We translate complex engineering concepts into "on-the-job" language, providing the context you need to navigate both office design tasks and site-based realities.</p>
+            </div>
+            <div class="why-card">
+                <div class="why-icon"><i class="fas fa-laptop-code"></i></div>
+                <h3>Hands-On Software Mastery</h3>
+                <p>Don't just watch—do. We provide clear, high-fidelity demonstrations of industry-standard tools (such as Maxsurf, GHS, or MOSES). Gain the technical fluency required to hit the ground running in any design office.</p>
+            </div>
+            <div class="why-card">
+                <div class="why-icon"><i class="fas fa-gavel"></i></div>
+                <h3>Regulatory & Compliance Focused</h3>
+                <p>Stay ahead of the curve. Our courses emphasize the application of international maritime regulations (SOLAS, MARPOL, Classification Society rules), ensuring your designs are not just functional, but compliant.</p>
+            </div>
+            <div class="why-card">
+                <div class="why-icon"><i class="fas fa-check-double"></i></div>
+                <h3>Structured Self-Evaluation</h3>
+                <p>Reinforce your expertise through our curated resource library. Use our interactive quizzes and assessment modules to track your progress and ensure you are job-ready at every stage.</p>
+            </div>
+            <div class="why-card">
+                <div class="why-icon"><i class="fas fa-chart-line"></i></div>
+                <h3>Designed for Your Career Phase</h3>
+                <p>Whether you are a student preparing for your first internship, a recent graduate navigating your entry into the industry, or a seasoned professional looking to upskill, Navculus is tailored to your professional evolution.</p>
+            </div>
+        </div>
+        <div class="bottom-why-note">
+            <i class="fas fa-anchor" style="margin-right: 10px;"></i> Join a new generation of naval architects — where theory meets the tide of real maritime engineering.
+        </div>
+    </div>
+
+    <!-- CURRICULUM SECTION (anchor id) -->
+    <div id="curriculum-section" class="courses-section">
+        <div class="section-title">
+            <i class="fas fa-layer-group"></i>
+            <span>Core Curriculum — Master each domain</span>
+        </div>
+
+        <div class="course-landscape-card">
+            <div class="course-icon-large"><i class="fas fa-drafting-compass"></i></div>
+            <div class="course-content">
+                <h3>Fundamentals of Naval Architecture</h3>
+                <div class="topics-grid">
+                    <div class="topic-item"><i class="fas fa-shapes"></i> <span><strong>Ship Geometry & Terminology:</strong> Lines plans, offsets, Block/Prismatic/Midship coeffs.</span></div>
+                    <div class="topic-item"><i class="fas fa-water"></i> <span><strong>Intact & Damage Stability:</strong> Metacentric height (GM), GZ curves, free surface effect.</span></div>
+                    <div class="topic-item"><i class="fas fa-tachometer-alt"></i> <span><strong>Resistance & Propulsion:</strong> Froude's law, resistance types, propeller selection.</span></div>
+                    <div class="topic-item"><i class="fas fa-layer-group"></i> <span><strong>Structural Mechanics:</strong> Still water/wave bending moments, shear forces, primary/secondary stresses.</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="course-landscape-card">
+            <div class="course-icon-large"><i class="fas fa-file-signature"></i></div>
+            <div class="course-content">
+                <h3>Practical Ship Design & Statutory Computations</h3>
+                <div class="topics-grid">
+                    <div class="topic-item"><i class="fas fa-balance-scale"></i> <span><strong>Statutory Documents:</strong> Freeboard & tonnage computations per IMO regulations.</span></div>
+                    <div class="topic-item"><i class="fas fa-cubes"></i> <span><strong>Hull Form & Fairing:</strong> Maxsurf / Rhino 3D workflows from IGS formats.</span></div>
+                    <div class="topic-item"><i class="fas fa-weight-hanging"></i> <span><strong>Weight & COG Estimation:</strong> Lightship weight methods for preliminary design.</span></div>
+                    <div class="topic-item"><i class="fas fa-building"></i> <span><strong>Classification Rules:</strong> Apply DNV, ABS, IRS for scantling & structural design.</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="course-landscape-card">
+            <div class="course-icon-large"><i class="fas fa-chart-line"></i></div>
+            <div class="course-content">
+                <h3>Advanced Hydrodynamics & CFD</h3>
+                <div class="topics-grid">
+                    <div class="topic-item"><i class="fas fa-ship"></i> <span><strong>CFD High-Speed Vessels:</strong> Domain setup, meshing, resistance analysis for fast crew boats.</span></div>
+                    <div class="topic-item"><i class="fas fa-cloud-upload-alt"></i> <span><strong>ANSYS Fluent Marine:</strong> Multiphase flow (VOF) and free surface modeling.</span></div>
+                    <div class="topic-item"><i class="fas fa-fan"></i> <span><strong>Propeller-Hull Interaction:</strong> Wake fraction (t), thrust deduction (w), aft-ship optimization.</span></div>
+                    <div class="topic-item"><i class="fas fa-chart-bar"></i> <span><strong>Verification & Validation:</strong> Grid Convergence Index (GCI) & towing tank validation.</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="course-landscape-card">
+            <div class="course-icon-large"><i class="fas fa-oil-can"></i></div>
+            <div class="course-content">
+                <h3>Offshore Engineering & Operations</h3>
+                <div class="topics-grid">
+                    <div class="topic-item"><i class="fas fa-waveform"></i> <span><strong>Environmental Loads & RAOs:</strong> Metocean, JONSWAP, Morison/Diffraction, RAOs for semis.</span></div>
+                    <div class="topic-item"><i class="fas fa-link"></i> <span><strong>Mooring Analysis:</strong> Static/dynamic line tension using Bentley MOSES.</span></div>
+                    <div class="topic-item"><i class="fas fa-arrow-up"></i> <span><strong>Self-Elevating Barges:</strong> Transit stability, leg penetration & elevated conditions.</span></div>
+                    <div class="topic-item"><i class="fas fa-tools"></i> <span><strong>Modular Offshore Structures:</strong> Heavy weather shelters & temporary deck modifications.</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ABOUT US SECTION (anchor id) -->
+    <div id="about-us-section" class="about-section">
+        <div class="about-content">
+            <h2>About Navculus</h2>
+            <p>Navculus is the premier online destination for naval architecture and maritime engineering education. 
+            We bridge the gap between academic theory and the pulse of the maritime industry through rigorous, 
+            professional-led training. Our mission is to create job-ready engineers who can confidently tackle 
+            design, compliance, and operational challenges from day one.</p>
+            <p>Born from decades of collective experience in ship design, offshore engineering, and regulatory 
+            consulting, Navculus provides a modern, software-integrated curriculum that reflects the real demands 
+            of classification societies, design offices, and shipyards worldwide.</p>
+            <div class="about-highlight">
+                <span>Interactive learning</span>
+                <span>40+ Industry Modules</span>
+                <span>Professional Certifications</span>
+                <span>Real-World Case Studies</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-wrapper">
+        <a href="https://www.navculus.in" target="_blank" class="btn-primary" rel="noopener noreferrer">
+            <i class="fas fa-compass"></i> Explore Navculus Ecosystem
+        </a>
+        <p style="margin-top: 1rem; font-size: 0.85rem; color: #507A6B;">Start your journey — access full video library & expert lessons</p>
+    </div>
+
+    <!-- footer -->
+    <div class="footer">
+        <div class="powered">⚡ Powered by navculus.in</div>
+        <small>© 2026 Navculus: The Tutor — The Professional’s Edge in Naval Architecture. All video content is protected and YouTube domain-restricted to this website.</small>
+        <small style="margin-top: 6px;"><i class="fas fa-laptop-code"></i> Industry-grade curriculum | Interactive learning | Certification ready</small>
+    </div>
+</div>
+
+<script>
+    // Smooth scroll for anchor links with offset for sticky header
+    document.querySelectorAll('.nav-links a').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                const headerOffset = 90;
+                const elementPosition = targetElement.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: "smooth"
+                });
+            }
+        });
+    });
+</script>
+</body>
+</html>
