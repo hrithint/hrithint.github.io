@@ -280,6 +280,30 @@
             margin-top: 10px;
         }
 
+        .mute-button {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 25;
+            background: rgba(0, 0, 0, 0.6);
+            border: none;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .mute-button:hover {
+            background: rgba(29, 122, 92, 0.8);
+            transform: scale(1.1);
+        }
+
         .restriction-note {
             background: #FFFFFFCC;
             backdrop-filter: blur(8px);
@@ -658,7 +682,7 @@
             <!-- YouTube Iframe -->
             <iframe 
                 id="youtubePlayer"
-                src="https://www.youtube-nocookie.com/embed/7oNP3EZxQU4?modestbranding=1&rel=0&controls=0&showinfo=0&fs=0&playsinline=1&disablekb=1&iv_load_policy=3" 
+                src="https://www.youtube-nocookie.com/embed/7oNP3EZxQU4?modestbranding=1&rel=0&controls=0&showinfo=0&fs=0&playsinline=1&disablekb=1&iv_load_policy=3&enablejsapi=1" 
                 title="Navculus Demo - Intro to Naval Architecture" 
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                 referrerpolicy="strict-origin-when-cross-origin">
@@ -673,6 +697,10 @@
                 <div class="thumbnail-text">Intro to The Tutor</div>
                 <div class="thumbnail-subtext">Click to play • Powered by Navculus</div>
             </div>
+            <!-- Mute/Unmute Button -->
+            <button class="mute-button" id="muteButton" title="Unmute">
+                <i class="fas fa-volume-mute"></i>
+            </button>
         </div>
     </div>
 
@@ -858,19 +886,58 @@
         }
     });
 
+    // YouTube Player API
+    let player;
+    let isMuted = true;
+
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('youtubePlayer', {
+            events: {
+                'onReady': onPlayerReady
+            }
+        });
+    }
+
+    function onPlayerReady(event) {
+        // Player is ready
+    }
+
     // Custom play overlay click handler
     document.getElementById('customPlayOverlay').addEventListener('click', function() {
         const overlay = document.getElementById('customPlayOverlay');
         overlay.classList.add('hidden');
         
-        // Add autoplay to the iframe URL and reload
-        const iframe = document.getElementById('youtubePlayer');
-        if (iframe.src.indexOf('autoplay=1') === -1) {
-            iframe.src += '&autoplay=1';
+        // Start video muted using API
+        if (player && player.playVideo && player.mute) {
+            player.mute();
+            player.playVideo();
         }
-        // Reload iframe to trigger autoplay
-        iframe.src = iframe.src;
     });
+
+    // Mute/Unmute button handler
+    document.getElementById('muteButton').addEventListener('click', function() {
+        const button = document.getElementById('muteButton');
+        const icon = button.querySelector('i');
+        
+        if (player) {
+            if (isMuted) {
+                player.unMute();
+                icon.className = 'fas fa-volume-up';
+                button.title = 'Mute';
+            } else {
+                player.mute();
+                icon.className = 'fas fa-volume-mute';
+                button.title = 'Unmute';
+            }
+            isMuted = !isMuted;
+        }
+    });
+
+    // Load YouTube API
+    const tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    const firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 </script>
 </body>
 </html>
