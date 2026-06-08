@@ -225,6 +225,30 @@
             pointer-events: auto;
         }
 
+        .mute-button {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 15;
+            background: rgba(0, 0, 0, 0.6);
+            border: none;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .mute-button:hover {
+            background: rgba(29, 122, 92, 0.8);
+            transform: scale(1.1);
+        }
+
         .custom-play-overlay {
             position: absolute;
             top: 0;
@@ -659,8 +683,7 @@
             <!-- Mux Player -->
             <mux-player
                 id="muxPlayer"
-                playback-id="YYbe5X9c9EVWrLdcZSlRZuJHeCS00kmYq1GznnocHnko"
-                muted
+                playback-id="u3t28VTFTcKqNbnlgvvrtCCFwPJHa6LnP54mvJdrXQg"
                 playsinline
                 disable-cookies
                 no-volume-panel
@@ -686,6 +709,10 @@
                 <div class="thumbnail-text">Intro to The Tutor</div>
                 <div class="thumbnail-subtext">Click to play • Powered by Navculus</div>
             </div>
+            <!-- Mute/Unmute Button -->
+            <button class="mute-button" id="muteButton" title="Mute">
+                <i class="fas fa-volume-up"></i>
+            </button>
         </div>
     </div>
 
@@ -873,13 +900,37 @@
         }
     });
 
+    // Get DOM elements
+    const muxPlayer = document.getElementById('muxPlayer');
+    const customPlayOverlay = document.getElementById('customPlayOverlay');
+    const muteButton = document.getElementById('muteButton');
+    let isMuted = false;
+
     // Custom play overlay click handler
-    document.getElementById('customPlayOverlay').addEventListener('click', function() {
-        const overlay = document.getElementById('customPlayOverlay');
-        const muxPlayer = document.getElementById('muxPlayer');
-        
-        overlay.classList.add('hidden');
+    customPlayOverlay.addEventListener('click', function() {
+        customPlayOverlay.classList.add('hidden');
         muxPlayer.play();
+    });
+
+    // Mute/Unmute button handler
+    muteButton.addEventListener('click', function() {
+        const icon = muteButton.querySelector('i');
+        
+        if (isMuted) {
+            muxPlayer.muted = false;
+            icon.className = 'fas fa-volume-up';
+            muteButton.title = 'Mute';
+        } else {
+            muxPlayer.muted = true;
+            icon.className = 'fas fa-volume-mute';
+            muteButton.title = 'Unmute';
+        }
+        isMuted = !isMuted;
+    });
+
+    // Listen for video end to bring back play overlay
+    muxPlayer.addEventListener('ended', function() {
+        customPlayOverlay.classList.remove('hidden');
     });
 </script>
 </body>
