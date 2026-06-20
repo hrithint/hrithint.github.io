@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Padeye Design Calculator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 1400px;
+            width: 100%;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px 25px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(30%, -30%);
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        h1 {
+            font-size: 2.4rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        .credit {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            z-index: 2;
+        }
+        
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 30px;
+        }
+        
+        .input-section {
+            flex: 1;
+            min-width: 350px;
+            padding: 20px;
+            border-right: 1px solid #eaeef2;
+        }
+        
+        .output-section {
+            flex: 2;
+            min-width: 600px;
+            padding: 20px;
+            overflow-x: auto;
+        }
+        
+        .section-title {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #eaeef2;
+            color: #2a5298;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+            display: flex;
+            align-items: center;
+        }
+        
+        label i {
+            margin-right: 8px;
+            color: #2a5298;
+            width: 20px;
+            text-align: center;
+        }
+        
+        input[type="number"], select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: #fafbfc;
+        }
+        
+        input[type="number"]:focus, select:focus {
+            outline: none;
+            border-color: #2a5298;
+            box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.1);
+            background-color: white;
+        }
+        
+        .unit {
+            color: #666;
+            font-size: 0.9rem;
+            margin-left: 5px;
+            font-weight: normal;
+        }
+        
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03);
+            font-size: 0.9rem;
+        }
+        
+        .result-table th, .result-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eaeef2;
+        }
+        
+        .result-table th {
+            background-color: #f8fafd;
+            font-weight: 600;
+            color: #2a5298;
+        }
+        
+        .result-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .result-table tr:hover {
+            background-color: #f8fafd;
+        }
+        
+        .status {
+            font-weight: bold;
+            padding: 6px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            font-size: 0.85rem;
+        }
+        
+        .status-ok {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .status-not-safe {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        
+        .formula {
+            font-family: 'Courier New', monospace;
+            background-color: #f8f9fa;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-size: 0.9rem;
+            border-left: 3px solid #2a5298;
+        }
+        
+        .diagram {
+            text-align: center;
+            margin: 25px 0;
+        }
+        
+        .diagram-placeholder {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, #f8fafd 0%, #eaeef2 100%);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #7a8ca5;
+            border: 1px dashed #d1d9e6;
+        }
+        
+        .diagram-placeholder i {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            opacity: 0.7;
+        }
+        
+        .check-title {
+            display: flex;
+            align-items: center;
+            margin: 25px 0 15px 0;
+            color: #2a5298;
+            font-size: 1.1rem;
+        }
+        
+        .check-title i {
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .subsection {
+            margin-left: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .subsection-title {
+            font-size: 1rem;
+            margin: 15px 0 10px 0;
+            color: #444;
+            font-weight: 600;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eaeef2;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            margin-right: 5px;
+            font-weight: 500;
+            color: #666;
+        }
+        
+        .tab.active {
+            color: #2a5298;
+            border-bottom: 3px solid #2a5298;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @media (max-width: 1100px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            .input-section {
+                border-right: none;
+                border-bottom: 1px solid #eaeef2;
+            }
+            
+            .credit {
+                position: relative;
+                top: auto;
+                right: auto;
+                margin-top: 15px;
+                display: inline-block;
+            }
+            
+            header {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1>Padeye Design Calculator</h1>
+                <p class="subtitle">Based on AISC ASD Standards & API RP 2A WSD</p>
+            </div>
+            <div class="credit">
+                Developed by Hrithin
+            </div>
+        </header>
+        
+        <div class="content">
+            <div class="input-section">
+                <h2 class="section-title"><i class="fas fa-sliders-h"></i> Input Parameters</h2>
+                
+                <div class="input-group">
+                    <label for="yield-stress"><i class="fas fa-gem"></i> Yield stress, sy <span class="unit">(MPa)</span></label>
+                    <input type="number" id="yield-stress" value="235" step="0.1">
+                </div>
+                
+                <div class="input-group">
+                    <label for="electrode-strength"><i class="fas fa-bolt"></i> Electrode tensile strength, sw <span class="unit">(MPa)</span></label>
+                    <input type="number" id="electrode-strength" value="410" step="0.1">
+                </div>
+                
+                <div class="input-group">
+                    <label for="elasticity"><i class="fas fa-ruler"></i> Modulus of elasticity, E <span class="unit">(MPa)</span></label>
+                    <input type="number" id="elasticity" value="200000" step="1000">
+                </div>
+                
+                <div class="input-group">
+                    <label for="poisson"><i class="fas fa-divide"></i> Poisson's ratio</label>
+                    <input type="number" id="poisson" value="0.3" step="0.01">
+                </div>
+                
+                <h3 class="section-title"><i class="fas fa-ruler-combined"></i> Padeye Geometry</h3>
+                
+                <div class="input-group">
+                    <label for="main-plate-radius"><i class="fas fa-circle"></i> Radius of main plate, R <span class="unit">(mm)</span></label>
+                    <input type="number" id="main-plate-radius" value="80" step="0.1">
+                </div>
+                
+                <div class="input-group">
+                    <label for="main-plate-thickness"><i class="fas fa-square"></i> Thickness of main plate, t <span class="unit">(mm)</span></label>
+                    <input type="number" id="main-plate-thickness" value="10" step="0.1">
+                </div>
+                
+                <div class="input-group">
+                    <label for="pin-hole-diameter"><i class="fas fa-dot-circle"></i> Diameter of eye pin hole, DE <span class="unit">(mm)</span></label>
+                    <input type="number" id="pin-hole-diameter" value="38" step="0.1">
+                </div>
+                
+                <div class="input-group">
+                    <label for="cheek-plate-diameter"><i class="fas fa-circle-notch"></i> Diameter of cheek plate, DC <span class="unit">(mm)</span></label>
+                    <input type="number" id="cheek-plate-diameter" value="73" step="0.1">
+                </div>
+                
+                <div class="input-group">
+                    <label for="cheek-plate-thickness"><i class="fas fa-layer-group"></i> Thickness of cheek plate, tC <span class="unit">(mm)</span></label>
+                    <input type="number" id="cheek-plate-thickness" value="8" step="0.1">
+                </div>
+                
+                <div class="input-group">
+                    <label for="total-height"><i class="fas fa-arrows-alt-v"></i> Total height of padeye, H <span class="unit">(mm)</span></label>
+                    <input type="number" id="total-height" value="200" step="0.1">
+                </div>
+                
+                <div class="input-group">
+                    <label for="base-plate-length"><i class="fas fa-arrows-alt-h"></i> Length of base plate, L <span class="unit">(mm)</span></label>
+                    <input type="number" id="base-plate-length" value="200" step="0.1">
+                </div>
+                
+                <h3 class="section-title"><i class="fas fa-wrench"></i> Weld Size</h3>
+                
+                <div class="input-group">
+                    <label for="base-weld-size"><i class="fas fa-drafting-compass"></i> Base weld leg size, tw <span class="unit">(mm)</span></label>
+                    <input type="number" id="base-weld-size" value="10" step="0.1">
+                </div>
+                
+                <div class="input-group">
+                    <label for="cheek-weld-size"><i class="fas fa-drafting-compass"></i> Cheek plate weld leg size, twc <span class="unit">(mm)</span></label>
+                    <input type="number" id="cheek-weld-size" value="10" step="0.1">
+                </div>
+                
+                <h3 class="section-title"><i class="fas fa-link"></i> Shackle Geometry</h3>
+                
+                <div class="input-group">
+                    <label for="shackle-swl"><i class="fas fa-weight-hanging"></i> Shackle SWL, SWLsh <span class="unit">(MT)</span></label>
+                    <input type="number" id="shackle-swl" value="0.75" step="0.01">
+                </div>
+                
+                <div class="input-group">
+                    <label for="shackle-length"><i class="fas fa-ruler-vertical"></i> Shackle inside length, Lsh <span class="unit">(mm)</span></label>
+                    <input type="number" id="shackle-length" value="22.352" step="0.1">
+                </div>
+                
+                <div class="input-group">
+                    <label for="shackle-width"><i class="fas fa-ruler-horizontal"></i> Shackle jaw width, Wsh <span class="unit">(mm)</span></label>
+                    <input type="number" id="shackle-width" value="13.462" step="0.1">
+                </div>
+                
+                <div class="input-group">
+                    <label for="shackle-pin-diameter"><i class="fas fa-circle"></i> Shackle pin diameter, Dshp <span class="unit">(mm)</span></label>
+                    <input type="number" id="shackle-pin-diameter" value="30" step="0.1">
+                </div>
+                
+                <h3 class="section-title"><i class="fas fa-cable"></i> Sling Geometry</h3>
+                
+                <div class="input-group">
+                    <label for="sling-diameter"><i class="fas fa-circle"></i> Sling diameter, Dsling <span class="unit">(mm)</span></label>
+                    <input type="number" id="sling-diameter" value="6" step="0.1">
+                </div>
+                
+                <h3 class="section-title"><i class="fas fa-dumbbell"></i> Padeye Load</h3>
+                
+                <div class="input-group">
+                    <label for="load"><i class="fas fa-weight-hanging"></i> Load on padeye, P <span class="unit">(MT)</span></label>
+                    <input type="number" id="load" value="8" step="0.1">
+                </div>
+                
+                <div class="input-group">
+                    <label for="load-angle"><i class="fas fa-angle-right"></i> Angle of load with vertical, θ <span class="unit">(deg)</span></label>
+                    <input type="number" id="load-angle" value="70" step="1">
+                </div>
+                
+                <div class="input-group">
+                    <label for="out-of-plane-angle"><i class="fas fa-sync-alt"></i> Out of plane angle, φ <span class="unit">(deg)</span></label>
+                    <input type="number" id="out-of-plane-angle" value="0" step="1">
+                </div>
+                
+                <div class="input-group">
+                    <label for="lift-type"><i class="fas fa-ship"></i> Lift type</label>
+                    <select id="lift-type">
+                        <option value="Lifts at open sea">Lifts at open sea</option>
+                        <option value="Lift at sheltered location" selected>Lift at sheltered location</option>
+                    </select>
+                </div>
+                
+                <div class="diagram">
+                    <div class="diagram-placeholder">
+                        <i class="fas fa-project-diagram"></i>
+                        <div>Padeye Diagram</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="output-section">
+                <div class="tabs">
+                    <div class="tab active" onclick="switchTab('geometry')">Geometry Check</div>
+                    <div class="tab" onclick="switchTab('stress-pin')">Stress at Pin Hole</div>
+                    <div class="tab" onclick="switchTab('stress-base')">Stress at Base Plate</div>
+                    <div class="tab" onclick="switchTab('weld-base')">Base Weld Check</div>
+                    <div class="tab" onclick="switchTab('weld-cheek')">Cheek Weld Check</div>
+                </div>
+                
+                <div id="geometry-tab" class="tab-content active">
+                    <h2 class="section-title"><i class="fas fa-ruler-combined"></i> Geometry Check</h2>
+                    
+                    <div class="subsection">
+                        <h3 class="subsection-title">Main Plate Radius</h3>
+                        <table class="result-table">
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Value</th>
+                                <th>Status</th>
+                            </tr>
+                            <tr>
+                                <td>Main Plate Radius, R</td>
+                                <td id="main-plate-radius-value">80</td>
+                                <td><span id="main-plate-radius-status" class="status status-ok">OK</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3 class="subsection-title">Shackle Clearance Check</h3>
+                        <table class="result-table">
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Value</th>
+                                <th>Status</th>
+                            </tr>
+                            <tr>
+                                <td>Clearance between pin hole diameter and pin diameter</td>
+                                <td id="pin-clearance">8</td>
+                                <td><span id="pin-clearance-status" class="status status-ok">OK</span></td>
+                            </tr>
+                            <tr>
+                                <td>Length clearance of shackle, dLshackle</td>
+                                <td id="length-clearance">41.824</td>
+                                <td><span id="length-clearance-status" class="status status-ok">OK</span></td>
+                            </tr>
+                            <tr>
+                                <td>Width clearance of shackle, dWshackle</td>
+                                <td id="width-clearance">33.462</td>
+                                <td><span id="width-clearance-status" class="status status-ok">OK</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                
+                <div id="stress-pin-tab" class="tab-content">
+                    <h2 class="section-title"><i class="fas fa-compress-arrows-alt"></i> Stress Check at Pin Hole</h2>
+                    
+                    <div class="subsection">
+                        <h3 class="subsection-title">Bearing Stress Check at Pin Hole</h3>
+                        <table class="result-table">
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Value</th>
+                                <th>Unit</th>
+                                <th>Status</th>
+                            </tr>
+                            <tr>
+                                <td>Bearing area, Abe</td>
+                                <td id="bearing-area">1193.8</td>
+                                <td>mm²</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Bearing stress, sbe(actual)</td>
+                                <td id="bearing-stress">121.6</td>
+                                <td>MPa</td>
+                                <td><span id="bearing-stress-status" class="status status-ok">OK</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3 class="subsection-title">Shear Stress Check at Pin Hole</h3>
+                        <table class="result-table">
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Value</th>
+                                <th>Unit</th>
+                                <th>Status</th>
+                            </tr>
+                            <tr>
+                                <td>Shear area of pin hole, Asp</td>
+                                <td id="shear-area">2420</td>
+                                <td>mm²</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Shear stress at pin hole, ssp(actual)</td>
+                                <td id="shear-stress">60.0</td>
+                                <td>MPa</td>
+                                <td><span id="shear-stress-status" class="status status-ok">OK</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3 class="subsection-title">Tensile Stress Check at Pin Hole</h3>
+                        <table class="result-table">
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Value</th>
+                                <th>Unit</th>
+                                <th>Status</th>
+                            </tr>
+                            <tr>
+                                <td>Tensile area, Atp</td>
+                                <td id="tensile-area">2420</td>
+                                <td>mm²</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Tensile stress at pin hole, stp(actual)</td>
+                                <td id="tensile-stress">60.0</td>
+                                <td>MPa</td>
+                                <td><span id="tensile-stress-status" class="status status-ok">OK</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3 class="subsection-title">Hertz/Contact Stress Check at Pin Hole</h3>
+                        <table class="result-table">
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Value</th>
+                                <th>Unit</th>
+                                <th>Status</th>
+                            </tr>
+                            <tr>
+                                <td>Design load per unit length, p</td>
+                                <td id="design-load-per-length">0.3077</td>
+                                <td>MT/mm</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Hertz stress at pin hole, sH(actual)</td>
+                                <td id="hertz-stress">469.8</td>
+                                <td>MPa</td>
+                                <td><span id="hertz-stress-status" class="status status-ok">OK</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                
+                <div id="stress-base-tab" class="tab-content">
+                    <h2 class="section-title"><i class="fas fa-compress-arrows-alt"></i> Stress Check at Base Plate</h2>
+                    
+                    <div class="subsection">
+                        <h3 class="subsection-title">Tensile Stress Check</h3>
+                        <table class="result-table">
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Value</th>
+                                <th>Unit</th>
+                                <th>Status</th>
+                            </tr>
+                            <tr>
+                                <td>Design tensile force, Pt</td>
+                                <td id="design-tensile-force">2.736</td>
+                                <td>MT</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Tensile area, Atb</td>
+                                <td id="tensile-area-base">2000</td>
+                                <td>mm²</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Tensile stress at base, stb(actual)</td>
+                                <td id="tensile-stress-base">13.4</td>
+                                <td>MPa</td>
+                                <td><span id="tensile-stress-base-status" class="status status-ok">OK</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3 class="subsection-title">Bending Stress Check</h3>
+                        <table class="result-table">
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Value</th>
+                                <th>Unit</th>
+                                <th>Status</th>
+                            </tr>
+                            <tr>
+                                <td>Moment lever for Horizontal/Lateral force, h</td>
+                                <td id="moment-lever-h">120</td>
+                                <td>mm</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Moment lever for Vertical force, e</td>
+                                <td id="moment-lever-e">40</td>
+                                <td>mm</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Total design moment about x-axis (in plane), Mdxx</td>
+                                <td id="moment-x">1348.3</td>
+                                <td>MTmm</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Section modulus of base about x-axis (in plane), Zbxx</td>
+                                <td id="section-modulus-x">66666.7</td>
+                                <td>mm³</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Bending stress about x-axis (in plane), sbbx(actual)</td>
+                                <td id="bending-stress-x">198.3</td>
+                                <td>MPa</td>
+                                <td><span id="bending-stress-x-status" class="status status-ok">OK</span></td>
+                            </tr>
+                            <tr>
+                                <td>Total design moment about y-axis (out of plane), Mdyy</td>
+                                <td id="moment-y">0</td>
+                                <td>MTmm</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Section modulus of base about y-axis (out of plane), Zbyy</td>
+                                <td id="section-modulus-y">6666.7</td>
+                                <td>mm³</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Bending stress about y-axis (out of plane), sbby(actual)</td>
+                                <td id="bending-stress-y">0</td>
+                                <td>MPa</td>
+                                <td><span id="bending-stress-y-status" class="status status-ok">OK</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3 class="subsection-title">Shear Stress Check</h3>
+                        <table class="result-table">
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Value</th>
+                                <th>Unit</th>
+                                <th>Status</th>
+                            </tr>
+                            <tr>
+                                <td>Shear area at base, Asb</td>
+                                <td id="shear-area-base">2000</td>
+                                <td>mm²</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Shear stress at base, horizontal, tsby(actual)</td>
+                                <td id="shear-stress-base-horizontal">58.8</td>
+                                <td>MPa</td>
+                                <td><span id="shear-stress-base-horizontal-status" class="status status-ok">OK</span></td>
+                            </tr>
+                            <tr>
+                                <td>Shear stress at base, lateral, tsbx(actual)</td>
+                                <td id="shear-stress-base-lateral">0</td>
+                                <td>MPa</td>
+                                <td><span id="shear-stress-base-lateral-status" class="status status-ok">OK</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3 class="subsection-title">Von Mises Stress Check</h3>
+                        <table class="result-table">
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Value</th>
+                                <th>Unit</th>
+                                <th>Status</th>
+                            </tr>
+                            <tr>
+                                <td>Von Mises Stress at base, svb(actual)</td>
+                                <td id="von-mises-stress">211.7</td>
+                                <td>MPa</td>
+                                <td><span id="von-mises-stress-status" class="status status-ok">OK</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3 class="subsection-title">Combined Stress Check</h3>
+                        <table class="result-table">
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Value</th>
+                                <th>Unit</th>
+                                <th>Status</th>
+                            </tr>
+                            <tr>
+                                <td>Axial Tension, fa</td>
+                                <td id="axial-tension">13.4</td>
+                                <td>MPa</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Allowable tensile stress, Ft</td>
+                                <td id="allowable-tensile-stress">141</td>
+                                <td>MPa</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>In plane bending stress, fbx</td>
+                                <td id="in-plane-bending-stress">198.3</td>
+                                <td>MPa</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Allowable in plane bending stress, Fbx</td>
+                                <td id="allowable-in-plane-bending">141</td>
+                                <td>MPa</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Out of plane bending stress, fby</td>
+                                <td id="out-of-plane-bending-stress">0</td>
+                                <td>MPa</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Allowable out of plane bending stress, Fby</td>
+                                <td id="allowable-out-of-plane-bending">176.3</td>
+                                <td>MPa</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Combined Stress Ratio</td>
+                                <td id="combined-stress-ratio">1.5</td>
+                                <td></td>
+                                <td><span id="combined-stress-status" class="status status-not-safe">NOT OK</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                
+                <div id="weld-base-tab" class="tab-content">
+                    <h2 class="section-title"><i class="fas fa-wrench"></i> Weld Stress Check of Base Weld</h2>
+                    
+                    <div class="subsection">
+                        <h3 class="subsection-title">Weld Dimension and Design Loads</h3>
+                        <table class="result-table">
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Value</th>
+                                <th>Unit</th>
+                            </tr>
+                            <tr>
+                                <td>Throat thickness, twt</td>
+                                <td id="throat-thickness">7.07</td>
+                                <td>mm</td>
+                            </tr>
+                            <tr>
+                                <td>Total weld length, Lw</td>
+                                <td id="total-weld-length">800</td>
+                                <td>mm</td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3 class="subsection-title">Shear Stress at Base Weld</h3>
+                        <table class="result-table">
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Value</th>
+                                <th>Unit</th>
+                                <th>Status</th>
+                            </tr>
+                            <tr>
+                                <td>Shear area of base weld, Asbw</td>
+                                <td id="shear-area-base-weld">5656.9</td>
+                                <td>mm²</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Shear stress at base weld - Horizontal (y direction), tsbwy(actual)</td>
+                                <td id="shear-stress-base-weld-horizontal">20.8</td>
+                                <td>MPa</td>
+                                <td><span id="shear-stress-base-weld-horizontal-status" class="status status-ok">OK</span></td>
+                            </tr>
+                            <tr>
+                                <td>Shear stress at base weld - Lateral (x direction), tsbwx(actual)</td>
+                                <td id="shear-stress-base-weld-lateral">0</td>
+                                <td>MPa</td>
+                                <td><span id="shear-stress-base-weld-lateral-status" class="status status-ok">OK</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3 class="subsection-title">Tensile Stress at Base Weld</h3>
+                        <table class="result-table">
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Value</th>
+                                <th>Unit</th>
+                                <th>Status</th>
+                            </tr>
+                            <tr>
+                                <td>Tensile area at base, Atbw</td>
+                                <td id="tensile-area-base-weld">5656.9</td>
+                                <td>mm²</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Tensile stress at base weld, stbw(actual)</td>
+                                <td id="tensile-stress-base-weld">4.7</td>
+                                <td>MPa</td>
+                                <td><span id="tensile-stress-base-weld-status" class="status status-ok">OK</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3 class="subsection-title">Bending Stress Check at Base Weld</h3>
+                        <table class="result-table">
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Value</th>
+                                <th>Unit</th>
+                                <th>Status</th>
+                            </tr>
+                            <tr>
+                                <td>Section modulus of base weld about x-axis, zwbxx</td>
+                                <td id="section-modulus-base-weld-x">56568.9</td>
+                                <td>mm³</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Total design bending moment about x-axis (in plane), Mdxx</td>
+                                <td id="moment-base-weld-x">1348.3</td>
+                                <td>MTmm</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Bending stress at base weld about x-axis(in plane), sbbwx(actual)</td>
+                                <td id="bending-stress-base-weld-x">23.4</td>
+                                <td>MPa</td>
+                                <td><span id="bending-stress-base-weld-x-status" class="status status-ok">OK</span></td>
+                            </tr>
+                            <tr>
+                                <td>Section modulus of base weld about y-axis, zwbyy</td>
+                                <td id="section-modulus-base-weld-y">9428.2</td>
+                                <td>mm³</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Total design bending moment about y-axis (out of plane), Mdyy</td>
+                                <td id="moment-base-weld-y">0</td>
+                                <td>MTmm</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Bending stress at base weld about y-axis(out of plane), sbbwy(actual)</td>
+                                <td id="bending-stress-base-weld-y">0</td>
+                                <td>MPa</td>
+                                <td><span id="bending-stress-base-weld-y-status" class="status status-ok">OK</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div class="subsection">
+                        <h3 class="subsection-title">Total Stress Check at Base Weld</h3>
+                        <table class="result-table">
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Value</th>
+                                <th>Unit</th>
+                                <th>Status</th>
+                            </tr>
+                            <tr>
+                                <td>Total stress at base weld, scbw(actual)</td>
+                                <td id="total-stress-base-weld">28.1</td>
+                                <td>MPa</td>
+                                <td><span id="total-stress-base-weld-status" class="status status-ok">OK</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                
+                <div id="weld-cheek-tab" class="tab-content">
+                    <h2 class="section-title"><i class="fas fa-wrench"></i> Weld Check of Cheek Plate Weld</h2>
+                    
+                    <div class="subsection">
+                        <table class="result-table">
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Value</th>
+                                <th>Unit</th>
+                                <th>Status</th>
+                            </tr>
+                            <tr>
+                                <td>Throat thickness, twtc</td>
+                                <td id="throat-thickness-cheek">5.66</td>
+                                <td>mm</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Weld length, Lwc</td>
+                                <td id="weld-length-cheek">114.7</td>
+                                <td>mm</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Weld area of cheek plate, Awc</td>
+                                <td id="weld-area-cheek">649.3</td>
+                                <td>mm²</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Design load on one cheek plate, Pdc</td>
+                                <td id="design-load-cheek">3.0769</td>
+                                <td>MT</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Weld stress at cheek weld, swc(actual)</td>
+                                <td id="weld-stress-cheek">46.5</td>
+                                <td>MPa</td>
+                                <td><span id="weld-stress-cheek-status" class="status status-ok">OK</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get all input elements
+        const inputs = document.querySelectorAll('input[type="number"], select');
+        
+        // Add event listeners to all inputs
+        inputs.forEach(input => {
+            input.addEventListener('input', updateCalculations);
+        });
+        
+        // Initial calculation
+        updateCalculations();
+        
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        function updateCalculations() {
+            // Get input values
+            const yieldStress = parseFloat(document.getElementById('yield-stress').value) || 0;
+            const electrodeStrength = parseFloat(document.getElementById('electrode-strength').value) || 0;
+            const elasticity = parseFloat(document.getElementById('elasticity').value) || 0;
+            const poisson = parseFloat(document.getElementById('poisson').value) || 0;
+            const mainPlateRadius = parseFloat(document.getElementById('main-plate-radius').value) || 0;
+            const mainPlateThickness = parseFloat(document.getElementById('main-plate-thickness').value) || 0;
+            const pinHoleDiameter = parseFloat(document.getElementById('pin-hole-diameter').value) || 0;
+            const cheekPlateDiameter = parseFloat(document.getElementById('cheek-plate-diameter').value) || 0;
+            const cheekPlateThickness = parseFloat(document.getElementById('cheek-plate-thickness').value) || 0;
+            const totalHeight = parseFloat(document.getElementById('total-height').value) || 0;
+            const basePlateLength = parseFloat(document.getElementById('base-plate-length').value) || 0;
+            const baseWeldSize = parseFloat(document.getElementById('base-weld-size').value) || 0;
+            const cheekWeldSize = parseFloat(document.getElementById('cheek-weld-size').value) || 0;
+            const shackleSWL = parseFloat(document.getElementById('shackle-swl').value) || 0;
+            const shackleLength = parseFloat(document.getElementById('shackle-length').value) || 0;
+            const shackleWidth = parseFloat(document.getElementById('shackle-width').value) || 0;
+            const shacklePinDiameter = parseFloat(document.getElementById('shackle-pin-diameter').value) || 0;
+            const slingDiameter = parseFloat(document.getElementById('sling-diameter').value) || 0;
+            const load = parseFloat(document.getElementById('load').value) || 0;
+            const loadAngle = parseFloat(document.getElementById('load-angle').value) || 0;
+            const outOfPlaneAngle = parseFloat(document.getElementById('out-of-plane-angle').value) || 0;
+            const liftType = document.getElementById('lift-type').value;
+            
+            // Calculate dynamic load factor
+            const dynamicLoadFactor = liftType === "Lifts at open sea" ? 2 : 1.5;
+            
+            // Calculate allowable stresses
+            const allowableBearingStress = 0.9 * yieldStress;
+            const allowableInPlaneBending = 0.6 * yieldStress;
+            const allowableOutOfPlaneBending = 0.75 * yieldStress;
+            const allowableTensileStress = 0.6 * yieldStress;
+            const allowableTensileStressPin = 0.45 * yieldStress;
+            const allowableShearStress = 0.4 * yieldStress;
+            const allowableHertzStress = 2 * yieldStress;
+            const allowableWeldStress = 0.3 * electrodeStrength;
+            
+            // Calculate design loads
+            const loadAngleRad = loadAngle * Math.PI / 180;
+            const outOfPlaneAngleRad = outOfPlaneAngle * Math.PI / 180;
+            
+            const loadVertical = load * Math.cos(loadAngleRad);
+            const loadHorizontal = load * Math.sin(loadAngleRad) * Math.cos(outOfPlaneAngleRad);
+            const loadLateral = load * Math.sin(loadAngleRad) * Math.sin(outOfPlaneAngleRad);
+            
+            const designLoad = load * dynamicLoadFactor;
+            const designLoadVertical = loadVertical * dynamicLoadFactor;
+            const designLoadHorizontal = loadHorizontal * dynamicLoadFactor;
+            const designLoadLateral = loadLateral * dynamicLoadFactor + designLoad * 0.05; // 5% lateral load as per API
+            
+            // Update geometry check values
+            document.getElementById('main-plate-radius-value').textContent = mainPlateRadius.toFixed(1);
+            document.getElementById('main-plate-radius-status').textContent = 
+                mainPlateRadius > 1.25 * pinHoleDiameter ? "OK" : "NOT OK";
+            document.getElementById('main-plate-radius-status').className = 
+                mainPlateRadius > 1.25 * pinHoleDiameter ? "status status-ok" : "status status-not-safe";
+            
+            const pinClearance = pinHoleDiameter - shacklePinDiameter;
+            document.getElementById('pin-clearance').textContent = pinClearance.toFixed(1);
+            document.getElementById('pin-clearance-status').textContent = 
+                pinClearance > 2 && pinClearance > shacklePinDiameter * 3/100 && pinClearance < 6 ? "OK" : "NOT OK";
+            document.getElementById('pin-clearance-status').className = 
+                pinClearance > 2 && pinClearance > shacklePinDiameter * 3/100 && pinClearance < 6 ? "status status-ok" : "status status-not-safe";
+            
+            const lengthClearance = shackleLength - (mainPlateRadius - pinHoleDiameter/2) - cheekPlateThickness;
+            document.getElementById('length-clearance').textContent = lengthClearance.toFixed(3);
+            document.getElementById('length-clearance-status').textContent = 
+                lengthClearance > 0 ? "OK" : "NOT OK";
+            document.getElementById('length-clearance-status').className = 
+                lengthClearance > 0 ? "status status-ok" : "status status-not-safe";
+            
+            const widthClearance = shackleWidth - mainPlateThickness - 2 * cheekPlateThickness;
+            document.getElementById('width-clearance').textContent = widthClearance.toFixed(3);
+            document.getElementById('width-clearance-status').textContent = 
+                widthClearance > 0 ? "OK" : "NOT OK";
+            document.getElementById('width-clearance-status').className = 
+                widthClearance > 0 ? "status status-ok" : "status status-not-safe";
+            
+            // Update stress at pin hole values
+            const bearingArea = Math.PI / 4 * shacklePinDiameter * (mainPlateThickness + 2 * cheekPlateThickness);
+            document.getElementById('bearing-area').textContent = bearingArea.toFixed(1);
+            
+            const bearingStress = designLoad / bearingArea * 9806.65;
+            document.getElementById('bearing-stress').textContent = bearingStress.toFixed(1);
+            document.getElementById('bearing-stress-status').textContent = 
+                bearingStress < allowableBearingStress ? "OK" : "NOT OK";
+            document.getElementById('bearing-stress-status').className = 
+                bearingStress < allowableBearingStress ? "status status-ok" : "status status-not-safe";
+            
+            const shearArea = 2 * ((mainPlateRadius - pinHoleDiameter/2) * mainPlateThickness + 2 * (cheekPlateDiameter/2 - pinHoleDiameter/2) * cheekPlateThickness);
+            document.getElementById('shear-area').textContent = shearArea.toFixed(0);
+            
+            const shearStress = designLoad / shearArea * 9806.65;
+            document.getElementById('shear-stress').textContent = shearStress.toFixed(1);
+            document.getElementById('shear-stress-status').textContent = 
+                shearStress < allowableShearStress ? "OK" : "NOT OK";
+            document.getElementById('shear-stress-status').className = 
+                shearStress < allowableShearStress ? "status status-ok" : "status status-not-safe";
+            
+            const tensileArea = shearArea; // Same as shear area
+            document.getElementById('tensile-area').textContent = tensileArea.toFixed(0);
+            
+            const tensileStress = designLoad / tensileArea * 9806.65;
+            document.getElementById('tensile-stress').textContent = tensileStress.toFixed(1);
+            document.getElementById('tensile-stress-status').textContent = 
+                tensileStress < allowableTensileStressPin ? "OK" : "NOT OK";
+            document.getElementById('tensile-stress-status').className = 
+                tensileStress < allowableTensileStressPin ? "status status-ok" : "status status-not-safe";
+            
+            const designLoadPerLength = designLoad / (mainPlateThickness + 2 * cheekPlateThickness);
+            document.getElementById('design-load-per-length').textContent = designLoadPerLength.toFixed(4);
+            
+            const hertzStress = Math.sqrt((designLoadPerLength * elasticity * (pinHoleDiameter - shacklePinDiameter) / (Math.PI * (1 - Math.pow(poisson, 2)) * pinHoleDiameter * shacklePinDiameter)) * 9806.65);
+            document.getElementById('hertz-stress').textContent = hertzStress.toFixed(1);
+            document.getElementById('hertz-stress-status').textContent = 
+                hertzStress < allowableHertzStress ? "OK" : "NOT OK";
+            document.getElementById('hertz-stress-status').className = 
+                hertzStress < allowableHertzStress ? "status status-ok" : "status status-not-safe";
+            
+            // Update stress at base plate values
+            document.getElementById('design-tensile-force').textContent = designLoadVertical.toFixed(3);
+            
+            const tensileAreaBase = basePlateLength * mainPlateThickness;
+            document.getElementById('tensile-area-base').textContent = tensileAreaBase.toFixed(0);
+            
+            const tensileStressBase = designLoadVertical / tensileAreaBase * 9806.65;
+            document.getElementById('tensile-stress-base').textContent = tensileStressBase.toFixed(1);
+            document.getElementById('tensile-stress-base-status').textContent = 
+                tensileStressBase < allowableTensileStress ? "OK" : "NOT OK";
+            document.getElementById('tensile-stress-base-status').className = 
+                tensileStressBase < allowableTensileStress ? "status status-ok" : "status status-not-safe";
+            
+            const momentLeverH = totalHeight - mainPlateRadius;
+            document.getElementById('moment-lever-h').textContent = momentLeverH.toFixed(0);
+            
+            const momentLeverE = mainPlateRadius - basePlateLength / 2;
+            document.getElementById('moment-lever-e').textContent = momentLeverE.toFixed(0);
+            
+            const momentX = designLoadHorizontal * momentLeverH + designLoadVertical * momentLeverE;
+            document.getElementById('moment-x').textContent = momentX.toFixed(1);
+            
+            const sectionModulusX = mainPlateThickness * Math.pow(basePlateLength, 2) / 6;
+            document.getElementById('section-modulus-x').textContent = sectionModulusX.toFixed(1);
+            
+            const bendingStressX = momentX / sectionModulusX * 9806.65;
+            document.getElementById('bending-stress-x').textContent = bendingStressX.toFixed(1);
+            document.getElementById('bending-stress-x-status').textContent = 
+                bendingStressX < allowableInPlaneBending ? "OK" : "NOT OK";
+            document.getElementById('bending-stress-x-status').className = 
+                bendingStressX < allowableInPlaneBending ? "status status-ok" : "status status-not-safe";
+            
+            const momentY = designLoadLateral * momentLeverH;
+            document.getElementById('moment-y').textContent = momentY.toFixed(1);
+            
+            const sectionModulusY = basePlateLength * Math.pow(mainPlateThickness, 2) / 6;
+            document.getElementById('section-modulus-y').textContent = sectionModulusY.toFixed(1);
+            
+            const bendingStressY = momentY / sectionModulusY * 9806.65;
+            document.getElementById('bending-stress-y').textContent = bendingStressY.toFixed(1);
+            document.getElementById('bending-stress-y-status').textContent = 
+                bendingStressY < allowableOutOfPlaneBending ? "OK" : "NOT OK";
+            document.getElementById('bending-stress-y-status').className = 
+                bendingStressY < allowableOutOfPlaneBending ? "status status-ok" : "status status-not-safe";
+            
+            const shearAreaBase = basePlateLength * mainPlateThickness;
+            document.getElementById('shear-area-base').textContent = shearAreaBase.toFixed(0);
+            
+            const shearStressBaseHorizontal = designLoadHorizontal / shearAreaBase * 9806.65;
+            document.getElementById('shear-stress-base-horizontal').textContent = shearStressBaseHorizontal.toFixed(1);
+            document.getElementById('shear-stress-base-horizontal-status').textContent = 
+                shearStressBaseHorizontal < allowableShearStress ? "OK" : "NOT OK";
+            document.getElementById('shear-stress-base-horizontal-status').className = 
+                shearStressBaseHorizontal < allowableShearStress ? "status status-ok" : "status status-not-safe";
+            
+            const shearStressBaseLateral = designLoadLateral / shearAreaBase * 9806.65;
+            document.getElementById('shear-stress-base-lateral').textContent = shearStressBaseLateral.toFixed(1);
+            document.getElementById('shear-stress-base-lateral-status').textContent = 
+                shearStressBaseLateral < allowableShearStress ? "OK" : "NOT OK";
+            document.getElementById('shear-stress-base-lateral-status').className = 
+                shearStressBaseLateral < allowableShearStress ? "status status-ok" : "status status-not-safe";
+            
+            const vonMisesStress = Math.sqrt(Math.pow(tensileStressBase + bendingStressX + bendingStressY, 2) + 3 * (Math.pow(shearStressBaseLateral, 2) + Math.pow(shearStressBaseHorizontal, 2)));
+            document.getElementById('von-mises-stress').textContent = vonMisesStress.toFixed(1);
+            document.getElementById('von-mises-stress-status').textContent = 
+                vonMisesStress < yieldStress ? "OK" : "NOT OK";
+            document.getElementById('von-mises-stress-status').className = 
+                vonMisesStress < yieldStress ? "status status-ok" : "status status-not-safe";
+            
+            document.getElementById('axial-tension').textContent = tensileStressBase.toFixed(1);
+            document.getElementById('allowable-tensile-stress').textContent = allowableTensileStress.toFixed(1);
+            document.getElementById('in-plane-bending-stress').textContent = bendingStressX.toFixed(1);
+            document.getElementById('allowable-in-plane-bending').textContent = allowableInPlaneBending.toFixed(1);
+            document.getElementById('out-of-plane-bending-stress').textContent = bendingStressY.toFixed(1);
+            document.getElementById('allowable-out-of-plane-bending').textContent = allowableOutOfPlaneBending.toFixed(1);
+            
+            const combinedStressRatio = tensileStressBase / allowableTensileStress + bendingStressX / allowableInPlaneBending + bendingStressY / allowableOutOfPlaneBending;
+            document.getElementById('combined-stress-ratio').textContent = combinedStressRatio.toFixed(2);
+            document.getElementById('combined-stress-status').textContent = 
+                combinedStressRatio <= 1 ? "OK" : "NOT OK";
+            document.getElementById('combined-stress-status').className = 
+                combinedStressRatio <= 1 ? "status status-ok" : "status status-not-safe";
+            
+            // Update base weld check values
+            const throatThickness = baseWeldSize / Math.sqrt(2);
+            document.getElementById('throat-thickness').textContent = throatThickness.toFixed(2);
+            
+            const totalWeldLength = 2 * basePlateLength + 2 * mainPlateThickness;
+            document.getElementById('total-weld-length').textContent = totalWeldLength.toFixed(0);
+            
+            const shearAreaBaseWeld = totalWeldLength * throatThickness;
+            document.getElementById('shear-area-base-weld').textContent = shearAreaBaseWeld.toFixed(1);
+            
+            const shearStressBaseWeldHorizontal = designLoadHorizontal / shearAreaBaseWeld * 9806.65;
+            document.getElementById('shear-stress-base-weld-horizontal').textContent = shearStressBaseWeldHorizontal.toFixed(1);
+            document.getElementById('shear-stress-base-weld-horizontal-status').textContent = 
+                shearStressBaseWeldHorizontal < allowableWeldStress ? "OK" : "NOT OK";
+            document.getElementById('shear-stress-base-weld-horizontal-status').className = 
+                shearStressBaseWeldHorizontal < allowableWeldStress ? "status status-ok" : "status status-not-safe";
+            
+            const shearStressBaseWeldLateral = designLoadLateral / shearAreaBaseWeld * 9806.65;
+            document.getElementById('shear-stress-base-weld-lateral').textContent = shearStressBaseWeldLateral.toFixed(1);
+            document.getElementById('shear-stress-base-weld-lateral-status').textContent = 
+                shearStressBaseWeldLateral < allowableWeldStress ? "OK" : "NOT OK";
+            document.getElementById('shear-stress-base-weld-lateral-status').className = 
+                shearStressBaseWeldLateral < allowableWeldStress ? "status status-ok" : "status status-not-safe";
+            
+            const tensileAreaBaseWeld = shearAreaBaseWeld; // Same as shear area
+            document.getElementById('tensile-area-base-weld').textContent = tensileAreaBaseWeld.toFixed(1);
+            
+            const tensileStressBaseWeld = designLoadVertical / tensileAreaBaseWeld * 9806.65;
+            document.getElementById('tensile-stress-base-weld').textContent = tensileStressBaseWeld.toFixed(1);
+            document.getElementById('tensile-stress-base-weld-status').textContent = 
+                tensileStressBaseWeld < allowableWeldStress ? "OK" : "NOT OK";
+            document.getElementById('tensile-stress-base-weld-status').className = 
+                tensileStressBaseWeld < allowableWeldStress ? "status status-ok" : "status status-not-safe";
+            
+            const sectionModulusBaseWeldX = (mainPlateThickness * basePlateLength + Math.pow(basePlateLength, 2) / 3) * throatThickness;
+            document.getElementById('section-modulus-base-weld-x').textContent = sectionModulusBaseWeldX.toFixed(1);
+            
+            document.getElementById('moment-base-weld-x').textContent = momentX.toFixed(1);
+            
+            const bendingStressBaseWeldX = momentX / sectionModulusBaseWeldX * 9806.65;
+            document.getElementById('bending-stress-base-weld-x').textContent = bendingStressBaseWeldX.toFixed(1);
+            document.getElementById('bending-stress-base-weld-x-status').textContent = 
+                bendingStressBaseWeldX < allowableWeldStress ? "OK" : "NOT OK";
+            document.getElementById('bending-stress-base-weld-x-status').className = 
+                bendingStressBaseWeldX < allowableWeldStress ? "status status-ok" : "status status-not-safe";
+            
+            const sectionModulusBaseWeldY = (mainPlateThickness * basePlateLength + mainPlateThickness / 3) * throatThickness;
+            document.getElementById('section-modulus-base-weld-y').textContent = sectionModulusBaseWeldY.toFixed(1);
+            
+            document.getElementById('moment-base-weld-y').textContent = momentY.toFixed(1);
+            
+            const bendingStressBaseWeldY = momentY / sectionModulusBaseWeldY * 9806.65;
+            document.getElementById('bending-stress-base-weld-y').textContent = bendingStressBaseWeldY.toFixed(1);
+            document.getElementById('bending-stress-base-weld-y-status').textContent = 
+                bendingStressBaseWeldY < allowableWeldStress ? "OK" : "NOT OK";
+            document.getElementById('bending-stress-base-weld-y-status').className = 
+                bendingStressBaseWeldY < allowableWeldStress ? "status status-ok" : "status status-not-safe";
+            
+            const totalStressBaseWeld = Math.sqrt(Math.pow(tensileStressBaseWeld + bendingStressBaseWeldX + bendingStressBaseWeldY, 2) + Math.pow(shearStressBaseWeldHorizontal, 2) + Math.pow(shearStressBaseWeldLateral, 2));
+            document.getElementById('total-stress-base-weld').textContent = totalStressBaseWeld.toFixed(1);
+            document.getElementById('total-stress-base-weld-status').textContent = 
+                totalStressBaseWeld < allowableWeldStress ? "OK" : "NOT OK";
+            document.getElementById('total-stress-base-weld-status').className = 
+                totalStressBaseWeld < allowableWeldStress ? "status status-ok" : "status status-not-safe";
+            
+            // Update cheek weld check values
+            const throatThicknessCheek = cheekWeldSize / Math.sqrt(2);
+            document.getElementById('throat-thickness-cheek').textContent = throatThicknessCheek.toFixed(2);
+            
+            const weldLengthCheek = Math.PI * cheekPlateDiameter / 2;
+            document.getElementById('weld-length-cheek').textContent = weldLengthCheek.toFixed(1);
+            
+            const weldAreaCheek = weldLengthCheek * throatThicknessCheek;
+            document.getElementById('weld-area-cheek').textContent = weldAreaCheek.toFixed(1);
+            
+            const designLoadCheek = designLoad * cheekPlateThickness / (mainPlateThickness + 2 * cheekPlateThickness);
+            document.getElementById('design-load-cheek').textContent = designLoadCheek.toFixed(4);
+            
+            const weldStressCheek = designLoadCheek / weldAreaCheek * 9806.65;
+            document.getElementById('weld-stress-cheek').textContent = weldStressCheek.toFixed(1);
+            document.getElementById('weld-stress-cheek-status').textContent = 
+                weldStressCheek < allowableWeldStress ? "OK" : "NOT OK";
+            document.getElementById('weld-stress-cheek-status').className = 
+                weldStressCheek < allowableWeldStress ? "status status-ok" : "status status-not-safe";
+        }
+    </script>
+</body>
+</html>
