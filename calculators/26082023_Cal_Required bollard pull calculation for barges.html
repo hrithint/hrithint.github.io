@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bollard Pull Calculator Suite</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px 25px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(30%, -30%);
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        h1 {
+            font-size: 2.4rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        .credit {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            z-index: 2;
+        }
+        
+        .tab-container {
+            display: flex;
+            background: #f1f5f9;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .tab {
+            padding: 18px 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: #64748b;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab.active {
+            color: #2a5298;
+            border-bottom: 3px solid #2a5298;
+            background: white;
+        }
+        
+        .tab:hover:not(.active) {
+            color: #475569;
+            background: #f8fafc;
+        }
+        
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 30px;
+        }
+        
+        .input-section {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+            border-right: 1px solid #eaeef2;
+        }
+        
+        .output-section {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+        }
+        
+        .section-title {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #eaeef2;
+            color: #2a5298;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+            display: flex;
+            align-items: center;
+        }
+        
+        label i {
+            margin-right: 8px;
+            color: #2a5298;
+            width: 20px;
+            text-align: center;
+        }
+        
+        input[type="number"], input[type="text"], select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: #fafbfc;
+        }
+        
+        input[type="number"]:focus, input[type="text"]:focus, select:focus {
+            outline: none;
+            border-color: #2a5298;
+            box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.1);
+            background-color: white;
+        }
+        
+        .unit {
+            color: #666;
+            font-size: 0.9rem;
+            margin-left: 5px;
+            font-weight: normal;
+        }
+        
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03);
+        }
+        
+        .result-table th, .result-table td {
+            padding: 14px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eaeef2;
+        }
+        
+        .result-table th {
+            background-color: #f8fafd;
+            font-weight: 600;
+            color: #2a5298;
+        }
+        
+        .result-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .result-table tr:hover {
+            background-color: #f8fafd;
+        }
+        
+        .status {
+            font-weight: bold;
+            padding: 6px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            font-size: 0.85rem;
+        }
+        
+        .status-pass {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .status-fail {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        
+        .formula {
+            font-family: 'Courier New', monospace;
+            background-color: #f8f9fa;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-size: 0.9rem;
+            border-left: 3px solid #2a5298;
+        }
+        
+        .check-title {
+            display: flex;
+            align-items: center;
+            margin: 25px 0 15px 0;
+            color: #2a5298;
+        }
+        
+        .check-title i {
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .method-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .method-btn {
+            padding: 10px 20px;
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #475569;
+            transition: all 0.3s ease;
+        }
+        
+        .method-btn.active {
+            background: #2a5298;
+            color: white;
+            border-color: #2a5298;
+        }
+        
+        .method-btn:hover:not(.active) {
+            background: #e2e8f0;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .calculation-note {
+            font-size: 0.9rem;
+            color: #64748b;
+            font-style: italic;
+            margin-top: 5px;
+        }
+        
+        .info-box {
+            background-color: #f0f7ff;
+            border-left: 4px solid #2a5298;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .info-box h4 {
+            color: #2a5298;
+            margin-bottom: 8px;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            .input-section {
+                border-right: none;
+                border-bottom: 1px solid #eaeef2;
+            }
+            
+            .credit {
+                position: relative;
+                top: auto;
+                right: auto;
+                margin-top: 15px;
+                display: inline-block;
+            }
+            
+            header {
+                text-align: center;
+            }
+            
+            .tab-container {
+                flex-direction: column;
+            }
+            
+            .tab {
+                padding: 15px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1>Bollard Pull Calculator Suite</h1>
+                <p class="subtitle">Based on DNV Rules, OPL Guidelines & Empirical Formulas</p>
+            </div>
+            <div class="credit">
+                Developed by Hrithin
+            </div>
+        </header>
+        
+        <div class="tab-container">
+            <div class="tab active" data-tab="bollard-dnv">DNV Rules</div>
+            <div class="tab" data-tab="bollard-opl">OPL Guidelines</div>
+            <div class="tab" data-tab="bollard-empirical">Empirical Formula</div>
+        </div>
+        
+        <!-- Bollard Pull (DNV) Tab -->
+        <div class="tab-content active" id="bollard-dnv">
+            <div class="content">
+                <div class="input-section">
+                    <h2 class="section-title"><i class="fas fa-ship"></i> Vessel Particulars (DNV Rules)</h2>
+                    
+                    <div class="info-box">
+                        <h4><i class="fas fa-info-circle"></i> DNV Rules for Marine Operations Pt.2, Ch.2</h4>
+                        <p>This calculator determines the required bollard pull for towing operations based on DNV standards, considering wind, current, and wave resistances.</p>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="dnv-length"><i class="fas fa-ruler"></i> Length, L <span class="unit">(m)</span></label>
+                        <input type="number" id="dnv-length" value="45" step="0.1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="dnv-breadth"><i class="fas fa-ruler-horizontal"></i> Breadth, B <span class="unit">(m)</span></label>
+                        <input type="number" id="dnv-breadth" value="45" step="0.1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="dnv-depth"><i class="fas fa-arrows-alt-v"></i> Depth, D <span class="unit">(m)</span></label>
+                        <input type="number" id="dnv-depth" value="4.5" step="0.1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="dnv-draft"><i class="fas fa-water"></i> Draft, T <span class="unit">(m)</span></label>
+                        <input type="number" id="dnv-draft" value="3.5" step="0.1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="dnv-hull-drag-coeff"><i class="fas fa-tachometer-alt"></i> Hull drag coefficient</label>
+                        <input type="number" id="dnv-hull-drag-coeff" value="1" step="0.01">
+                        <div class="calculation-note">Typical values: 0.08-1.0 depending on hull shape</div>
+                    </div>
+                    
+                    <h3 class="section-title"><i class="fas fa-box"></i> Cargo Particulars</h3>
+                    
+                    <div class="input-group">
+                        <label for="dnv-cargo-breadth"><i class="fas fa-ruler-horizontal"></i> Breadth overall, BC <span class="unit">(m)</span></label>
+                        <input type="number" id="dnv-cargo-breadth" value="0" step="0.1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="dnv-cargo-height"><i class="fas fa-mountain"></i> Height overall, HC <span class="unit">(m)</span></label>
+                        <input type="number" id="dnv-cargo-height" value="0" step="0.1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="dnv-height-coeff"><i class="fas fa-chart-line"></i> Height coefficient, Ch</label>
+                        <select id="dnv-height-coeff">
+                            <option value="1">0-15.3m: 1</option>
+                            <option value="1.1">15.3-30.5m: 1.1</option>
+                            <option value="1.2">30.5-46m: 1.2</option>
+                            <option value="1.3">46-61m: 1.3</option>
+                            <option value="1.37">61-76m: 1.37</option>
+                            <option value="1.43">76-91.5m: 1.43</option>
+                            <option value="1.48">91.5-106.5m: 1.48</option>
+                            <option value="1.52">106.5-122m: 1.52</option>
+                            <option value="1.56">122-137m: 1.56</option>
+                            <option value="1.6">137-152.5m: 1.6</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="dnv-shape-coeff"><i class="fas fa-shapes"></i> Shape coefficient, CS</label>
+                        <select id="dnv-shape-coeff">
+                            <option value="0.4">Spherical: 0.4</option>
+                            <option value="0.5">Cylindrical: 0.5</option>
+                            <option value="1" selected>Hull: 1</option>
+                            <option value="1.1">Cluster of deckhouse: 1.1</option>
+                            <option value="1.5">Isolated structural shapes: 1.5</option>
+                            <option value="1.25">Derrick: 1.25</option>
+                            <option value="1.2">Wires: 1.2</option>
+                            <option value="1.4">Small parts: 1.4</option>
+                        </select>
+                    </div>
+                    
+                    <h3 class="section-title"><i class="fas fa-wind"></i> Environmental Conditions</h3>
+                    
+                    <div class="input-group">
+                        <label for="dnv-wave-height"><i class="fas fa-water"></i> Wave height, HS <span class="unit">(m)</span></label>
+                        <input type="number" id="dnv-wave-height" value="3" step="0.1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="dnv-current-speed"><i class="fas fa-stream"></i> Current speed, VC <span class="unit">(m/s)</span></label>
+                        <input type="number" id="dnv-current-speed" value="0.5" step="0.1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="dnv-wind-speed"><i class="fas fa-wind"></i> Wind speed, VW <span class="unit">(m/s)</span></label>
+                        <input type="number" id="dnv-wind-speed" value="20" step="0.1">
+                    </div>
+                    
+                    <h3 class="section-title"><i class="fas fa-tractor"></i> Tug Particulars</h3>
+                    
+                    <div class="input-group">
+                        <label for="dnv-actual-bp"><i class="fas fa-anchor"></i> Actual bollard pull of tug, BPT <span class="unit">(MT)</span></label>
+                        <input type="number" id="dnv-actual-bp" value="80" step="0.1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="dnv-towing-efficiency"><i class="fas fa-cogs"></i> Towing efficiency, η</label>
+                        <input type="number" id="dnv-towing-efficiency" value="0.75" step="0.01" min="0" max="1">
+                        <div class="calculation-note">Typical range: 0.7-0.85</div>
+                    </div>
+                </div>
+                
+                <div class="output-section">
+                    <h2 class="section-title"><i class="fas fa-calculator"></i> DNV Rule Calculation Results</h2>
+                    
+                    <h3 class="check-title"><i class="fas fa-wind"></i> Wind Resistance</h3>
+                    <table class="result-table">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Value</th>
+                            <th>Unit</th>
+                        </tr>
+                        <tr>
+                            <td>Hull windage area, AW</td>
+                            <td id="dnv-hull-windage-area">45.00</td>
+                            <td>m²</td>
+                        </tr>
+                        <tr>
+                            <td>Cargo windage area, AWC</td>
+                            <td id="dnv-cargo-windage-area">0.00</td>
+                            <td>m²</td>
+                        </tr>
+                        <tr>
+                            <td>Wind resistance of hull, FWH</td>
+                            <td id="dnv-wind-hull">11.03</td>
+                            <td>kN</td>
+                        </tr>
+                        <tr>
+                            <td>Wind resistance of cargo, FWC</td>
+                            <td id="dnv-wind-cargo">0.00</td>
+                            <td>kN</td>
+                        </tr>
+                        <tr>
+                            <td>Total wind resistance, FW</td>
+                            <td id="dnv-wind-total">11.03</td>
+                            <td>kN</td>
+                        </tr>
+                    </table>
+                    
+                    <h3 class="check-title"><i class="fas fa-stream"></i> Current Resistance</h3>
+                    <table class="result-table">
+                        <tr>
+                            <td>Hull submerged area, AC</td>
+                            <td id="dnv-hull-submerged-area">157.50</td>
+                            <td>m²</td>
+                        </tr>
+                        <tr>
+                            <td>Current resistance, FC</td>
+                            <td id="dnv-current-res">1.97</td>
+                            <td>kN</td>
+                        </tr>
+                    </table>
+                    
+                    <h3 class="check-title"><i class="fas fa-water"></i> Wave Drift Resistance</h3>
+                    <table class="result-table">
+                        <tr>
+                            <td>Wave drift resistance, FD</td>
+                            <td id="dnv-wave-drift">64.26</td>
+                            <td>kN</td>
+                        </tr>
+                    </table>
+                    
+                    <h3 class="check-title"><i class="fas fa-tachometer-alt"></i> Total Resistance</h3>
+                    <table class="result-table">
+                        <tr>
+                            <td>Total resistance, TR</td>
+                            <td id="dnv-total-res">77.26</td>
+                            <td>kN</td>
+                        </tr>
+                    </table>
+                    
+                    <h3 class="check-title"><i class="fas fa-anchor"></i> Required Bollard Pull</h3>
+                    <table class="result-table">
+                        <tr>
+                            <td>Required bollard pull, BPR</td>
+                            <td id="dnv-req-bp">103.01</td>
+                            <td>kN</td>
+                        </tr>
+                        <tr>
+                            <td>Required bollard pull</td>
+                            <td id="dnv-req-bp-mt">10.51</td>
+                            <td>MT</td>
+                        </tr>
+                        <tr>
+                            <td>Actual bollard pull, BPT</td>
+                            <td id="dnv-actual-bp-display">80.00</td>
+                            <td>MT</td>
+                        </tr>
+                        <tr>
+                            <td>Status</td>
+                            <td colspan="2"><span id="dnv-status" class="status status-pass">PASS</span></td>
+                        </tr>
+                        <tr>
+                            <td>Condition</td>
+                            <td colspan="2" id="dnv-condition">Since required bollard pull is less than the actual bollard pull of tug, the condition is satisfactory.</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="formula">
+                        <strong>Key Formulas (DNV Rules):</strong><br>
+                        1. Wind resistance: FWH = 0.5 × ρa × AW × VW² / 10000 (kN)<br>
+                        2. Current resistance: FC = 0.5 × ρw × AC × VC² × CD / 1000 (kN)<br>
+                        3. Wave drift: FD = 1/8 × ρw × g × (Hs/2)² × L × Cd (kN)<br>
+                        4. Required BP: BPR = TR / η (kN)
+                    </div>
+                    
+                    <div class="calculation-note">
+                        <p><strong>Note:</strong> Based on DNV Rules for Marine Operations Pt.2, Ch.2</p>
+                        <p>Applicability: L/T > 6 and L/D > 3 for zero towing speed</p>
+                        <p>1 MT (Metric Ton) = 9.80665 kN</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bollard Pull (OPL) Tab -->
+        <div class="tab-content" id="bollard-opl">
+            <div class="content">
+                <div class="input-section">
+                    <h2 class="section-title"><i class="fas fa-ship"></i> Vessel Particulars (OPL Guidelines)</h2>
+                    
+                    <div class="info-box">
+                        <h4><i class="fas fa-info-circle"></i> Outside Port Limits (OPL) Guidelines</h4>
+                        <p>This calculator determines required bollard pull based on OPL guidelines using imperial units, considering frictional, wave forming, wind, and current resistances.</p>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="opl-length"><i class="fas fa-ruler"></i> Length, L <span class="unit">(ft)</span></label>
+                        <input type="number" id="opl-length" value="147.638" step="0.1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="opl-breadth"><i class="fas fa-ruler-horizontal"></i> Breadth, B <span class="unit">(ft)</span></label>
+                        <input type="number" id="opl-breadth" value="147.638" step="0.1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="opl-depth"><i class="fas fa-arrows-alt-v"></i> Depth, D <span class="unit">(ft)</span></label>
+                        <input type="number" id="opl-depth" value="14.7638" step="0.1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="opl-draft"><i class="fas fa-water"></i> Draft, T <span class="unit">(ft)</span></label>
+                        <input type="number" id="opl-draft" value="11.483" step="0.1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="opl-towing-speed"><i class="fas fa-tachometer-alt"></i> Towing Speed, VT <span class="unit">(knots)</span></label>
+                        <input type="number" id="opl-towing-speed" value="4" step="0.1">
+                    </div>
+                    
+                    <h3 class="section-title"><i class="fas fa-cogs"></i> Resistance Coefficients</h3>
+                    
+                    <div class="input-group">
+                        <label for="opl-fouling-coeff"><i class="fas fa-bacteria"></i> Fouling coefficient, f1</label>
+                        <select id="opl-fouling-coeff">
+                            <option value="0.4">0.4 - clean hull</option>
+                            <option value="0.625" selected>0.625 - mean value</option>
+                            <option value="0.85">0.85 - fouled hull</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="opl-hull-shape-coeff"><i class="fas fa-shapes"></i> Hull shape coefficient, f2</label>
+                        <select id="opl-hull-shape-coeff">
+                            <option value="0.2">0.2 - rake ended and bluff bowed vessels</option>
+                            <option value="0.5" selected>0.5 - square bowed vessels</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="opl-height-coeff"><i class="fas fa-chart-line"></i> Height coefficient, Ch</label>
+                        <select id="opl-height-coeff">
+                            <option value="1">0-50ft: 1</option>
+                            <option value="1.1">50-100ft: 1.1</option>
+                            <option value="1.2">100-150ft: 1.2</option>
+                            <option value="1.3">150-200ft: 1.3</option>
+                            <option value="1.4">200-250ft: 1.4</option>
+                            <option value="1.5">250-300ft: 1.5</option>
+                            <option value="1.6">300-350ft: 1.6</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="opl-shape-coeff"><i class="fas fa-shapes"></i> Shape coefficient, CS</label>
+                        <select id="opl-shape-coeff">
+                            <option value="0.4">Sphere: 0.4</option>
+                            <option value="0.5" selected>Cylinder: 0.5</option>
+                            <option value="1">Flat perpendicular surface: 1</option>
+                            <option value="1.3">Exposed beams: 1.3</option>
+                            <option value="1.25">Derrick: 1.25</option>
+                        </select>
+                    </div>
+                    
+                    <h3 class="section-title"><i class="fas fa-wind"></i> Environmental Conditions</h3>
+                    
+                    <div class="input-group">
+                        <label for="opl-wave-height"><i class="fas fa-water"></i> Wave height, HS <span class="unit">(ft)</span></label>
+                        <input type="number" id="opl-wave-height" value="6.561" step="0.1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="opl-current-speed"><i class="fas fa-stream"></i> Current velocity, VC <span class="unit">(knots)</span></label>
+                        <input type="number" id="opl-current-speed" value="2" step="0.1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="opl-wind-speed"><i class="fas fa-wind"></i> Wind velocity, VW <span class="unit">(knots)</span></label>
+                        <input type="number" id="opl-wind-speed" value="40" step="0.1">
+                    </div>
+                    
+                    <h3 class="section-title"><i class="fas fa-tractor"></i> Tug Particulars</h3>
+                    
+                    <div class="input-group">
+                        <label for="opl-actual-bp"><i class="fas fa-anchor"></i> Actual bollard pull of tug, BPT <span class="unit">(tonnes)</span></label>
+                        <input type="number" id="opl-actual-bp" value="40" step="0.1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="opl-towing-efficiency"><i class="fas fa-cogs"></i> Towing efficiency, η <span class="unit">(%)</span></label>
+                        <input type="number" id="opl-towing-efficiency" value="75" step="1" min="0" max="100">
+                        <div class="calculation-note">Typical range: 70-85%</div>
+                    </div>
+                    
+                    <h3 class="section-title"><i class="fas fa-box"></i> Cargo & Hull Areas</h3>
+                    
+                    <div class="input-group">
+                        <label for="opl-cargo-area"><i class="fas fa-box-open"></i> Cargo transverse area, AC <span class="unit">(ft²)</span></label>
+                        <input type="number" id="opl-cargo-area" value="1330.418" step="0.1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="opl-hull-area"><i class="fas fa-ship"></i> Exposed hull transverse area, AH <span class="unit">(ft²)</span></label>
+                        <input type="number" id="opl-hull-area" value="726.564" step="0.1">
+                    </div>
+                </div>
+                
+                <div class="output-section">
+                    <h2 class="section-title"><i class="fas fa-calculator"></i> OPL Guidelines Calculation Results</h2>
+                    
+                    <h3 class="check-title"><i class="fas fa-water"></i> Frictional Resistance</h3>
+                    <table class="result-table">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Value</th>
+                            <th>Unit</th>
+                        </tr>
+                        <tr>
+                            <td>Hull wetted surface area, S</td>
+                            <td id="opl-wetted-area">23034.70</td>
+                            <td>ft²</td>
+                        </tr>
+                        <tr>
+                            <td>Frictional resistance, RF</td>
+                            <td id="opl-friction-res">17.41</td>
+                            <td>tonnes</td>
+                        </tr>
+                    </table>
+                    
+                    <h3 class="check-title"><i class="fas fa-water"></i> Wave Forming Resistance</h3>
+                    <table class="result-table">
+                        <tr>
+                            <td>Transverse underwater area, ST</td>
+                            <td id="opl-transverse-area">1695.46</td>
+                            <td>ft²</td>
+                        </tr>
+                        <tr>
+                            <td>Wave forming resistance, RWF</td>
+                            <td id="opl-wave-form-res">21.10</td>
+                            <td>tonnes</td>
+                        </tr>
+                    </table>
+                    
+                    <h3 class="check-title"><i class="fas fa-wind"></i> Wind Resistance</h3>
+                    <table class="result-table">
+                        <tr>
+                            <td>Total transverse area, AT</td>
+                            <td id="opl-total-transverse-area">2056.98</td>
+                            <td>ft²</td>
+                        </tr>
+                        <tr>
+                            <td>Wind resistance, RW</td>
+                            <td id="opl-wind-res">5.70</td>
+                            <td>tonnes</td>
+                        </tr>
+                    </table>
+                    
+                    <h3 class="check-title"><i class="fas fa-stream"></i> Current Resistance</h3>
+                    <table class="result-table">
+                        <tr>
+                            <td>Current resistance, RC</td>
+                            <td id="opl-current-res">8.23</td>
+                            <td>tonnes</td>
+                        </tr>
+                    </table>
+                    
+                    <h3 class="check-title"><i class="fas fa-water"></i> Wave Effect Resistance</h3>
+                    <table class="result-table">
+                        <tr>
+                            <td>Wave resistance, RWH</td>
+                            <td id="opl-wave-res">3.64</td>
+                            <td>tonnes</td>
+                        </tr>
+                    </table>
+                    
+                    <h3 class="check-title"><i class="fas fa-tachometer-alt"></i> Total Resistance</h3>
+                    <table class="result-table">
+                        <tr>
+                            <td>Hawser resistance, RH</td>
+                            <td id="opl-hawser-res">3.85</td>
+                            <td>tonnes</td>
+                        </tr>
+                        <tr>
+                            <td>Total resistance, TR</td>
+                            <td id="opl-total-res">59.93</td>
+                            <td>tonnes</td>
+                        </tr>
+                    </table>
+                    
+                    <h3 class="check-title"><i class="fas fa-anchor"></i> Required Bollard Pull</h3>
+                    <table class="result-table">
+                        <tr>
+                            <td>Required bollard pull, BPR</td>
+                            <td id="opl-req-bp">79.91</td>
+                            <td>tonnes</td>
+                        </tr>
+                        <tr>
+                            <td>Actual bollard pull, BPT</td>
+                            <td id="opl-actual-bp-display">40.00</td>
+                            <td>tonnes</td>
+                        </tr>
+                        <tr>
+                            <td>Status</td>
+                            <td colspan="2"><span id="opl-status" class="status status-fail">FAIL</span></td>
+                        </tr>
+                        <tr>
+                            <td>Condition</td>
+                            <td colspan="2" id="opl-condition">Since required bollard pull is more than the actual bollard pull of tug, the condition is not satisfactory.</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="formula">
+                        <strong>Key Formulas (OPL Guidelines):</strong><br>
+                        1. Frictional: RF = f1 × S × (VT/6)² × 0.000454 (tonnes)<br>
+                        2. Wave forming: RWF = 3.42 × f2 × ST × VT² × 0.000454 (tonnes)<br>
+                        3. Wind: RW = 0.0034 × AT × (VW+VT)² × Ch × Cs × 0.000454 (tonnes)<br>
+                        4. Current: RC = 0.016 × S × VC² × 0.000454 (tonnes)<br>
+                        5. Hawser: RH = 0.1 × (RF + RWF) (tonnes)<br>
+                        6. Required BP: BPR = TR / (η/100) (tonnes)
+                    </div>
+                    
+                    <div class="calculation-note">
+                        <p><strong>Note:</strong> Based on Outside Port Limits (OPL) Guidelines</p>
+                        <p>All calculations in imperial units (feet, pounds, knots)</p>
+                        <p>Conversion: 1 lb = 0.000454 tonnes</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bollard Pull (Empirical) Tab -->
+        <div class="tab-content" id="bollard-empirical">
+            <div class="content">
+                <div class="input-section">
+                    <h2 class="section-title"><i class="fas fa-ship"></i> Vessel Particulars (Empirical Formula)</h2>
+                    
+                    <div class="info-box">
+                        <h4><i class="fas fa-info-circle"></i> Empirical Formula</h4>
+                        <p>This calculator uses empirical formulas for quick estimation of required bollard pull under different weather conditions and towing speeds.</p>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="emp-length"><i class="fas fa-ruler"></i> Length, L <span class="unit">(m)</span></label>
+                        <input type="number" id="emp-length" value="86" step="0.1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="emp-breadth"><i class="fas fa-ruler-horizontal"></i> Breadth, B <span class="unit">(m)</span></label>
+                        <input type="number" id="emp-breadth" value="27.43" step="0.1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="emp-depth"><i class="fas fa-arrows-alt-v"></i> Depth, D <span class="unit">(m)</span></label>
+                        <input type="number" id="emp-depth" value="5.5" step="0.1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="emp-draft"><i class="fas fa-water"></i> Draft, T <span class="unit">(m)</span></label>
+                        <input type="number" id="emp-draft" value="4.24" step="0.1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="emp-cargo-height"><i class="fas fa-mountain"></i> Cargo height, H <span class="unit">(m)</span></label>
+                        <input type="number" id="emp-cargo-height" value="4.09" step="0.1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="emp-displacement"><i class="fas fa-weight-hanging"></i> Displacement, Δ <span class="unit">(tonnes)</span></label>
+                        <input type="number" id="emp-displacement" value="9246.19" step="0.1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="emp-tow-by-stern"><i class="fas fa-compass"></i> Is it tow by stern?</label>
+                        <select id="emp-tow-by-stern">
+                            <option value="No">No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
+                        <div class="calculation-note">If tow by stern, multiply result by 1.2</div>
+                    </div>
+                    
+                    <h3 class="section-title"><i class="fas fa-tractor"></i> Tug Particulars</h3>
+                    
+                    <div class="input-group">
+                        <label for="emp-actual-bp"><i class="fas fa-anchor"></i> Actual bollard pull of tug, BPT <span class="unit">(tonnes)</span></label>
+                        <input type="number" id="emp-actual-bp" value="40" step="0.1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="emp-towing-efficiency"><i class="fas fa-cogs"></i> Tug efficiency, η <span class="unit">(%)</span></label>
+                        <input type="number" id="emp-towing-efficiency" value="75" step="1" min="0" max="100">
+                    </div>
+                    
+                    <h3 class="section-title"><i class="fas fa-cloud-sun"></i> Weather Conditions</h3>
+                    
+                    <div class="method-selector">
+                        <div class="method-btn active" data-weather="calm">Calm</div>
+                        <div class="method-btn" data-weather="rough">Rough</div>
+                        <div class="method-btn" data-weather="extreme">Extreme</div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="emp-towing-speed"><i class="fas fa-tachometer-alt"></i> Towing speed, v <span class="unit">(knots)</span></label>
+                        <input type="number" id="emp-towing-speed" value="5" step="0.1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="emp-weather-factor"><i class="fas fa-cloud"></i> Weather factor, K</label>
+                        <input type="number" id="emp-weather-factor" value="1" step="0.1" min="0.5" max="3">
+                        <div class="calculation-note">
+                            <p><strong>Weather Factor Guidelines:</strong></p>
+                            <p>• Exposed tows: K = 1-3</p>
+                            <p>• Sheltered tows: K = 0.75-2</p>
+                            <p>• Protected tows: K = 0.5-1.5</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="output-section">
+                    <h2 class="section-title"><i class="fas fa-calculator"></i> Empirical Formula Results</h2>
+                    
+                    <h3 class="check-title"><i class="fas fa-cloud-sun"></i> Current Weather Condition: <span id="current-weather">Calm</span></h3>
+                    
+                    <table class="result-table">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Value</th>
+                            <th>Unit</th>
+                        </tr>
+                        <tr>
+                            <td>Exposed height, D1</td>
+                            <td id="emp-exposed-height">5.35</td>
+                            <td>m</td>
+                        </tr>
+                        <tr>
+                            <td>Required bollard pull, BPR</td>
+                            <td id="emp-req-bp">22.29</td>
+                            <td>tonnes</td>
+                        </tr>
+                        <tr>
+                            <td>Bollard pull considering tug efficiency</td>
+                            <td id="emp-req-bp-efficiency">29.72</td>
+                            <td>tonnes</td>
+                        </tr>
+                        <tr>
+                            <td>Actual bollard pull, BPT</td>
+                            <td id="emp-actual-bp-display">40.00</td>
+                            <td>tonnes</td>
+                        </tr>
+                        <tr>
+                            <td>Status</td>
+                            <td colspan="2"><span id="emp-status" class="status status-pass">PASS</span></td>
+                        </tr>
+                    </table>
+                    
+                    <h3 class="check-title"><i class="fas fa-cloud-sun-rain"></i> All Weather Conditions</h3>
+                    
+                    <table class="result-table">
+                        <tr>
+                            <th>Weather Condition</th>
+                            <th>Towing Speed (knots)</th>
+                            <th>Weather Factor, K</th>
+                            <th>Required BP (tonnes)</th>
+                            <th>Status</th>
+                        </tr>
+                        <tr>
+                            <td>Calm</td>
+                            <td>5</td>
+                            <td>1</td>
+                            <td id="emp-calm-bp">22.29</td>
+                            <td><span id="emp-calm-status" class="status status-pass">PASS</span></td>
+                        </tr>
+                        <tr>
+                            <td>Rough</td>
+                            <td>4</td>
+                            <td>2</td>
+                            <td id="emp-rough-bp">33.10</td>
+                            <td><span id="emp-rough-status" class="status status-pass">PASS</span></td>
+                        </tr>
+                        <tr>
+                            <td>Extreme</td>
+                            <td>1</td>
+                            <td>3</td>
+                            <td id="emp-extreme-bp">10.15</td>
+                            <td><span id="emp-extreme-status" class="status status-pass">PASS</span></td>
+                        </tr>
+                    </table>
+                    
+                    <div class="formula">
+                        <strong>Empirical Formula:</strong><br>
+                        BPR = ((Δ^(2/3) × (v³/(120×60))) + (0.06 × B × D1)) × K<br>
+                        If tow by stern: Multiply result by 1.2
+                    </div>
+                    
+                    <div class="calculation-note">
+                        <p><strong>Note:</strong> Empirical formula for barge towing calculations</p>
+                        <p>This formula provides quick estimates and should be verified with more detailed methods</p>
+                        <p>Displacement (Δ) in tonnes, Breadth (B) in meters, Speed (v) in knots</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Remove active class from all tabs and tab contents
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab
+                this.classList.add('active');
+                
+                // Show corresponding tab content
+                const tabId = this.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // Weather condition selector for empirical method
+        document.querySelectorAll('.method-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.method-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const weather = this.getAttribute('data-weather');
+                document.getElementById('current-weather').textContent = weather.charAt(0).toUpperCase() + weather.slice(1);
+                
+                // Update input values based on selected weather
+                const speedInput = document.getElementById('emp-towing-speed');
+                const factorInput = document.getElementById('emp-weather-factor');
+                
+                if (weather === 'calm') {
+                    speedInput.value = 5;
+                    factorInput.value = 1;
+                } else if (weather === 'rough') {
+                    speedInput.value = 4;
+                    factorInput.value = 2;
+                } else if (weather === 'extreme') {
+                    speedInput.value = 1;
+                    factorInput.value = 3;
+                }
+                
+                updateEmpiricalCalculations();
+            });
+        });
+        
+        // ========== DNV BOLLARD PULL CALCULATIONS ==========
+        // Get all input elements for DNV method
+        const dnvInputs = document.querySelectorAll('#bollard-dnv input, #bollard-dnv select');
+        
+        // Add event listeners to all DNV inputs
+        dnvInputs.forEach(input => {
+            input.addEventListener('input', updateDNVCalculations);
+            input.addEventListener('change', updateDNVCalculations);
+        });
+        
+        // Initial calculation for DNV
+        updateDNVCalculations();
+        
+        function updateDNVCalculations() {
+            // Get input values for DNV method
+            const length = parseFloat(document.getElementById('dnv-length').value) || 0;
+            const breadth = parseFloat(document.getElementById('dnv-breadth').value) || 0;
+            const depth = parseFloat(document.getElementById('dnv-depth').value) || 0;
+            const draft = parseFloat(document.getElementById('dnv-draft').value) || 0;
+            const hullDragCoeff = parseFloat(document.getElementById('dnv-hull-drag-coeff').value) || 0;
+            const cargoBreadth = parseFloat(document.getElementById('dnv-cargo-breadth').value) || 0;
+            const cargoHeight = parseFloat(document.getElementById('dnv-cargo-height').value) || 0;
+            const heightCoeff = parseFloat(document.getElementById('dnv-height-coeff').value) || 0;
+            const shapeCoeff = parseFloat(document.getElementById('dnv-shape-coeff').value) || 0;
+            const waveHeight = parseFloat(document.getElementById('dnv-wave-height').value) || 0;
+            const currentSpeed = parseFloat(document.getElementById('dnv-current-speed').value) || 0;
+            const windSpeed = parseFloat(document.getElementById('dnv-wind-speed').value) || 0;
+            const actualBP = parseFloat(document.getElementById('dnv-actual-bp').value) || 0;
+            const towingEfficiency = parseFloat(document.getElementById('dnv-towing-efficiency').value) || 0;
+            
+            // Calculate derived values
+            const freeboard = depth - draft;
+            const hullWindageArea = length * freeboard;
+            const hullSubmergedArea = length * draft;
+            const cargoWindageArea = cargoBreadth * cargoHeight;
+            
+            // Constants
+            const airDensity = 1.225; // kg/m³
+            const waterDensity = 1025; // kg/m³
+            const gravity = 9.81; // m/s²
+            
+            // Calculate wind resistance (in kN)
+            const windResHull = 0.5 * airDensity * hullWindageArea * Math.pow(windSpeed, 2) / 1000; // kN
+            const windResCargo = 0.5 * airDensity * cargoWindageArea * heightCoeff * shapeCoeff * Math.pow(windSpeed, 2) / 1000; // kN
+            const totalWindRes = windResHull + windResCargo;
+            
+            // Calculate current resistance (in kN)
+            const currentRes = 0.5 * waterDensity * hullSubmergedArea * Math.pow(currentSpeed, 2) * hullDragCoeff / 1000; // kN
+            
+            // Calculate wave drift resistance (simplified formula from Excel)
+            // FD = 1/8 * ρw * g * (Hs/2)² * L * Cd (where Cd is drift coefficient ~0.88)
+            const waveDriftRes = (1/8) * waterDensity * gravity * Math.pow(waveHeight/2, 2) * length * 0.88 / 1000; // kN
+            
+            // Calculate total resistance
+            const totalRes = totalWindRes + currentRes + waveDriftRes;
+            
+            // Calculate required bollard pull
+            const requiredBPkN = totalRes / towingEfficiency;
+            const requiredBPMT = requiredBPkN / 9.80665; // Convert kN to MT
+            
+            // Update display values
+            document.getElementById('dnv-hull-windage-area').textContent = hullWindageArea.toFixed(2);
+            document.getElementById('dnv-cargo-windage-area').textContent = cargoWindageArea.toFixed(2);
+            document.getElementById('dnv-wind-hull').textContent = windResHull.toFixed(2);
+            document.getElementById('dnv-wind-cargo').textContent = windResCargo.toFixed(2);
+            document.getElementById('dnv-wind-total').textContent = totalWindRes.toFixed(2);
+            document.getElementById('dnv-hull-submerged-area').textContent = hullSubmergedArea.toFixed(2);
+            document.getElementById('dnv-current-res').textContent = currentRes.toFixed(2);
+            document.getElementById('dnv-wave-drift').textContent = waveDriftRes.toFixed(2);
+            document.getElementById('dnv-total-res').textContent = totalRes.toFixed(2);
+            document.getElementById('dnv-req-bp').textContent = requiredBPkN.toFixed(2);
+            document.getElementById('dnv-req-bp-mt').textContent = requiredBPMT.toFixed(2);
+            document.getElementById('dnv-actual-bp-display').textContent = actualBP.toFixed(2);
+            
+            // Update status
+            const statusElement = document.getElementById('dnv-status');
+            const conditionElement = document.getElementById('dnv-condition');
+            
+            if (requiredBPMT < actualBP) {
+                statusElement.textContent = "PASS";
+                statusElement.className = "status status-pass";
+                conditionElement.textContent = "Since required bollard pull is less than the actual bollard pull of tug, the condition is satisfactory.";
+            } else {
+                statusElement.textContent = "FAIL";
+                statusElement.className = "status status-fail";
+                conditionElement.textContent = "Since required bollard pull is more than the actual bollard pull of tug, the condition is not satisfactory.";
+            }
+        }
+        
+        // ========== OPL BOLLARD PULL CALCULATIONS ==========
+        // Get all input elements for OPL method
+        const oplInputs = document.querySelectorAll('#bollard-opl input, #bollard-opl select');
+        
+        // Add event listeners to all OPL inputs
+        oplInputs.forEach(input => {
+            input.addEventListener('input', updateOPLCalculations);
+            input.addEventListener('change', updateOPLCalculations);
+        });
+        
+        // Initial calculation for OPL
+        updateOPLCalculations();
+        
+        function updateOPLCalculations() {
+            // Get input values for OPL method
+            const length = parseFloat(document.getElementById('opl-length').value) || 0;
+            const breadth = parseFloat(document.getElementById('opl-breadth').value) || 0;
+            const depth = parseFloat(document.getElementById('opl-depth').value) || 0;
+            const draft = parseFloat(document.getElementById('opl-draft').value) || 0;
+            const towingSpeed = parseFloat(document.getElementById('opl-towing-speed').value) || 0;
+            const foulingCoeff = parseFloat(document.getElementById('opl-fouling-coeff').value) || 0;
+            const hullShapeCoeff = parseFloat(document.getElementById('opl-hull-shape-coeff').value) || 0;
+            const heightCoeff = parseFloat(document.getElementById('opl-height-coeff').value) || 0;
+            const shapeCoeff = parseFloat(document.getElementById('opl-shape-coeff').value) || 0;
+            const waveHeight = parseFloat(document.getElementById('opl-wave-height').value) || 0;
+            const currentSpeed = parseFloat(document.getElementById('opl-current-speed').value) || 0;
+            const windSpeed = parseFloat(document.getElementById('opl-wind-speed').value) || 0;
+            const actualBP = parseFloat(document.getElementById('opl-actual-bp').value) || 0;
+            const towingEfficiency = parseFloat(document.getElementById('opl-towing-efficiency').value) || 0;
+            const cargoArea = parseFloat(document.getElementById('opl-cargo-area').value) || 0;
+            const hullArea = parseFloat(document.getElementById('opl-hull-area').value) || 0;
+            
+            // Calculate derived values
+            // Estimate wetted surface area using Taylor's formula: S = 1.7*L*T + (L*B*T)/(L*B*T)*B
+            const wettedSurfaceArea = 1.7 * length * draft + (length * breadth * draft) / (length * breadth * draft) * breadth;
+            const transverseUnderwaterArea = breadth * draft; // ft²
+            const totalTransverseArea = cargoArea + hullArea; // ft²
+            
+            // Calculate frictional resistance (RF = f1 * S * (VT/6)^2 * 0.000454 tonnes)
+            const frictionalRes = foulingCoeff * wettedSurfaceArea * Math.pow(towingSpeed / 6, 2) * 0.000454;
+            
+            // Calculate wave forming resistance (RWF = 3.42 * f2 * ST * VT^2 * 0.000454 tonnes)
+            const waveFormRes = 3.42 * hullShapeCoeff * transverseUnderwaterArea * Math.pow(towingSpeed, 2) * 0.000454;
+            
+            // Calculate wind resistance (RW = 0.0034 * AT * (VW + VT)^2 * Ch * Cs * 0.000454 tonnes)
+            const windRes = 0.0034 * totalTransverseArea * Math.pow(windSpeed + towingSpeed, 2) * heightCoeff * shapeCoeff * 0.000454;
+            
+            // Calculate current resistance (RC = 0.016 * S * VC^2 * 0.000454 tonnes)
+            const currentRes = 0.016 * wettedSurfaceArea * Math.pow(currentSpeed, 2) * 0.000454;
+            
+            // Calculate wave resistance from interpolation table
+            // Simplified linear interpolation based on wave height (from Excel table)
+            let waveResLbs = 0;
+            if (waveHeight <= 5) {
+                waveResLbs = 2000 * (waveHeight / 5);
+            } else if (waveHeight <= 10) {
+                waveResLbs = 2000 + (12000 - 2000) * ((waveHeight - 5) / 5);
+            } else if (waveHeight <= 15) {
+                waveResLbs = 12000 + (22000 - 12000) * ((waveHeight - 10) / 5);
+            } else if (waveHeight <= 20) {
+                waveResLbs = 22000 + (29000 - 22000) * ((waveHeight - 15) / 5);
+            } else if (waveHeight <= 25) {
+                waveResLbs = 29000 + (30000 - 29000) * ((waveHeight - 20) / 5);
+            } else {
+                waveResLbs = 30000 + (33000 - 30000) * ((waveHeight - 25) / 5);
+            }
+            const waveResTonnes = waveResLbs * 0.000454;
+            
+            // Calculate hawser resistance (RH = 0.1 * (RF + RWF))
+            const hawserRes = 0.1 * (frictionalRes + waveFormRes);
+            
+            // Calculate total resistance
+            const totalRes = frictionalRes + waveFormRes + windRes + currentRes + waveResTonnes + hawserRes;
+            
+            // Calculate required bollard pull
+            const requiredBP = totalRes / (towingEfficiency / 100);
+            
+            // Update display values
+            document.getElementById('opl-wetted-area').textContent = wettedSurfaceArea.toFixed(2);
+            document.getElementById('opl-friction-res').textContent = frictionalRes.toFixed(2);
+            document.getElementById('opl-transverse-area').textContent = transverseUnderwaterArea.toFixed(2);
+            document.getElementById('opl-wave-form-res').textContent = waveFormRes.toFixed(2);
+            document.getElementById('opl-total-transverse-area').textContent = totalTransverseArea.toFixed(2);
+            document.getElementById('opl-wind-res').textContent = windRes.toFixed(2);
+            document.getElementById('opl-current-res').textContent = currentRes.toFixed(2);
+            document.getElementById('opl-wave-res').textContent = waveResTonnes.toFixed(2);
+            document.getElementById('opl-hawser-res').textContent = hawserRes.toFixed(2);
+            document.getElementById('opl-total-res').textContent = totalRes.toFixed(2);
+            document.getElementById('opl-req-bp').textContent = requiredBP.toFixed(2);
+            document.getElementById('opl-actual-bp-display').textContent = actualBP.toFixed(2);
+            
+            // Update status
+            const statusElement = document.getElementById('opl-status');
+            const conditionElement = document.getElementById('opl-condition');
+            
+            if (requiredBP < actualBP) {
+                statusElement.textContent = "PASS";
+                statusElement.className = "status status-pass";
+                conditionElement.textContent = "Since required bollard pull is less than the actual bollard pull of tug, the condition is satisfactory.";
+            } else {
+                statusElement.textContent = "FAIL";
+                statusElement.className = "status status-fail";
+                conditionElement.textContent = "Since required bollard pull is more than the actual bollard pull of tug, the condition is not satisfactory.";
+            }
+        }
+        
+        // ========== EMPIRICAL BOLLARD PULL CALCULATIONS ==========
+        // Get all input elements for empirical method
+        const empInputs = document.querySelectorAll('#bollard-empirical input, #bollard-empirical select');
+        
+        // Add event listeners to all empirical inputs
+        empInputs.forEach(input => {
+            input.addEventListener('input', updateEmpiricalCalculations);
+            input.addEventListener('change', updateEmpiricalCalculations);
+        });
+        
+        // Initial calculation for empirical
+        updateEmpiricalCalculations();
+        
+        function updateEmpiricalCalculations() {
+            // Get input values for empirical method
+            const length = parseFloat(document.getElementById('emp-length').value) || 0;
+            const breadth = parseFloat(document.getElementById('emp-breadth').value) || 0;
+            const depth = parseFloat(document.getElementById('emp-depth').value) || 0;
+            const draft = parseFloat(document.getElementById('emp-draft').value) || 0;
+            const cargoHeight = parseFloat(document.getElementById('emp-cargo-height').value) || 0;
+            const displacement = parseFloat(document.getElementById('emp-displacement').value) || 0;
+            const towByStern = document.getElementById('emp-tow-by-stern').value;
+            const actualBP = parseFloat(document.getElementById('emp-actual-bp').value) || 0;
+            const towingEfficiency = parseFloat(document.getElementById('emp-towing-efficiency').value) || 0;
+            const towingSpeed = parseFloat(document.getElementById('emp-towing-speed').value) || 0;
+            const weatherFactor = parseFloat(document.getElementById('emp-weather-factor').value) || 0;
+            
+            // Calculate exposed height
+            const exposedHeight = depth - draft + cargoHeight;
+            document.getElementById('emp-exposed-height').textContent = exposedHeight.toFixed(2);
+            
+            // Calculate required bollard pull for current weather condition
+            let requiredBP = (Math.pow(displacement, 2/3) * (Math.pow(towingSpeed, 3) / (120 * 60))) + (0.06 * breadth * exposedHeight);
+            requiredBP = requiredBP * weatherFactor;
+            
+            // Apply stern tow factor if applicable
+            if (towByStern === "Yes") {
+                requiredBP = requiredBP * 1.2;
+            }
+            
+            // Calculate required BP considering tug efficiency
+            const requiredBPEfficiency = requiredBP / (towingEfficiency / 100);
+            
+            // Calculate for all weather conditions
+            const calmBP = calculateEmpiricalForWeather(displacement, breadth, exposedHeight, 5, 1, towByStern);
+            const roughBP = calculateEmpiricalForWeather(displacement, breadth, exposedHeight, 4, 2, towByStern);
+            const extremeBP = calculateEmpiricalForWeather(displacement, breadth, exposedHeight, 1, 3, towByStern);
+            
+            // Update display values
+            document.getElementById('emp-req-bp').textContent = requiredBP.toFixed(2);
+            document.getElementById('emp-req-bp-efficiency').textContent = requiredBPEfficiency.toFixed(2);
+            document.getElementById('emp-actual-bp-display').textContent = actualBP.toFixed(2);
+            document.getElementById('emp-calm-bp').textContent = calmBP.toFixed(2);
+            document.getElementById('emp-rough-bp').textContent = roughBP.toFixed(2);
+            document.getElementById('emp-extreme-bp').textContent = extremeBP.toFixed(2);
+            
+            // Update status for current weather
+            const statusElement = document.getElementById('emp-status');
+            if (requiredBPEfficiency < actualBP) {
+                statusElement.textContent = "PASS";
+                statusElement.className = "status status-pass";
+            } else {
+                statusElement.textContent = "FAIL";
+                statusElement.className = "status status-fail";
+            }
+            
+            // Update status for all weather conditions
+            const calmStatus = document.getElementById('emp-calm-status');
+            const calmEfficiency = calmBP / (towingEfficiency / 100);
+            calmStatus.textContent = (calmEfficiency < actualBP) ? "PASS" : "FAIL";
+            calmStatus.className = (calmEfficiency < actualBP) ? "status status-pass" : "status status-fail";
+            
+            const roughStatus = document.getElementById('emp-rough-status');
+            const roughEfficiency = roughBP / (towingEfficiency / 100);
+            roughStatus.textContent = (roughEfficiency < actualBP) ? "PASS" : "FAIL";
+            roughStatus.className = (roughEfficiency < actualBP) ? "status status-pass" : "status status-fail";
+            
+            const extremeStatus = document.getElementById('emp-extreme-status');
+            const extremeEfficiency = extremeBP / (towingEfficiency / 100);
+            extremeStatus.textContent = (extremeEfficiency < actualBP) ? "PASS" : "FAIL";
+            extremeStatus.className = (extremeEfficiency < actualBP) ? "status status-pass" : "status status-fail";
+        }
+        
+        function calculateEmpiricalForWeather(displacement, breadth, exposedHeight, speed, factor, towByStern) {
+            let requiredBP = (Math.pow(displacement, 2/3) * (Math.pow(speed, 3) / (120 * 60))) + (0.06 * breadth * exposedHeight);
+            requiredBP = requiredBP * factor;
+            
+            if (towByStern === "Yes") {
+                requiredBP = requiredBP * 1.2;
+            }
+            
+            return requiredBP;
+        }
+    </script>
+</body>
+</html>
