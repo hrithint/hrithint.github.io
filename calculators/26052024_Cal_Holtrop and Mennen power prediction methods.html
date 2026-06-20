@@ -1,0 +1,1651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Holtrop & Mennen Power Prediction Calculator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        
+        .container {
+            max-width: 1400px;
+            width: 100%;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1a4b8c 0%, #2a5298 100%);
+            color: white;
+            padding: 30px 25px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: translate(30%, -30%);
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        h1 {
+            font-size: 2.4rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        .credit {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            z-index: 2;
+        }
+        
+        .tabs {
+            display: flex;
+            background: #f0f4f9;
+            border-bottom: 1px solid #dce3ec;
+        }
+        
+        .tab {
+            padding: 18px 30px;
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            color: #5a6c7d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            max-width: 300px;
+        }
+        
+        .tab i {
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .tab.active {
+            color: #2a5298;
+            border-bottom: 3px solid #2a5298;
+            background: white;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 30px;
+        }
+        
+        .tab-content.active {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        
+        .input-section {
+            flex: 1;
+            min-width: 400px;
+            padding: 20px;
+            border-right: 1px solid #eaeef2;
+        }
+        
+        .output-section {
+            flex: 2;
+            min-width: 500px;
+            padding: 20px;
+        }
+        
+        .section-title {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #eaeef2;
+            color: #2a5298;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+            display: flex;
+            align-items: center;
+        }
+        
+        label i {
+            margin-right: 8px;
+            color: #2a5298;
+            width: 20px;
+            text-align: center;
+        }
+        
+        input[type="number"], select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: #fafbfc;
+        }
+        
+        input[type="number"]:focus, select:focus {
+            outline: none;
+            border-color: #2a5298;
+            box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.1);
+            background-color: white;
+        }
+        
+        .unit {
+            color: #666;
+            font-size: 0.9rem;
+            margin-left: 5px;
+            font-weight: normal;
+        }
+        
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03);
+            margin-bottom: 25px;
+        }
+        
+        .result-table th, .result-table td {
+            padding: 14px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eaeef2;
+        }
+        
+        .result-table th {
+            background-color: #f8fafd;
+            font-weight: 600;
+            color: #2a5298;
+        }
+        
+        .result-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .result-table tr:hover {
+            background-color: #f8fafd;
+        }
+        
+        .calc-button {
+            background: linear-gradient(135deg, #2a5298 0%, #1a4b8c 100%);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 25px auto;
+            width: 200px;
+        }
+        
+        .calc-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(42, 82, 152, 0.2);
+        }
+        
+        .calc-button i {
+            margin-right: 10px;
+        }
+        
+        .input-row {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .input-row .input-group {
+            flex: 1;
+        }
+        
+        @media (max-width: 1024px) {
+            .tab-content.active {
+                flex-direction: column;
+            }
+            
+            .input-section {
+                border-right: none;
+                border-bottom: 1px solid #eaeef2;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                max-width: 100%;
+                padding: 15px;
+                justify-content: flex-start;
+            }
+            
+            .credit {
+                position: relative;
+                top: auto;
+                right: auto;
+                margin-top: 15px;
+                display: inline-block;
+            }
+            
+            header {
+                text-align: center;
+            }
+            
+            .input-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+        
+        .results-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .result-card {
+            flex: 1;
+            min-width: 300px;
+            background: #f8fafd;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #eaeef2;
+        }
+        
+        .result-card-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #2a5298;
+            display: flex;
+            align-items: center;
+        }
+        
+        .result-card-title i {
+            margin-right: 10px;
+        }
+        
+        .result-item {
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #e0e0e0;
+        }
+        
+        .result-item:last-child {
+            border-bottom: none;
+        }
+        
+        .status {
+            font-weight: bold;
+            padding: 6px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            font-size: 0.85rem;
+        }
+        
+        .status-ok {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .status-caution {
+            background-color: #fff3e0;
+            color: #ef6c00;
+        }
+        
+        .status-error {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        
+        .formula-display {
+            background-color: #f9f9f9;
+            border-left: 4px solid #2a5298;
+            padding: 12px 15px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 0.95rem;
+            color: #333;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .input-radio-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 10px;
+        }
+        
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .radio-option input {
+            width: auto;
+        }
+        
+        .appendage-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        .appendage-table th, .appendage-table td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        
+        .appendage-table th {
+            background-color: #f0f4f9;
+        }
+        
+        .small-input {
+            width: 80px;
+            padding: 8px;
+        }
+        
+        .toggle-section {
+            margin-bottom: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .toggle-header {
+            background-color: #f5f7fa;
+            padding: 12px 15px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .toggle-content {
+            padding: 15px;
+            display: none;
+        }
+        
+        .toggle-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1>Holtrop & Mennen Power Prediction Calculator</h1>
+                <p class="subtitle">An Approximate Power Prediction Method for Ships</p>
+            </div>
+            <div class="credit">Developed by Hrithin</div>
+        </header>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="vessel">
+                <i class="fas fa-ship"></i> Vessel Particulars
+            </div>
+            <div class="tab" data-tab="resistance">
+                <i class="fas fa-tachometer-alt"></i> Resistance Components
+            </div>
+            <div class="tab" data-tab="propulsion">
+                <i class="fas fa-cogs"></i> Propulsion Factors
+            </div>
+        </div>
+        
+        <!-- Vessel Particulars Tab Content -->
+        <div id="vessel-tab" class="tab-content active">
+            <div class="input-section">
+                <h2 class="section-title"><i class="fas fa-ship"></i> Vessel Particulars</h2>
+                
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="LBP"><i class="fas fa-ruler"></i> Length between perpendiculars, LBP <span class="unit">(m)</span></label>
+                        <input type="number" id="LBP" value="192.89" step="0.01">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="B"><i class="fas fa-ruler"></i> Breadth, B <span class="unit">(m)</span></label>
+                        <input type="number" id="B" value="32.207" step="0.001">
+                    </div>
+                </div>
+                
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="TF"><i class="fas fa-tint"></i> Forward Draft, TF <span class="unit">(m)</span></label>
+                        <input type="number" id="TF" value="15" step="0.1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="TA"><i class="fas fa-tint"></i> After Draft, TA <span class="unit">(m)</span></label>
+                        <input type="number" id="TA" value="15" step="0.1">
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="LWL"><i class="fas fa-ruler"></i> Length of waterline, LWL <span class="unit">(m)</span></label>
+                    <input type="number" id="LWL" value="192.89" step="0.01">
+                </div>
+                
+                <h2 class="section-title"><i class="fas fa-shapes"></i> Coefficients</h2>
+                
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="CB"><i class="fas fa-cube"></i> Block coefficient, CB</label>
+                        <input type="number" id="CB" value="0.59" step="0.001">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="CP"><i class="fas fa-cube"></i> Prismatic coefficient, CP</label>
+                        <input type="number" id="CP" value="0.583" step="0.001">
+                    </div>
+                </div>
+                
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="CM"><i class="fas fa-cube"></i> Midship section coefficient, CM</label>
+                        <input type="number" id="CM" value="0.98" step="0.001">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="CWP"><i class="fas fa-cube"></i> Waterplane area coefficient, CWP</label>
+                        <input type="number" id="CWP" value="0.75" step="0.001">
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="lcb"><i class="fas fa-bullseye"></i> Longitudinal position of centre of buoyancy, lcb <span class="unit">(% L forward of 0.5L)</span></label>
+                    <input type="number" id="lcb" value="-0.75" step="0.01">
+                </div>
+                
+                <h2 class="section-title"><i class="fas fa-weight-hanging"></i> Displacement & Speed</h2>
+                
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="displacement"><i class="fas fa-weight"></i> Displacement, Δ <span class="unit">(t)</span></label>
+                        <input type="number" id="displacement" value="38437.5" step="0.1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="volume"><i class="fas fa-weight"></i> Volume displacement, Ñ <span class="unit">(m³)</span></label>
+                        <input type="number" id="volume" value="37500" step="1">
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="speed"><i class="fas fa-tachometer-alt"></i> Speed, V <span class="unit">(knots)</span></label>
+                    <input type="number" id="speed" value="25" step="0.1">
+                </div>
+                
+                <h2 class="section-title"><i class="fas fa-water"></i> Water Properties</h2>
+                
+                <div class="input-group">
+                    <label for="density"><i class="fas fa-water"></i> Density of water, ρ <span class="unit">(t/m³)</span></label>
+                    <input type="number" id="density" value="1.025" step="0.001">
+                </div>
+                
+                <div class="toggle-section">
+                    <div class="toggle-header" onclick="toggleSection('bulbous-bow')">
+                        <span><i class="fas fa-bullseye"></i> Bulbous Bow Parameters</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="toggle-content" id="bulbous-bow">
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label for="ABT">Transverse sectional area of bulb, ABT <span class="unit">(m²)</span></label>
+                                <input type="number" id="ABT" value="20" step="0.1">
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="hB">Position of centroid of ABT from keel line, hB <span class="unit">(m)</span></label>
+                                <input type="number" id="hB" value="4" step="0.1">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="toggle-section">
+                    <div class="toggle-header" onclick="toggleSection('transom')">
+                        <span><i class="fas fa-ship"></i> Transom Parameters</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="toggle-content" id="transom">
+                        <div class="input-group">
+                            <label for="AT">Transverse area of immersed transom, AT <span class="unit">(m²)</span></label>
+                            <input type="number" id="AT" value="16" step="0.1">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="toggle-section">
+                    <div class="toggle-header" onclick="toggleSection('stern-type')">
+                        <span><i class="fas fa-ship"></i> Stern Type</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="toggle-content" id="stern-type">
+                        <div class="input-group">
+                            <label for="stern-type-select">Select stern type</label>
+                            <select id="stern-type-select">
+                                <option value="-10">V-shaped sections</option>
+                                <option value="0">Normal section shape</option>
+                                <option value="10" selected>U-shaped sections with Hogner stern</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="calc-button" id="calculate-resistance">
+                    <i class="fas fa-calculator"></i> Calculate Resistance
+                </button>
+            </div>
+            
+            <div class="output-section">
+                <h2 class="section-title"><i class="fas fa-chart-line"></i> Preliminary Calculations</h2>
+                
+                <table class="result-table">
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Value</th>
+                        <th>Unit</th>
+                    </tr>
+                    <tr>
+                        <td>Froude number, Fn</td>
+                        <td id="Fn-result">0.207</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>Reynolds number, Rn</td>
+                        <td id="Rn-result">2.18E+09</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>Frictional coefficient, CF</td>
+                        <td id="CF-result">0.00153</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>Wetted surface area, S</td>
+                        <td id="S-result">8562.3</td>
+                        <td>m²</td>
+                    </tr>
+                    <tr>
+                        <td>Form factor, 1+k1</td>
+                        <td id="k1-result">1.245</td>
+                        <td>-</td>
+                    </tr>
+                </table>
+                
+                <h2 class="section-title"><i class="fas fa-calculator"></i> Appendage Resistance</h2>
+                
+                <div class="toggle-section">
+                    <div class="toggle-header" onclick="toggleSection('appendages')">
+                        <span><i class="fas fa-plus-circle"></i> Appendage Configuration</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="toggle-content" id="appendages">
+                        <table class="appendage-table">
+                            <thead>
+                                <tr>
+                                    <th>Appendage Type</th>
+                                    <th>(1+k2) Value</th>
+                                    <th>Wetted Area (m²)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Rudder behind stern</td>
+                                    <td><input type="number" id="k2-rudder" value="1.4" step="0.1" class="small-input"></td>
+                                    <td><input type="number" id="area-rudder" value="10" step="0.1" class="small-input"></td>
+                                </tr>
+                                <tr>
+                                    <td>Shaft brackets</td>
+                                    <td><input type="number" id="k2-brackets" value="3" step="0.1" class="small-input"></td>
+                                    <td><input type="number" id="area-brackets" value="10" step="0.1" class="small-input"></td>
+                                </tr>
+                                <tr>
+                                    <td>Strut bossings</td>
+                                    <td><input type="number" id="k2-strut" value="3" step="0.1" class="small-input"></td>
+                                    <td><input type="number" id="area-strut" value="10" step="0.1" class="small-input"></td>
+                                </tr>
+                                <tr>
+                                    <td>Hull bossings</td>
+                                    <td><input type="number" id="k2-hull" value="2" step="0.1" class="small-input"></td>
+                                    <td><input type="number" id="area-hull" value="10" step="0.1" class="small-input"></td>
+                                </tr>
+                                <tr>
+                                    <td>Shafts</td>
+                                    <td><input type="number" id="k2-shafts" value="3" step="0.1" class="small-input"></td>
+                                    <td><input type="number" id="area-shafts" value="10" step="0.1" class="small-input"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label>Bow thruster tunnel</label>
+                                <div class="input-radio-group">
+                                    <div class="radio-option">
+                                        <input type="radio" id="thruster-no" name="thruster" value="no" checked>
+                                        <label for="thruster-no">No</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" id="thruster-yes" name="thruster" value="yes">
+                                        <label for="thruster-yes">Yes</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="tunnel-diameter">Diameter of tunnel, d <span class="unit">(m)</span></label>
+                                <input type="number" id="tunnel-diameter" value="2" step="0.1">
+                            </div>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="CBTO">CBTO (0.003 to 0.012)</label>
+                            <input type="number" id="CBTO" value="0.01" step="0.001" min="0.003" max="0.012">
+                        </div>
+                    </div>
+                </div>
+                
+                <table class="result-table">
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Value</th>
+                        <th>Unit</th>
+                    </tr>
+                    <tr>
+                        <td>Total appendage wetted area, SAPP</td>
+                        <td id="SAPP-result">50</td>
+                        <td>m²</td>
+                    </tr>
+                    <tr>
+                        <td>Equivalent (1+k2)eq</td>
+                        <td id="k2eq-result">2.48</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>Appendage resistance, RAPP</td>
+                        <td id="RAPP-result">184.2</td>
+                        <td>kN</td>
+                    </tr>
+                </table>
+                
+                <div class="results-container">
+                    <div class="result-card">
+                        <div class="result-card-title">
+                            <i class="fas fa-tachometer-alt"></i> Resistance Summary
+                        </div>
+                        <div class="result-item">
+                            <strong>Frictional resistance, RF:</strong> <span id="summary-RF">1,245.3 kN</span>
+                        </div>
+                        <div class="result-item">
+                            <strong>Form resistance:</strong> <span id="summary-RFk1">1,550.4 kN</span>
+                        </div>
+                        <div class="result-item">
+                            <strong>Appendage resistance, RAPP:</strong> <span id="summary-RAPP">184.2 kN</span>
+                        </div>
+                        <div class="result-item">
+                            <strong>Total resistance (prelim):</strong> <span id="summary-total-prelim">1,734.6 kN</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Resistance Components Tab Content -->
+        <div id="resistance-tab" class="tab-content">
+            <div class="output-section">
+                <h2 class="section-title"><i class="fas fa-wind"></i> Wave Resistance</h2>
+                
+                <table class="result-table">
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Formula</th>
+                        <th>Value</th>
+                    </tr>
+                    <tr>
+                        <td>Half angle of entrance, iE</td>
+                        <td>From formula or input</td>
+                        <td id="iE-result">20.0°</td>
+                    </tr>
+                    <tr>
+                        <td>Coefficient c1</td>
+                        <td>2223105·c7³·⁷⁸⁶¹³·(T/B)¹·⁰⁷⁹⁶¹·(90-iE)⁻¹·³⁷⁵⁶⁵</td>
+                        <td id="c1-result">1.245</td>
+                    </tr>
+                    <tr>
+                        <td>Coefficient c2</td>
+                        <td>exp(-1.89·√c3)</td>
+                        <td id="c2-result">0.987</td>
+                    </tr>
+                    <tr>
+                        <td>Coefficient c3</td>
+                        <td>0.56·ABT¹·⁵/{B·T·(0.31·√ABT + TF - hB)}</td>
+                        <td id="c3-result">0.012</td>
+                    </tr>
+                    <tr>
+                        <td>Coefficient c5</td>
+                        <td>1 - 0.8·AT/(B·T·CM)</td>
+                        <td id="c5-result">0.997</td>
+                    </tr>
+                    <tr>
+                        <td>Coefficient c7</td>
+                        <td>Based on B/L ratio</td>
+                        <td id="c7-result">0.167</td>
+                    </tr>
+                    <tr>
+                        <td>Coefficient λ</td>
+                        <td>1.446·CP - 0.03·L/B (if L/B < 12)</td>
+                        <td id="lambda-result">0.786</td>
+                    </tr>
+                    <tr>
+                        <td>Wave resistance, RW</td>
+                        <td>c1·c2·c5·Ñ·ρ·g·exp(m1·Fnᵈ + m2·cos(λ·Fn⁻²))</td>
+                        <td id="RW-result">325.4 kN</td>
+                    </tr>
+                </table>
+                
+                <h2 class="section-title"><i class="fas fa-bullseye"></i> Bulbous Bow Resistance</h2>
+                
+                <table class="result-table">
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Formula</th>
+                        <th>Value</th>
+                    </tr>
+                    <tr>
+                        <td>Parameter PB</td>
+                        <td>0.56·√ABT/(TF - 1.5·hB)</td>
+                        <td id="PB-result">0.373</td>
+                    </tr>
+                    <tr>
+                        <td>Froude number Fni</td>
+                        <td>V/√{g·(TF - hB - 0.25·√ABT) + 0.15·V²}</td>
+                        <td id="Fni-result">1.245</td>
+                    </tr>
+                    <tr>
+                        <td>Bulbous bow resistance, RB</td>
+                        <td>0.11·exp(-3·PB⁻²)·Fni³·ABT¹·⁵·ρ·g/(1 + Fni²)</td>
+                        <td id="RB-result">42.7 kN</td>
+                    </tr>
+                </table>
+                
+                <h2 class="section-title"><i class="fas fa-ship"></i> Transom Resistance</h2>
+                
+                <table class="result-table">
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Formula</th>
+                        <th>Value</th>
+                    </tr>
+                    <tr>
+                        <td>Froude number FnT</td>
+                        <td>V/√{2·g·AT/(B + B·CWP)}</td>
+                        <td id="FnT-result">2.345</td>
+                    </tr>
+                    <tr>
+                        <td>Coefficient c6</td>
+                        <td>0.2·(1 - 0.2·FnT) if FnT < 5</td>
+                        <td id="c6-result">0.106</td>
+                    </tr>
+                    <tr>
+                        <td>Transom resistance, RTR</td>
+                        <td>0.5·ρ·V²·AT·c6</td>
+                        <td id="RTR-result">28.9 kN</td>
+                    </tr>
+                </table>
+                
+                <h2 class="section-title"><i class="fas fa-project-diagram"></i> Model-Ship Correlation</h2>
+                
+                <table class="result-table">
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Formula</th>
+                        <th>Value</th>
+                    </tr>
+                    <tr>
+                        <td>Coefficient c4</td>
+                        <td>TF/L if TF/L ≤ 0.04</td>
+                        <td id="c4-result">0.078</td>
+                    </tr>
+                    <tr>
+                        <td>Correlation allowance, CA</td>
+                        <td>0.006·(L+100)⁻⁰·¹⁶ - 0.00205 + 0.003·√(L/7.5)·CB⁴·c2·(0.04-c4)</td>
+                        <td id="CA-result">0.00042</td>
+                    </tr>
+                    <tr>
+                        <td>Model-ship correlation resistance, RA</td>
+                        <td>0.5·ρ·V²·S·CA</td>
+                        <td id="RA-result">18.3 kN</td>
+                    </tr>
+                </table>
+                
+                <h2 class="section-title"><i class="fas fa-balance-scale"></i> Total Resistance</h2>
+                
+                <div class="results-container">
+                    <div class="result-card">
+                        <div class="result-card-title">
+                            <i class="fas fa-weight-hanging"></i> Resistance Components
+                        </div>
+                        <div class="result-item">
+                            <strong>Frictional resistance (with form):</strong> <span id="total-RFk1">1,550.4 kN</span>
+                        </div>
+                        <div class="result-item">
+                            <strong>Appendage resistance:</strong> <span id="total-RAPP">184.2 kN</span>
+                        </div>
+                        <div class="result-item">
+                            <strong>Wave resistance:</strong> <span id="total-RW">325.4 kN</span>
+                        </div>
+                        <div class="result-item">
+                            <strong>Bulbous bow resistance:</strong> <span id="total-RB">42.7 kN</span>
+                        </div>
+                        <div class="result-item">
+                            <strong>Transom resistance:</strong> <span id="total-RTR">28.9 kN</span>
+                        </div>
+                        <div class="result-item">
+                            <strong>Model-ship correlation:</strong> <span id="total-RA">18.3 kN</span>
+                        </div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <div class="result-card-title">
+                            <i class="fas fa-calculator"></i> Total Results
+                        </div>
+                        <div class="result-item">
+                            <strong>Total resistance, RTotal:</strong> <span id="total-RTotal">2,149.9 kN</span>
+                        </div>
+                        <div class="result-item">
+                            <strong>Effective power, PE:</strong> <span id="total-PE">27,642 kW</span>
+                        </div>
+                        <div class="result-item">
+                            <strong>Froude number, Fn:</strong> <span id="total-Fn">0.207</span>
+                        </div>
+                        <div class="result-item">
+                            <strong>Speed:</strong> <span id="total-speed">25.0 knots</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Propulsion Factors Tab Content -->
+        <div id="propulsion-tab" class="tab-content">
+            <div class="input-section">
+                <h2 class="section-title"><i class="fas fa-cog"></i> Propeller Details</h2>
+                
+                <div class="input-group">
+                    <label for="propulsion-type"><i class="fas fa-screwdriver"></i> Propulsion type</label>
+                    <select id="propulsion-type">
+                        <option value="Single screw">Single screw</option>
+                        <option value="Twin screw">Twin screw</option>
+                    </select>
+                </div>
+                
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="propeller-diameter"><i class="fas fa-cog"></i> Propeller diameter, D <span class="unit">(m)</span></label>
+                        <input type="number" id="propeller-diameter" value="8" step="0.1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="propeller-blades"><i class="fas fa-cog"></i> Number of propeller blades</label>
+                        <input type="number" id="propeller-blades" value="4" step="1">
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="propeller-depth"><i class="fas fa-tint"></i> Depth of propeller shaft line below waterline, h <span class="unit">(m)</span></label>
+                    <input type="number" id="propeller-depth" value="6" step="0.1">
+                </div>
+                
+                <div class="input-row">
+                    <div class="input-group">
+                        <label for="pitch-ratio"><i class="fas fa-ruler"></i> Pitch ratio, P/D</label>
+                        <input type="number" id="pitch-ratio" value="0.8" step="0.01">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="AE_AO"><i class="fas fa-ruler"></i> Blade area ratio, AE/AO</label>
+                        <input type="number" id="AE_AO" value="0.55" step="0.01">
+                    </div>
+                </div>
+                
+                <h2 class="section-title"><i class="fas fa-tachometer-alt"></i> Additional Parameters</h2>
+                
+                <div class="input-group">
+                    <label for="po-pv"><i class="fas fa-temperature-high"></i> po - pv (sea water at 15°C) <span class="unit">(N/m²)</span></label>
+                    <input type="number" id="po-pv" value="99047" step="1">
+                </div>
+                
+                <button class="calc-button" id="calculate-propulsion">
+                    <i class="fas fa-calculator"></i> Calculate Propulsion Factors
+                </button>
+            </div>
+            
+            <div class="output-section">
+                <h2 class="section-title"><i class="fas fa-tachometer-alt"></i> Propulsion Factors</h2>
+                
+                <h3 class="section-title" style="font-size: 1.2rem;"><i class="fas fa-water"></i> Wake Fraction, w</h3>
+                
+                <table class="result-table">
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Formula</th>
+                        <th>Value</th>
+                    </tr>
+                    <tr>
+                        <td>Viscous resistance coefficient, CV</td>
+                        <td>(1+k1)·CF + CA</td>
+                        <td id="CV-result">0.00233</td>
+                    </tr>
+                    <tr>
+                        <td>Coefficient c8</td>
+                        <td>Based on B/TA ratio</td>
+                        <td id="c8-result">22.4</td>
+                    </tr>
+                    <tr>
+                        <td>Coefficient c9</td>
+                        <td>Based on c8 value</td>
+                        <td id="c9-result">22.4</td>
+                    </tr>
+                    <tr>
+                        <td>Modified prismatic coefficient, CP1</td>
+                        <td>1.45·CP - 0.315 - 0.0225·lcb</td>
+                        <td id="CP1-result">0.527</td>
+                    </tr>
+                    <tr>
+                        <td>Coefficient c11</td>
+                        <td>Based on TA/D ratio</td>
+                        <td id="c11-result">1.875</td>
+                    </tr>
+                    <tr>
+                        <td>Wake fraction, w</td>
+                        <td>Single screw formula</td>
+                        <td id="w-result">0.312</td>
+                    </tr>
+                </table>
+                
+                <h3 class="section-title" style="font-size: 1.2rem;"><i class="fas fa-compress-alt"></i> Thrust Deduction Factor, t</h3>
+                
+                <table class="result-table">
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Formula</th>
+                        <th>Value</th>
+                    </tr>
+                    <tr>
+                        <td>Coefficient c10</td>
+                        <td>Based on L/B ratio</td>
+                        <td id="c10-result">0.167</td>
+                    </tr>
+                    <tr>
+                        <td>Thrust deduction factor, t</td>
+                        <td>Single screw formula</td>
+                        <td id="t-result">0.198</td>
+                    </tr>
+                </table>
+                
+                <h3 class="section-title" style="font-size: 1.2rem;"><i class="fas fa-cogs"></i> Relative Rotative Efficiency, ηR</h3>
+                
+                <table class="result-table">
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Formula</th>
+                        <th>Value</th>
+                    </tr>
+                    <tr>
+                        <td>Propeller thrust, T</td>
+                        <td>RTotal / (1 - t)</td>
+                        <td id="T-result">2,677.9 kN</td>
+                    </tr>
+                    <tr>
+                        <td>AE/AO (calculated)</td>
+                        <td>K + (1.3+0.3·Z)·T/(D²·(po+ρ·g·h-pv))</td>
+                        <td id="AE_AO-calc">0.623</td>
+                    </tr>
+                    <tr>
+                        <td>Relative rotative efficiency, ηR</td>
+                        <td>0.9922 - 0.05906·AE/AO + 0.07424·(CP-0.0225·lcb)</td>
+                        <td id="etaR-result">1.012</td>
+                    </tr>
+                </table>
+                
+                <h3 class="section-title"><i class="fas fa-bolt"></i> Power Requirements</h3>
+                
+                <div class="results-container">
+                    <div class="result-card">
+                        <div class="result-card-title">
+                            <i class="fas fa-tachometer-alt"></i> Efficiencies
+                        </div>
+                        <div class="result-item">
+                            <strong>Wake fraction, w:</strong> <span id="summary-w">0.312</span>
+                        </div>
+                        <div class="result-item">
+                            <strong>Thrust deduction, t:</strong> <span id="summary-t">0.198</span>
+                        </div>
+                        <div class="result-item">
+                            <strong>Relative rotative efficiency, ηR:</strong> <span id="summary-etaR">1.012</span>
+                        </div>
+                        <div class="result-item">
+                            <strong>Hull efficiency, ηH:</strong> <span id="summary-etaH">1.142</span>
+                        </div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <div class="result-card-title">
+                            <i class="fas fa-calculator"></i> Power Calculation
+                        </div>
+                        <div class="result-item">
+                            <strong>Effective power, PE:</strong> <span id="summary-PE">27,642 kW</span>
+                        </div>
+                        <div class="result-item">
+                            <strong>Thrust power, PT:</strong> <span id="summary-PT">24,218 kW</span>
+                        </div>
+                        <div class="result-item">
+                            <strong>Propeller power (delivered), PD:</strong> <span id="summary-PD">21,485 kW</span>
+                        </div>
+                        <div class="result-item">
+                            <strong>Shaft power, PS:</strong> <span id="summary-PS">22,895 kW</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3 class="section-title"><i class="fas fa-chart-bar"></i> Summary</h3>
+                
+                <table class="result-table">
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Value</th>
+                        <th>Unit</th>
+                    </tr>
+                    <tr>
+                        <td>Total resistance, RTotal</td>
+                        <td id="final-RTotal">2,149.9</td>
+                        <td>kN</td>
+                    </tr>
+                    <tr>
+                        <td>Effective power, PE</td>
+                        <td id="final-PE">27,642</td>
+                        <td>kW</td>
+                    </tr>
+                    <tr>
+                        <td>Required shaft power, PS</td>
+                        <td id="final-PS">22,895</td>
+                        <td>kW</td>
+                    </tr>
+                    <tr>
+                        <td>Propeller thrust, T</td>
+                        <td id="final-T">2,677.9</td>
+                        <td>kN</td>
+                    </tr>
+                    <tr>
+                        <td>Speed</td>
+                        <td id="final-speed">25.0</td>
+                        <td>knots</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs and content
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab
+                tab.classList.add('active');
+                
+                // Show corresponding content
+                const tabId = tab.getAttribute('data-tab');
+                document.getElementById(`${tabId}-tab`).classList.add('active');
+            });
+        });
+        
+        // Toggle section functionality
+        function toggleSection(sectionId) {
+            const content = document.getElementById(sectionId);
+            const header = content.previousElementSibling;
+            const icon = header.querySelector('.fa-chevron-down');
+            
+            content.classList.toggle('active');
+            if (content.classList.contains('active')) {
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+            } else {
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+            }
+        }
+        
+        // Calculate All buttons
+        document.getElementById('calculate-resistance').addEventListener('click', calculateAll);
+        document.getElementById('calculate-propulsion').addEventListener('click', calculatePropulsion);
+        
+        // Add event listeners to all inputs for auto-calculation
+        document.querySelectorAll('#vessel-tab input, #vessel-tab select').forEach(input => {
+            input.addEventListener('input', calculateAll);
+        });
+        
+        document.querySelectorAll('#propulsion-tab input, #propulsion-tab select').forEach(input => {
+            input.addEventListener('input', calculatePropulsion);
+        });
+        
+        // Initial calculation
+        calculateAll();
+        
+        // Constants
+        const g = 9.80665; // m/s²
+        const kinematicViscosity = 1.13902e-6; // m²/s
+        
+        function calculateAll() {
+            // Get vessel particulars
+            const LBP = parseFloat(document.getElementById('LBP').value) || 0;
+            const B = parseFloat(document.getElementById('B').value) || 0;
+            const TF = parseFloat(document.getElementById('TF').value) || 0;
+            const TA = parseFloat(document.getElementById('TA').value) || 0;
+            const LWL = parseFloat(document.getElementById('LWL').value) || 0;
+            const CB = parseFloat(document.getElementById('CB').value) || 0;
+            const CP = parseFloat(document.getElementById('CP').value) || 0;
+            const CM = parseFloat(document.getElementById('CM').value) || 0;
+            const CWP = parseFloat(document.getElementById('CWP').value) || 0;
+            const lcb = parseFloat(document.getElementById('lcb').value) || 0;
+            const displacement = parseFloat(document.getElementById('displacement').value) || 0;
+            const volume = parseFloat(document.getElementById('volume').value) || 0;
+            const speed = parseFloat(document.getElementById('speed').value) || 0;
+            const density = parseFloat(document.getElementById('density').value) || 0;
+            const ABT = parseFloat(document.getElementById('ABT').value) || 0;
+            const hB = parseFloat(document.getElementById('hB').value) || 0;
+            const AT = parseFloat(document.getElementById('AT').value) || 0;
+            const sternType = parseFloat(document.getElementById('stern-type-select').value) || 0;
+            
+            // Convert speed from knots to m/s
+            const V = speed * 0.5144;
+            
+            // 1. Calculate Froude number
+            const Fn = V / Math.sqrt(g * LWL);
+            document.getElementById('Fn-result').textContent = Fn.toFixed(3);
+            document.getElementById('total-Fn').textContent = Fn.toFixed(3);
+            document.getElementById('final-speed').textContent = speed.toFixed(1);
+            
+            // 2. Calculate Reynolds number
+            const Rn = V * LWL / kinematicViscosity;
+            document.getElementById('Rn-result').textContent = Rn.toExponential(2);
+            
+            // 3. Calculate frictional coefficient CF
+            const CF = 0.075 / Math.pow((Math.log10(Rn) - 2), 2);
+            document.getElementById('CF-result').textContent = CF.toFixed(5);
+            
+            // 4. Calculate wetted surface area S
+            const S = LWL * (2 * TF + B) * Math.sqrt(CM) * 
+                     (0.453 + 0.4425 * CB + 0.2862 * CM - 0.003467 * B / TF + 0.3696 * CWP) + 
+                     2.38 * ABT / CB;
+            document.getElementById('S-result').textContent = S.toFixed(1);
+            
+            // 5. Calculate form factor 1+k1
+            // Calculate LR/L
+            const LR_L = 1 - CP + 0.06 * CP * lcb / (4 * CP - 1);
+            const LR = LR_L * LWL;
+            
+            // Calculate c12 based on T/L ratio
+            const T = (TF + TA) / 2;
+            const T_L = T / LWL;
+            let c12;
+            if (T_L > 0.05) {
+                c12 = Math.pow(T_L, 0.2228446);
+            } else if (T_L < 0.02) {
+                c12 = 0.479948;
+            } else {
+                c12 = 48.2 * Math.pow(T_L - 0.02, 2.078) + 0.479948;
+            }
+            
+            // Calculate c13 based on stern type
+            const c13 = 1 + 0.003 * sternType;
+            
+            // Calculate form factor
+            const k1 = c13 * (0.93 + c12 * Math.pow(B / LR, 0.92497) * 
+                     Math.pow(0.95 - CP, -0.521448) * 
+                     Math.pow(1 - CP + 0.0225 * lcb, 0.6906));
+            document.getElementById('k1-result').textContent = k1.toFixed(3);
+            
+            // 6. Calculate frictional resistance RF
+            const RF = 0.5 * density * CF * S * V * V;
+            document.getElementById('summary-RF').textContent = (RF / 1000).toFixed(1) + " kN";
+            
+            // 7. Calculate form resistance RF*(1+k1)
+            const RFk1 = RF * k1;
+            document.getElementById('summary-RFk1').textContent = (RFk1 / 1000).toFixed(1) + " kN";
+            
+            // 8. Calculate appendage resistance
+            // Get appendage values
+            const k2Rudder = parseFloat(document.getElementById('k2-rudder').value) || 0;
+            const areaRudder = parseFloat(document.getElementById('area-rudder').value) || 0;
+            const k2Brackets = parseFloat(document.getElementById('k2-brackets').value) || 0;
+            const areaBrackets = parseFloat(document.getElementById('area-brackets').value) || 0;
+            const k2Strut = parseFloat(document.getElementById('k2-strut').value) || 0;
+            const areaStrut = parseFloat(document.getElementById('area-strut').value) || 0;
+            const k2Hull = parseFloat(document.getElementById('k2-hull').value) || 0;
+            const areaHull = parseFloat(document.getElementById('area-hull').value) || 0;
+            const k2Shafts = parseFloat(document.getElementById('k2-shafts').value) || 0;
+            const areaShafts = parseFloat(document.getElementById('area-shafts').value) || 0;
+            
+            const SAPP = areaRudder + areaBrackets + areaStrut + areaHull + areaShafts;
+            document.getElementById('SAPP-result').textContent = SAPP.toFixed(0);
+            
+            const k2eq = (k2Rudder * areaRudder + k2Brackets * areaBrackets + 
+                         k2Strut * areaStrut + k2Hull * areaHull + k2Shafts * areaShafts) / SAPP;
+            document.getElementById('k2eq-result').textContent = k2eq.toFixed(2);
+            
+            // Check for bow thruster
+            const hasThruster = document.getElementById('thruster-yes').checked;
+            const CBTO = parseFloat(document.getElementById('CBTO').value) || 0;
+            const tunnelDiameter = parseFloat(document.getElementById('tunnel-diameter').value) || 0;
+            
+            let RAPP = 0.5 * density * V * V * SAPP * k2eq * CF;
+            
+            // Add bow thruster resistance if applicable
+            if (hasThruster) {
+                const RThruster = density * V * V * Math.PI * Math.pow(tunnelDiameter, 2) * CBTO;
+                RAPP += RThruster;
+            }
+            
+            document.getElementById('RAPP-result').textContent = (RAPP / 1000).toFixed(1);
+            document.getElementById('summary-RAPP').textContent = (RAPP / 1000).toFixed(1) + " kN";
+            
+            // 9. Calculate wave resistance coefficients
+            // Calculate c7
+            const B_L = B / LWL;
+            let c7;
+            if (B_L < 0.11) {
+                c7 = 0.229577 * Math.pow(B_L, 0.33333);
+            } else if (B_L > 0.25) {
+                c7 = 0.5 - 0.0625 * LWL / B;
+            } else {
+                c7 = B_L;
+            }
+            document.getElementById('c7-result').textContent = c7.toFixed(3);
+            
+            // Calculate iE (half angle of entrance)
+            const iE = 1 + 89 * Math.exp(-Math.pow(LWL/B, 0.80856) * 
+                     Math.pow(1 - CWP, 0.30484) * 
+                     Math.pow(1 - CP - 0.0225 * lcb, 0.6367) * 
+                     Math.pow(LR / B, 0.34574) * 
+                     Math.pow(100 * volume / Math.pow(LWL, 3), 0.16302));
+            document.getElementById('iE-result').textContent = iE.toFixed(1) + "°";
+            
+            // Calculate c1
+            const c1 = 2223105 * Math.pow(c7, 3.78613) * 
+                      Math.pow(TF / B, 1.07961) * 
+                      Math.pow(90 - iE, -1.37565);
+            document.getElementById('c1-result').textContent = c1.toFixed(3);
+            
+            // Calculate c3
+            const c3 = 0.56 * Math.pow(ABT, 1.5) / 
+                      (B * TF * (0.31 * Math.sqrt(ABT) + TF - hB));
+            document.getElementById('c3-result').textContent = c3.toFixed(3);
+            
+            // Calculate c2
+            const c2 = Math.exp(-1.89 * Math.sqrt(c3));
+            document.getElementById('c2-result').textContent = c2.toFixed(3);
+            
+            // Calculate c5
+            const c5 = 1 - 0.8 * AT / (B * TF * CM);
+            document.getElementById('c5-result').textContent = c5.toFixed(3);
+            
+            // Calculate λ
+            let lambda;
+            if (LWL / B < 12) {
+                lambda = 1.446 * CP - 0.03 * LWL / B;
+            } else {
+                lambda = 1.446 * CP - 0.36;
+            }
+            document.getElementById('lambda-result').textContent = lambda.toFixed(3);
+            
+            // Calculate c16 for m1
+            let c16;
+            if (CP < 0.8) {
+                c16 = 8.07981 * CP - 13.8673 * CP * CP + 6.984388 * CP * CP * CP;
+            } else {
+                c16 = 1.73014 - 0.7067 * CP;
+            }
+            
+            // Calculate m1
+            const m1 = 0.0140407 * LWL / TF - 1.75254 * Math.pow(volume, 1/3) / LWL - 
+                      4.79323 * B / LWL - c16;
+            
+            // Calculate c15 for m2
+            const L3_V = Math.pow(LWL, 3) / volume;
+            let c15;
+            if (L3_V < 512) {
+                c15 = -1.69385;
+            } else if (L3_V > 1727) {
+                c15 = 0.0;
+            } else {
+                c15 = -1.69385 + (LWL / Math.pow(volume, 1/3) - 8.0) / 2.36;
+            }
+            
+            // Calculate m2
+            const m2 = c15 * CP * CP * Math.exp(-0.1 * Math.pow(Fn, -2));
+            
+            // d coefficient
+            const d = -0.9;
+            
+            // Calculate wave resistance RW
+            const RW = c1 * c2 * c5 * volume * density * g * 
+                      Math.exp(m1 * Math.pow(Fn, d) + m2 * Math.cos(lambda * Math.pow(Fn, -2)));
+            document.getElementById('RW-result').textContent = (RW / 1000).toFixed(1) + " kN";
+            document.getElementById('total-RW').textContent = (RW / 1000).toFixed(1) + " kN";
+            
+            // 10. Calculate bulbous bow resistance
+            const PB = 0.56 * Math.sqrt(ABT) / (TF - 1.5 * hB);
+            document.getElementById('PB-result').textContent = PB.toFixed(3);
+            
+            const Fni = V / Math.sqrt(g * (TF - hB - 0.25 * Math.sqrt(ABT)) + 0.15 * V * V);
+            document.getElementById('Fni-result').textContent = Fni.toFixed(3);
+            
+            const RB = 0.11 * Math.exp(-3 * Math.pow(PB, -2)) * Math.pow(Fni, 3) * 
+                      Math.pow(ABT, 1.5) * density * g / (1 + Fni * Fni);
+            document.getElementById('RB-result').textContent = (RB / 1000).toFixed(1) + " kN";
+            document.getElementById('total-RB').textContent = (RB / 1000).toFixed(1) + " kN";
+            
+            // 11. Calculate transom resistance
+            const FnT = V / Math.sqrt(2 * g * AT / (B + B * CWP));
+            document.getElementById('FnT-result').textContent = FnT.toFixed(3);
+            
+            let c6;
+            if (FnT < 5) {
+                c6 = 0.2 * (1 - 0.2 * FnT);
+            } else {
+                c6 = 0.0;
+            }
+            document.getElementById('c6-result').textContent = c6.toFixed(3);
+            
+            const RTR = 0.5 * density * V * V * AT * c6;
+            document.getElementById('RTR-result').textContent = (RTR / 1000).toFixed(1) + " kN";
+            document.getElementById('total-RTR').textContent = (RTR / 1000).toFixed(1) + " kN";
+            
+            // 12. Calculate model-ship correlation
+            let c4;
+            if (TF / LWL > 0.04) {
+                c4 = 0.04;
+            } else {
+                c4 = TF / LWL;
+            }
+            document.getElementById('c4-result').textContent = c4.toFixed(3);
+            
+            const CA = 0.006 * Math.pow(LWL + 100, -0.16) - 0.00205 + 
+                      0.003 * Math.sqrt(LWL / 7.5) * Math.pow(CB, 4) * c2 * (0.04 - c4);
+            document.getElementById('CA-result').textContent = CA.toFixed(5);
+            
+            const RA = 0.5 * density * V * V * S * CA;
+            document.getElementById('RA-result').textContent = (RA / 1000).toFixed(1) + " kN";
+            document.getElementById('total-RA').textContent = (RA / 1000).toFixed(1) + " kN";
+            
+            // 13. Calculate total resistance
+            const RTotal = RFk1 + RAPP + RW + RB + RTR + RA;
+            document.getElementById('total-RTotal').textContent = (RTotal / 1000).toFixed(1) + " kN";
+            document.getElementById('final-RTotal').textContent = (RTotal / 1000).toFixed(1);
+            
+            // 14. Calculate effective power
+            const PE = RTotal * V;
+            document.getElementById('total-PE').textContent = (PE / 1000).toFixed(0) + " kW";
+            document.getElementById('final-PE').textContent = (PE / 1000).toFixed(0);
+            document.getElementById('summary-PE').textContent = (PE / 1000).toFixed(0) + " kW";
+            
+            // Update summary sections
+            document.getElementById('summary-total-prelim').textContent = ((RFk1 + RAPP) / 1000).toFixed(1) + " kN";
+            document.getElementById('total-RFk1').textContent = (RFk1 / 1000).toFixed(1) + " kN";
+            document.getElementById('total-RAPP').textContent = (RAPP / 1000).toFixed(1) + " kN";
+            
+            // Calculate propulsion factors
+            calculatePropulsion();
+        }
+        
+        function calculatePropulsion() {
+            // Get propulsion inputs
+            const propulsionType = document.getElementById('propulsion-type').value;
+            const D = parseFloat(document.getElementById('propeller-diameter').value) || 0;
+            const Z = parseFloat(document.getElementById('propeller-blades').value) || 0;
+            const h = parseFloat(document.getElementById('propeller-depth').value) || 0;
+            const pitchRatio = parseFloat(document.getElementById('pitch-ratio').value) || 0;
+            const AE_AO_input = parseFloat(document.getElementById('AE_AO').value) || 0;
+            const po_pv = parseFloat(document.getElementById('po-pv').value) || 0;
+            
+            // Get previously calculated values
+            const RTotal = parseFloat(document.getElementById('total-RTotal').textContent) * 1000 || 0;
+            const CF = parseFloat(document.getElementById('CF-result').textContent) || 0;
+            const k1 = parseFloat(document.getElementById('k1-result').textContent) || 0;
+            const CA = parseFloat(document.getElementById('CA-result').textContent) || 0;
+            const CP = parseFloat(document.getElementById('CP').value) || 0;
+            const lcb = parseFloat(document.getElementById('lcb').value) || 0;
+            const B = parseFloat(document.getElementById('B').value) || 0;
+            const TA = parseFloat(document.getElementById('TA').value) || 0;
+            const LWL = parseFloat(document.getElementById('LWL').value) || 0;
+            const S = parseFloat(document.getElementById('S-result').textContent) || 0;
+            const density = parseFloat(document.getElementById('density').value) || 0;
+            const sternType = parseFloat(document.getElementById('stern-type-select').value) || 0;
+            
+            // 1. Calculate viscous resistance coefficient CV
+            const CV = k1 * CF + CA;
+            document.getElementById('CV-result').textContent = CV.toFixed(5);
+            
+            // 2. Calculate wake fraction w
+            // Calculate c8
+            let c8;
+            if (B / TA < 5) {
+                c8 = B * S / (LWL * D * TA);
+            } else {
+                c8 = S * (7 * B / TA - 25) / (LWL * D * (B / TA - 3));
+            }
+            document.getElementById('c8-result').textContent = c8.toFixed(1);
+            
+            // Calculate c9
+            let c9;
+            if (c8 < 28) {
+                c9 = c8;
+            } else {
+                c9 = 32 - 16 / (c8 - 24);
+            }
+            document.getElementById('c9-result').textContent = c9.toFixed(1);
+            
+            // Calculate CP1
+            const CP1 = 1.45 * CP - 0.315 - 0.0225 * lcb;
+            document.getElementById('CP1-result').textContent = CP1.toFixed(3);
+            
+            // Calculate c11
+            let c11;
+            if (TA / D < 2) {
+                c11 = TA / D;
+            } else {
+                c11 = 0.0833333 * Math.pow(TA / D, 3) + 1.33333;
+            }
+            document.getElementById('c11-result').textContent = c11.toFixed(3);
+            
+            // Calculate Cstern value for display
+            let CsternValue;
+            if (sternType === -10) {
+                CsternValue = -10;
+            } else if (sternType === 0) {
+                CsternValue = 0;
+            } else {
+                CsternValue = 10;
+            }
+            
+            // Calculate wake fraction based on propulsion type
+            let w;
+            if (propulsionType === "Single screw") {
+                w = c9 * CV * LWL / TA * (0.0661875 + 1.21756 * c11 * CV / (1 - CP1)) + 
+                    0.24558 * Math.sqrt(B / (LWL * (1 - CP1))) - 
+                    0.09726 / (0.95 - CP) + 
+                    0.11434 / (0.95 - parseFloat(document.getElementById('CB').value)) + 
+                    0.75 * CsternValue * CV + 
+                    0.002 * CsternValue;
+            } else {
+                w = 0.3095 * parseFloat(document.getElementById('CB').value) + 
+                    10 * CV * parseFloat(document.getElementById('CB').value) - 
+                    0.23 * D / Math.sqrt(B * parseFloat(document.getElementById('TA').value));
+            }
+            
+            document.getElementById('w-result').textContent = w.toFixed(3);
+            document.getElementById('summary-w').textContent = w.toFixed(3);
+            
+            // 3. Calculate thrust deduction factor t
+            // Calculate c10
+            let c10;
+            if (LWL / B > 5.2) {
+                c10 = B / LWL;
+            } else {
+                c10 = 0.25 - 0.003328402 / (B / LWL - 0.134615385);
+            }
+            document.getElementById('c10-result').textContent = c10.toFixed(3);
+            
+            // Calculate thrust deduction factor
+            let t;
+            if (propulsionType === "Single screw") {
+                t = 0.001979 * LWL / (B - B * CP1) + 
+                    1.0585 * c10 - 
+                    0.00524 - 
+                    0.1418 * D * D / (B * parseFloat(document.getElementById('TF').value)) + 
+                    0.0015 * CsternValue;
+            } else {
+                t = 0.325 * parseFloat(document.getElementById('CB').value) - 
+                    0.1885 * D / Math.sqrt(B * parseFloat(document.getElementById('TA').value));
+            }
+            
+            document.getElementById('t-result').textContent = t.toFixed(3);
+            document.getElementById('summary-t').textContent = t.toFixed(3);
+            
+            // 4. Calculate hull efficiency
+            const etaH = (1 - t) / (1 - w);
+            document.getElementById('summary-etaH').textContent = etaH.toFixed(3);
+            
+            // 5. Calculate propeller thrust T
+            const T = RTotal / (1 - t);
+            document.getElementById('T-result').textContent = (T / 1000).toFixed(1) + " kN";
+            document.getElementById('final-T').textContent = (T / 1000).toFixed(1);
+            
+            // 6. Calculate AE/AO (if needed)
+            const K = propulsionType === "Single screw" ? 0.2 : 0.0;
+            const AE_AO_calc = K + (1.3 + 0.3 * Z) * T / 
+                              (D * D * (po_pv + density * g * h));
+            document.getElementById('AE_AO-calc').textContent = AE_AO_calc.toFixed(3);
+            
+            // Use input AE/AO or calculated
+            const AE_AO = AE_AO_input || AE_AO_calc;
+            
+            // 7. Calculate relative rotative efficiency ηR
+            let etaR;
+            if (propulsionType === "Single screw") {
+                etaR = 0.9922 - 0.05906 * AE_AO + 0.07424 * (CP - 0.0225 * lcb);
+            } else {
+                etaR = 0.9737 + 0.111 * (CP - 0.0225 * lcb) - 0.06325 * pitchRatio;
+            }
+            
+            document.getElementById('etaR-result').textContent = etaR.toFixed(3);
+            document.getElementById('summary-etaR').textContent = etaR.toFixed(3);
+            
+            // 8. Calculate power requirements
+            const speed = parseFloat(document.getElementById('speed').value) || 0;
+            const V = speed * 0.5144;
+            const PE = RTotal * V;
+            
+            // Thrust power
+            const PT = PE / etaH;
+            document.getElementById('summary-PT').textContent = (PT / 1000).toFixed(0) + " kW";
+            
+            // Propeller delivered power
+            const PD = PT / etaR;
+            document.getElementById('summary-PD').textContent = (PD / 1000).toFixed(0) + " kW";
+            
+            // Shaft power (assuming 96% transmission efficiency)
+            const transmissionEfficiency = 0.96;
+            const PS = PD / transmissionEfficiency;
+            document.getElementById('summary-PS').textContent = (PS / 1000).toFixed(0) + " kW";
+            document.getElementById('final-PS').textContent = (PS / 1000).toFixed(0);
+        }
+        
+        // Initialize toggle sections
+        document.addEventListener('DOMContentLoaded', function() {
+            // Open the first toggle section by default
+            setTimeout(() => {
+                toggleSection('bulbous-bow');
+                toggleSection('transom');
+                toggleSection('stern-type');
+            }, 100);
+        });
+    </script>
+</body>
+</html>
