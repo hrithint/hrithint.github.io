@@ -3,119 +3,150 @@
     
     <url>
         <loc>https://www.navculus.in/</loc>
-        <lastmod>2026-06-13</lastmod>
+        <lastmod>2026-06-20</lastmod>
+        <changefreq>weekly</changefreq>
         <priority>1.0</priority>
     </url>
     <url>
         <loc>https://www.navculus.in/about.html</loc>
         <lastmod>2026-06-13</lastmod>
+        <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
         <loc>https://www.navculus.in/contact.html</loc>
         <lastmod>2026-06-13</lastmod>
+        <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
         <loc>https://www.navculus.in/navculus_news.html</loc>
         <lastmod>2026-06-13</lastmod>
+        <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
 
     <url>
-        <loc>https://www.navculus.in/29012025_Cal_Smit%20bracket%20design.html</loc>
+        <loc>https://www.navculus.in/calculators/29012025_Cal_Smit%20bracket%20design.html</loc>
         <lastmod>2026-06-13</lastmod>
+        <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
-        <loc>https://www.navculus.in/26082023_Cal_Required%20bollard%20pull%20calculation%20for%20barges.html</loc>
+        <loc>https://www.navculus.in/calculators/26082023_Cal_Required%20bollard%20pull%20calculation%20for%20barges.html</loc>
         <lastmod>2026-06-13</lastmod>
+        <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
-        <loc>https://www.navculus.in/22112024_Cal_Bollard%20Strength%20Check.html</loc>
+        <loc>https://www.navculus.in/calculators/22112024_Cal_Bollard%20Strength%20Check.html</loc>
         <lastmod>2026-06-13</lastmod>
+        <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
-        <loc>https://www.navculus.in/18122024_Cal_Padeye%20design.html</loc>
+        <loc>https://www.navculus.in/calculators/18122024_Cal_Padeye%20design.html</loc>
         <lastmod>2026-06-13</lastmod>
+        <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
-        <loc>https://www.navculus.in/08112025_Cal_Delta%20plate%20design.html</loc>
+        <loc>https://www.navculus.in/calculators/08112025_Cal_Delta%20plate%20design.html</loc>
         <lastmod>2026-06-13</lastmod>
+        <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
-        <loc>https://www.navculus.in/04072025_Cal_Ship%20Squat%20Calculation.html</loc>
+        <loc>https://www.navculus.in/calculators/04072025_Cal_Ship%20Squat%20Calculation.html</loc>
         <lastmod>2026-06-13</lastmod>
+        <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
-        <loc>https://www.navculus.in/01092025_Cal_Dog%20plate%20design.html</loc>
+        <loc>https://www.navculus.in/calculators/01092025_Cal_Dog%20plate%20design.html</loc>
         <lastmod>2026-06-13</lastmod>
+        <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
-        <loc>https://www.navculus.in/25042025_Cal_Hull%20form%20Acceptable%20tolerance_IACS.html</loc>
+        <loc>https://www.navculus.in/calculators/25042025_Cal_Hull%20form%20Acceptable%20tolerance_IACS.html</loc>
         <lastmod>2026-06-13</lastmod>
+        <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
-        <loc>https://www.navculus.in/26052024_Cal_Holtrop%20and%20Mennen%20power%20prediction%20methods.html</loc>
+        <loc>https://www.navculus.in/calculators/26052024_Cal_Holtrop%20and%20Mennen%20power%20prediction%20methods.html</loc>
         <lastmod>2026-06-13</lastmod>
+        <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
-        <loc>https://www.navculus.in/27012025_Cal_Van%20Ootemerssen_Power%20prediction.html</loc>
+        <loc>https://www.navculus.in/calculators/27012025_Cal_Van%20Ootemerssen_Power%20prediction.html</loc>
         <lastmod>2026-06-13</lastmod>
+        <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
-        <loc>https://www.navculus.in/19122025_Cal_Towing%20Bridle%20Design%20Check.html</loc>
+        <loc>https://www.navculus.in/calculators/19122025_Cal_Towing%20Bridle%20Design%20Check.html</loc>
         <lastmod>2026-06-13</lastmod>
+        <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
-        <loc>https://www.navculus.in/01092025_Cal_Motions%20and%20Accelrations_DNVGL-RU-SHIP.html</loc>
+        <loc>https://www.navculus.in/calculators/01092025_Cal_Motions%20and%20Accelrations_DNVGL-RU-SHIP.html</loc>
         <lastmod>2026-06-13</lastmod>
+        <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
-        <loc>https://www.navculus.in/20042026_Cal_Berthing%20energy%20calculation.html</loc>
+        <loc>https://www.navculus.in/calculators/20042026_Cal_Berthing%20energy%20calculation.html</loc>
         <lastmod>2026-06-13</lastmod>
+        <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
+
     <url>
         <loc>https://www.navculus.in/tools/navculus_beam.html</loc>
-        <lastmod>2026-06-13</lastmod>
+        <lastmod>2026-06-20</lastmod>
+        <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
-        <loc>https://www.navculus.in/signals.html</loc>
-        <lastmod>2026-06-13</lastmod>
+        <loc>https://www.navculus.in/tools/signals.html</loc>
+        <lastmod>2026-06-20</lastmod>
+        <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
         <loc>https://www.navculus.in/tools/Unit.html</loc>
-        <lastmod>2026-06-13</lastmod>
+        <lastmod>2026-06-20</lastmod>
+        <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
         <loc>https://www.navculus.in/tools/Rulefinder/navculus_rulefinder.html</loc>
-        <lastmod>2026-06-13</lastmod>
+        <lastmod>2026-06-20</lastmod>
+        <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
 
     <url>
         <loc>https://www.navculus.in/Fun/Quiz.html</loc>
         <lastmod>2026-06-13</lastmod>
+        <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
         <loc>https://www.navculus.in/Fun/know_the_ship.html</loc>
         <lastmod>2026-06-13</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <url>
+        <loc>https://www.navculus.in/The%20Tutor/the%20tutor_main.html</loc>
+        <lastmod>2026-06-13</lastmod>
+        <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
 
