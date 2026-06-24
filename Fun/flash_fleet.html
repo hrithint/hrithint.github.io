@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Navculus · Naval Architecture Flash Cards</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Inter", system-ui, -apple-system, sans-serif;
+      background: #eef2f8;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .card-container {
+      max-width: 880px;
+      width: 100%;
+      background: #ffffff;
+      border-radius: 3rem;
+      box-shadow: 0 30px 60px -20px rgba(0, 20, 40, 0.25);
+      padding: 2.2rem 2.5rem 2.8rem;
+      transition: all 0.2s;
+      backdrop-filter: blur(2px);
+    }
+
+    /* ---------- brand ---------- */
+    .brand {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #e6ecf4;
+      padding-bottom: 0.8rem;
+      margin-bottom: 1.8rem;
+      flex-wrap: wrap;
+    }
+
+    .brand h1 {
+      font-weight: 700;
+      font-size: 2rem;
+      letter-spacing: -0.03em;
+      color: #0b1e33;
+    }
+
+    .brand h1 span {
+      color: #1d6f9c;
+      background: #e2ebf5;
+      padding: 0.1rem 0.7rem;
+      border-radius: 40px;
+      font-size: 1rem;
+      font-weight: 500;
+      margin-left: 0.3rem;
+    }
+
+    .level-tag {
+      background: #dce5f0;
+      padding: 0.35rem 1.2rem;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: #1a3c57;
+      letter-spacing: 0.2px;
+      border: 1px solid #cdd9e8;
+    }
+
+    /* ---------- level panel ---------- */
+    .level-panel {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .level-btn {
+      background: #f0f4fa;
+      border: 1px solid #dce4ef;
+      padding: 0.65rem 1.4rem;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #1d3b55;
+      cursor: pointer;
+      transition: all 0.2s;
+      flex: 1 0 auto;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+      letter-spacing: 0.2px;
+    }
+
+    .level-btn.active {
+      background: #1d6f9c;
+      color: white;
+      border-color: #1d6f9c;
+      box-shadow: 0 8px 18px -6px rgba(29, 111, 156, 0.4);
+      transform: scale(1.02);
+    }
+
+    .level-btn:active {
+      transform: scale(0.95);
+    }
+
+    .level-btn.locked {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .lock-msg {
+      font-size: 0.8rem;
+      color: #d94a4a;
+      text-align: center;
+      margin: -1rem 0 1.2rem;
+      font-weight: 500;
+      display: none;
+    }
+
+    /* ---------- question box ---------- */
+    .question-box {
+      background: #f8fafd;
+      border-radius: 2rem;
+      padding: 2rem 2rem 1.8rem;
+      margin-bottom: 1.5rem;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #e6ecf4;
+      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.01);
+    }
+
+    .q-counter {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #59748f;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .question-text {
+      font-size: 1.55rem;
+      font-weight: 500;
+      line-height: 1.5;
+      color: #0b1e33;
+      margin-bottom: 0.3rem;
+    }
+
+    .answer-textarea {
+      width: 100%;
+      border: 1px solid #d4dee9;
+      border-radius: 1.2rem;
+      padding: 0.9rem 1.2rem;
+      font-family: "Inter", system-ui, sans-serif;
+      font-size: 0.95rem;
+      color: #0b1e33;
+      background: white;
+      resize: vertical;
+      margin-top: 1.2rem;
+      outline: none;
+      transition: border 0.2s, box-shadow 0.2s;
+      min-height: 80px;
+      line-height: 1.5;
+    }
+
+    .answer-textarea:focus {
+      border-color: #1d6f9c;
+      box-shadow: 0 0 0 4px rgba(29, 111, 156, 0.08);
+    }
+
+    /* ---------- action row ---------- */
+    .action-row {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      margin-top: 0.2rem;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .action-left {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      background: white;
+      border: 1px solid #d4dee9;
+      padding: 0.6rem 1.6rem;
+      border-radius: 60px;
+      font-weight: 500;
+      color: #1d3b55;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-size: 0.9rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      letter-spacing: 0.2px;
+    }
+
+    .btn-primary {
+      background: #1d6f9c;
+      border: 1px solid #1d6f9c;
+      color: white;
+      box-shadow: 0 6px 14px -8px rgba(29, 111, 156, 0.5);
+    }
+
+    .btn-primary:active {
+      background: #155580;
+      transform: scale(0.95);
+    }
+
+    .btn:active {
+      transform: scale(0.95);
+    }
+
+    .btn:disabled {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .reset-btn {
+      background: #f0f4fa;
+      border: 1px solid #d4dee9;
+    }
+
+    .reset-btn:active {
+      background: #e2eaf4;
+    }
+
+    .status-badge {
+      background: #e2ebf5;
+      padding: 0.3rem 1.2rem;
+      border-radius: 60px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #1a3c57;
+      white-space: nowrap;
+      border: 1px solid #cdd9e8;
+      letter-spacing: 0.3px;
+    }
+
+    /* ---------- eval button ---------- */
+    .eval-btn {
+      background: #2a9d8f;
+      border: 1px solid #2a9d8f;
+      color: white;
+      box-shadow: 0 6px 14px -8px rgba(42, 157, 143, 0.5);
+    }
+
+    .eval-btn:active {
+      background: #238b7e;
+    }
+
+    .eval-btn.evaluating {
+      background: #6b85a0;
+      border-color: #6b85a0;
+      pointer-events: none;
+    }
+
+    .eval-btn.evaluating .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin-right: 8px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* ---------- results panel ---------- */
+    .results-panel {
+      background: #f8fafd;
+      border-radius: 2rem;
+      padding: 1.8rem 2rem;
+      margin-top: 1.8rem;
+      border: 1px solid #e6ecf4;
+      display: none;
+      box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.01);
+    }
+
+    .results-header {
+      font-weight: 700;
+      font-size: 1rem;
+      color: #0b1e33;
+      margin-bottom: 1.2rem;
+      text-align: center;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      opacity: 0.7;
+    }
+
+    .score-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      margin-bottom: 1.2rem;
+    }
+
+    .score-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0.3rem 0.8rem;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: white;
+      letter-spacing: 0.2px;
+    }
+
+    .score-badge.high {
+      background: #2a9d8f;
+    }
+
+    .score-badge.med {
+      background: #f1c40f;
+      color: #2d2d2d;
+    }
+
+    .score-badge.low {
+      background: #e74c3c;
+    }
+
+    .level-score {
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1d6f9c;
+      margin: 0.8rem 0 1rem;
+    }
+
+    .feedback-text {
+      background: #eef2f8;
+      border-radius: 1.2rem;
+      padding: 0.9rem 1.2rem;
+      font-size: 0.9rem;
+      color: #1a3c57;
+      line-height: 1.6;
+      margin-bottom: 1.2rem;
+      border-left: 4px solid #1d6f9c;
+    }
+
+    .model-answers {
+      margin-top: 0.5rem;
+    }
+
+    .model-answers-title {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: #0b1e33;
+      margin-bottom: 0.8rem;
+      letter-spacing: 0.4px;
+      opacity: 0.7;
+      text-transform: uppercase;
+    }
+
+    .model-answer-item {
+      background: white;
+      border-radius: 1.2rem;
+      padding: 0.9rem 1.2rem;
+      margin-bottom: 0.6rem;
+      border: 1px solid #e6ecf4;
+      transition: box-shadow 0.1s;
+    }
+
+    .model-answer-item .q-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #59748f;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.25rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .model-answer-item .q-score {
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .model-answer-item .q-score.high {
+      color: #2a9d8f;
+    }
+
+    .model-answer-item .q-score.med {
+      color: #d4a017;
+    }
+
+    .model-answer-item .q-score.low {
+      color: #e74c3c;
+    }
+
+    .model-answer-item .model-text {
+      font-size: 0.9rem;
+      color: #0b1e33;
+      line-height: 1.5;
+      margin-bottom: 0.2rem;
+    }
+
+    .model-answer-item .student-text {
+      font-size: 0.85rem;
+      color: #6b85a0;
+      line-height: 1.4;
+      border-top: 1px dashed #e6ecf4;
+      padding-top: 0.4rem;
+      margin-top: 0.3rem;
+    }
+
+    .model-answer-item .student-text::before {
+      content: "Your answer: ";
+      font-weight: 500;
+      color: #59748f;
+    }
+
+    .eval-error {
+      color: #d94a4a;
+      font-size: 0.85rem;
+      margin-top: 0.6rem;
+      text-align: center;
+    }
+
+    .eval-error .retry-btn {
+      display: inline-block;
+      margin-top: 0.5rem;
+      padding: 0.4rem 1.2rem;
+      background: #d94a4a;
+      color: white;
+      border: none;
+      border-radius: 40px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .footer-note {
+      margin-top: 2rem;
+      font-size: 0.75rem;
+      color: #6b85a0;
+      border-top: 1px solid #e6ecf4;
+      padding-top: 1.2rem;
+      text-align: center;
+      letter-spacing: 0.3px;
+    }
+
+    .footer-note strong {
+      color: #1d6f9c;
+    }
+
+    /* ---------- intro overlay ---------- */
+    .intro-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(11, 30, 51, 0.7);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 1.5rem;
+    }
+
+    .intro-modal {
+      max-width: 640px;
+      width: 100%;
+      background: #ffffff;
+      border-radius: 2.5rem;
+      padding: 2.8rem 2.8rem 2.2rem;
+      box-shadow: 0 40px 80px -24px rgba(0, 0, 0, 0.45);
+      animation: introFadeIn 0.4s ease-out;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .intro-modal::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #1d6f9c, #2a9d8f, #1d6f9c);
+    }
+
+    @keyframes introFadeIn {
+      from { opacity: 0; transform: translateY(24px) scale(0.96); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .intro-modal h2 {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #1d6f9c;
+      margin-bottom: 0.5rem;
+    }
+
+    .intro-modal h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #0b1e33;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    .intro-modal p {
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: #2d4a66;
+      margin-bottom: 1.25rem;
+    }
+
+    .intro-modal .tiers {
+      background: #f4f8fc;
+      border-radius: 1.4rem;
+      padding: 1.2rem 1.5rem;
+      margin-bottom: 1.4rem;
+      border: 1px solid #e0e9f4;
+    }
+
+    .intro-modal .tiers li {
+      list-style: none;
+      font-size: 0.9rem;
+      line-height: 1.55;
+      color: #2d4a66;
+      padding: 0.55rem 0 0.55rem 2rem;
+      position: relative;
+      border-bottom: 1px solid #e6ecf4;
+    }
+
+    .intro-modal .tiers li:last-child {
+      border-bottom: none;
+    }
+
+    .intro-modal .tiers li .level-icon {
+      position: absolute;
+      left: 0;
+      top: 0.55rem;
+      width: 1.3rem;
+      height: 1.3rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .intro-modal .tiers li .level-icon.l1 { background: #1d6f9c; }
+    .intro-modal .tiers li .level-icon.l2 { background: #2a9d8f; }
+    .intro-modal .tiers li .level-icon.l3 { background: #e67e22; }
+
+    .intro-modal .tiers li strong {
+      display: block;
+      font-size: 0.85rem;
+      color: #0b1e33;
+      margin-bottom: 0.1rem;
+    }
+
+    .intro-modal .tagline {
+      font-size: 0.9rem;
+      color: #2d4a66;
+      line-height: 1.65;
+      margin-bottom: 1.6rem;
+      padding: 0.9rem 1.2rem;
+      background: #f8fafd;
+      border-radius: 1.2rem;
+      border-left: 3px solid #1d6f9c;
+    }
+
+    .intro-modal .tagline em {
+      font-style: italic;
+      color: #1d6f9c;
+      font-weight: 500;
+    }
+
+    .intro-modal .begin-btn {
+      display: block;
+      width: 100%;
+      padding: 0.9rem;
+      background: linear-gradient(135deg, #1d6f9c, #1a5f85);
+      color: white;
+      border: none;
+      border-radius: 60px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      letter-spacing: 0.5px;
+      box-shadow: 0 6px 20px -8px rgba(29, 111, 156, 0.45);
+    }
+
+    .intro-modal .begin-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 28px -8px rgba(29, 111, 156, 0.55);
+    }
+
+    .intro-modal .begin-btn:active {
+      transform: scale(0.98);
+      box-shadow: 0 4px 12px -6px rgba(29, 111, 156, 0.4);
+    }
+
+    /* ---------- responsive ---------- */
+    @media (max-width: 600px) {
+      .card-container {
+        padding: 1.2rem;
+      }
+      .question-text {
+        font-size: 1.2rem;
+      }
+      .brand h1 {
+        font-size: 1.6rem;
+      }
+      .action-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .action-left {
+        justify-content: center;
+      }
+      .status-badge {
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="card-container">
+    <!-- intro overlay -->
+    <div class="intro-overlay" id="introOverlay">
+      <div class="intro-modal">
+        <h2>⚓ Flash Fleet</h2>
+        <h1>Ready to test your technical mettle?</h1>
+        <p>Welcome to the Flash Fleet, naval architecture interview prep. This interactive flashcard deck is designed to challenge your engineering knowledge, bridge the gap between theory and industry practice, and get you ready for the toughest technical boards.</p>
+        <div class="tiers">
+          <ul>
+            <li><span class="level-icon l1">1</span><strong>Level 1 · Fundamentals &amp; Spatial Orientation</strong>Solidify your baseline knowledge with core terminology, ship geometry, and spatial reasoning.</li>
+            <li><span class="level-icon l2">2</span><strong>Level 2 · Applied Hydrostatics, Resistance &amp; Regulations</strong>Tackle practical stability scenarios, powering concepts, and critical maritime frameworks like IMO and CII compliance.</li>
+            <li><span class="level-icon l3">3</span><strong>Level 3 · Advanced Hydrodynamics, FEA &amp; Specialized Vessels</strong>Defend your expertise in complex fluid dynamics, structural finite element analysis, and the unique design challenges of specialized craft.</li>
+          </ul>
+        </div>
+        <div class="tagline">Don't just flip the cards — <em>defend your answers.</em> Navculus AI evaluates your responses at every stage, offering real-time grading and constructive feedback to help you perfect your interview delivery.</div>
+        <button class="begin-btn" id="beginBtn">Begin</button>
+      </div>
+    </div>
+
+    <!-- brand -->
+    <div class="brand">
+      <h1>navculus<a href="/" style="color:inherit;text-decoration:none"><span>.in</span></a></h1>
+      <span class="level-tag" id="levelDisplay">⚓ Level 1</span>
+    </div>
+
+    <!-- level buttons -->
+    <div class="level-panel" id="levelPanel">
+      <button class="level-btn active" data-level="0">⚓ Level 1</button>
+      <button class="level-btn" data-level="1">⛵ Level 2</button>
+      <button class="level-btn" data-level="2">🚢 Level 3</button>
+    </div>
+
+    <!-- lock message -->
+    <div class="lock-msg" id="lockMsg">🚧 Complete and evaluate Levels 1 &amp; 2 first</div>
+
+    <!-- question card -->
+    <div class="question-box" id="questionBox">
+      <div class="q-counter" id="qCounter">Question 1 / 7</div>
+      <div class="question-text" id="questionText">Click "Next" to start</div>
+      <textarea class="answer-textarea" id="answerTextarea" placeholder="Type your answer here…" rows="3"></textarea>
+    </div>
+
+    <!-- controls -->
+    <div class="action-row">
+      <div class="action-left">
+        <button class="btn btn-primary" id="nextBtn">⟳ Next</button>
+        <button class="btn eval-btn" id="evaluateBtn" style="display:none"><span class="spinner" style="display:none"></span> Evaluate</button>
+        <button class="btn reset-btn" id="resetLevelBtn">↺ Reset level</button>
+      </div>
+      <span class="status-badge" id="progressStatus">0 / 7</span>
+    </div>
+
+    <!-- results panel -->
+    <div class="results-panel" id="resultsPanel">
+      <div class="results-header">═══ Level Evaluation ═══</div>
+      <div class="score-grid" id="scoreGrid"></div>
+      <div class="level-score">Level Score: <span id="levelScoreValue">0</span> / 10</div>
+      <div class="feedback-text" id="overallFeedback"></div>
+      <div class="model-answers" id="modelAnswers"></div>
+      <div class="eval-error" id="evalError" style="display:none"></div>
+    </div>
+
+    <div class="footer-note">
+      Navculus always helps you to improve
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // --------------------------------------------------------------
+      //  QUESTION BANK (Naval Architecture)
+      // --------------------------------------------------------------
+      const QUESTIONS_PER_LEVEL = 7;
+      const QUESTION_BANK = {
+        level0: [
+          { q: "Locate the Forward Perpendicular (FP) on a vessel's hull.", a: "The vertical line drawn exactly through the intersection of the summer load waterline and the ship's stem." },
+          { q: "A surveyor asks for the LBP. From which two distinct points do you measure?", a: "The longitudinal distance measured exactly between the forward and aft perpendiculars." },
+          { q: "State Archimedes' principle of displacement in terms of a vessel's physical weight.", a: "The total physical weight of the ship is exactly equal to the weight of the water it displaces." },
+          { q: "You are standing on the weather deck looking down at the waterline. What is this vertical distance called?", a: "Freeboard." },
+          { q: "A vessel sustains a severe breach at the bow. Which specific structural boundary prevents progressive flooding?", a: "The collision bulkhead." },
+          { q: "Explain how the Plimsoll mark physically restricts a vessel's loading operations.", a: "It establishes the maximum legally permissible draft to which a ship can be loaded across different water densities and seasonal zones." },
+          { q: "List the primary weight components that make up a vessel's Deadweight (DWT).", a: "Cargo, fuel oil, fresh water, ballast water, provisions, and crew (total weight carried minus the lightship)." },
+          { q: "Geometrically speaking, where exactly is a ship's Center of Buoyancy (B) located?", a: "It is the exact geometric centroid (center of volume) of the ship's continuously changing underwater hull volume." },
+          { q: "As a ship's speed increases significantly, which type of hydrodynamic resistance becomes dominant?", a: "Wave-making resistance." },
+          { q: "A vessel's forward draft is 5.2m and its aft draft is 6.0m. State the condition of the vessel.", a: "The vessel is trimmed 0.8 meters by the stern." },
+          { q: "Differentiate between a vessel's moulded depth and its overall air draft.", a: "Moulded depth is measured from the baseline to the freeboard deck; air draft is measured from the waterline to the highest point of the mast." },
+          { q: "Identify the primary structural difference between a flat-plate keel and a duct keel.", a: "A flat-plate keel is a single thickened centerline bottom plate; a duct keel is an internal box-girder structure used to route piping." },
+          { q: "A vessel is floating in perfectly upright equilibrium. State the relationship between the Center of Gravity (G) and Center of Buoyancy (B).", a: "They must lie on the exact same vertical centerline." },
+          { q: "Why is the Block Coefficient (C_B) of a Very Large Crude Carrier (VLCC) higher than that of a container ship?", a: "VLCCs prioritize maximum internal cargo volume (C_B ~ 0.80-0.85), whereas container ships prioritize high speed (C_B ~ 0.55-0.65)." },
+          { q: "Look at a standard lines Body Plan. What do the curves on the right and left sides represent?", a: "The right side illustrates the forward transverse frames (bow); the left side illustrates the aft transverse frames (stern)." },
+          { q: "Explain the practical purpose of 'camber' on a weather deck.", a: "To create a transverse curve that sheds shipped green water overboard quickly." },
+          { q: "A ship loads 100 tonnes of cargo directly over its Longitudinal Center of Flotation (LCF). How does the trim change?", a: "The trim does not change; the vessel sinks parallel to its existing waterline." },
+          { q: "Differentiate between 'Lightship Weight' and 'Gross Tonnage (GT)'.", a: "Lightship is the physical weight of the empty ship in metric tonnes; GT is a non-dimensional index of the ship's total enclosed internal volume." },
+          { q: "What happens to a ship's draft when it sails from the high-salinity Atlantic Ocean into a freshwater river?", a: "The draft increases (the ship sinks deeper) due to the lower density of fresh water." },
+          { q: "Identify the primary function of a 'bilge strake' in a ship's shell plating.", a: "It is the curved section of longitudinal plating that transitions the bottom shell into the vertical side shell." },
+          { q: "A captain asks for the 'Reserve Buoyancy' of his vessel. What volume are you looking at?", a: "The intact, enclosed, watertight volume of the hull existing above the actual operating waterline." },
+          { q: "State the primary condition required for a vessel to possess positive initial stability.", a: "The Metacenter (M) must be located strictly above the Center of Gravity (G), resulting in a positive GM." },
+          { q: "How does a bulbous bow reduce fuel consumption on a large commercial vessel?", a: "It creates a secondary wave system that destructively interferes with the vessel's natural bow wave, reducing wave-making resistance." },
+          { q: "Identify the purpose of a 'sounding pipe' penetrating a double-bottom ballast tank.", a: "To allow a weighted brass sounding tape to be lowered in to measure the liquid depth inside the tank." },
+          { q: "Differentiate between a ship's 'list' and a ship's 'heel'.", a: "List is a permanent angle caused by internal off-center weight; heel is a temporary angle caused by external forces like wind or waves." },
+          { q: "What is the structural role of 'web frames' inside a cargo hold?", a: "They are deep, heavy transverse frames spaced at regular intervals to support primary longitudinals and resist racking stresses." },
+          { q: "A hull girder experiences a 'sagging' bending moment. Which part of the structure is under extreme tension?", a: "The bottom shell and keel structure." },
+          { q: "State the exact weight of one cubic meter of standard seawater used in Class stability calculations.", a: "1.025 metric tonnes." },
+          { q: "What does the Prismatic Coefficient (C_P) indicate that the Block Coefficient (C_B) fails to show?", a: "The longitudinal distribution of the underwater volume relative to the midship cross-sectional area." },
+          { q: "Identify the primary mechanism of a sacrificial zinc anode bolted to a hull.", a: "It possesses a higher electrochemical potential than steel, corroding preferentially to protect the hull from galvanic corrosion." }
+        ],
+        level1: [
+          { q: "An inclining test yields a calculated GM. How do you derive the ship's vertical center of gravity (KG) from this?", a: "Look up the transverse metacenter height (KM) in the hydrostatic tables for that draft, and subtract the GM (KG = KM - GM)." },
+          { q: "Explain the physical mechanism of the Free Surface Effect in a half-filled ballast tank.", a: "The liquid shifts toward the low side during a roll, causing a virtual shift in the ship's center of gravity that reduces the effective righting arm." },
+          { q: "A vessel exhibits an 'angle of loll'. What is its GM value when forced upright?", a: "Negative (GM < 0)." },
+          { q: "You must correct an angle of loll to starboard. Why is filling a port-side tank first a catastrophic error?", a: "It adds free-surface effect and high-side weight, which can cause the ship to violently snap over to port and capsize." },
+          { q: "Differentiate between Intact Stability and Damage Stability.", a: "Intact evaluates the unbreached vessel against overturning forces; Damage evaluates floatability, residual stability, and equilibrium after a specific compartment is flooded." },
+          { q: "Define the 'Margin Line' used in passenger ship subdivision calculations.", a: "An imaginary line drawn 76 mm below the upper surface of the bulkhead deck; it must not be submerged in the final stage of flooding." },
+          { q: "What does a GZ curve represent, and what are its two axis variables?", a: "It represents the righting lever (y-axis) plotted against the angle of heel (x-axis)." },
+          { q: "When scaling towing tank model data to full size, which specific resistance component is scaled using Froude's Law of Comparison?", a: "The residuary (wave-making) resistance." },
+          { q: "State the relationship between a propeller's Speed of Advance (V_A), the ship's speed (V), and the Taylor wake fraction (w).", a: "V_A = V x (1 - w)." },
+          { q: "What physical phenomenon triggers propeller cavitation on the back of a blade?", a: "The local water velocity increases to the point where local static pressure drops below the vapor pressure of water, flashing the water into collapsing vapor bubbles." },
+          { q: "Identify the difference between a main engine's Brake Power (P_B) and Delivered Power (P_D).", a: "The parasitic mechanical friction losses occurring in the reduction gearbox, thrust block, and stern tube shaft bearings." },
+          { q: "A 3D hull model in Rhino shows 'naked edges'. Why is this fatal for Maxsurf or ANSYS export?", a: "It indicates the polysurface is not a closed, watertight manifold, causing software volume integrations and CFD surface meshing to fail." },
+          { q: "When auditing a midship section drawing for Class, what defines the 'Strength Deck'?", a: "The uppermost continuous deck that forms the top structural flange of the primary hull girder." },
+          { q: "State the mathematical relationship used to estimate a vessel's open-water squat.", a: "Squat ≈ (C_B x V^2) / 100 (in meters, where V is speed in knots)." },
+          { q: "What is the explicit mechanical function of the Thrust Block (thrust bearing) in the engine room?", a: "To capture the massive axial thrust generated by the propeller shaft and transfer it directly into the ship's double-bottom structure." },
+          { q: "Under SOLAS Chapter II-1, what defines the 'Permissible Length' of a compartment?", a: "The theoretical floodable length multiplied by the specific Factor of Subdivision assigned to that vessel type." },
+          { q: "Differentiate between Open Water Efficiency (eta_0) and Behind-Hull Efficiency (eta_B) of a propeller.", a: "Behind-hull efficiency accounts for the modified flow field caused by the hull's wake fraction and thrust deduction (eta_B = eta_0 x eta_R)." },
+          { q: "A vessel is executing a heavy crane lift over the side. How do you treat the lifted weight in your stability calculation?", a: "The moment the load clears the deck, its weight is treated as acting instantly at the very tip of the crane boom." },
+          { q: "What is the specific baseline calculated by the ITTC 1957 Model-Ship Correlation Line?", a: "The baseline frictional resistance coefficient (C_F) of a mathematically flat plate of equal length and wetted surface area." },
+          { q: "Identify the primary operational function of adding a Kort Nozzle around a tugboat's propeller.", a: "To prevent tip vortex losses and accelerate mass flow through the disk, heavily increasing bollard pull at zero-to-low speeds." },
+          { q: "Under the ISM Code, what constitutes a 'Non-Conformity' during a design or operational audit?", a: "An observed situation where objective evidence indicates the non-fulfillment of a specified Safety Management System requirement." },
+          { q: "What is the structural role of a 'pillar' (stanchion) inside a multi-deck vessel?", a: "To act as a vertical compression member transferring heavy localized deck loads down to the stiffened double bottom." },
+          { q: "How does an increase in the Prismatic Coefficient (C_P) alter the geometry of the ship's ends?", a: "It pushes volume away from amidships toward the ends, creating blunt, full U-shaped bow and stern sections." },
+          { q: "What specific pollution sector is governed by MARPOL Annex VI?", a: "Air pollution, specifically capping Sulfur Oxides (SO_x), Nitrogen Oxides (NO_x), and mandatory carbon reporting." },
+          { q: "Why is longitudinal framing preferred over transverse framing in the bottom and deck plating of a 200m vessel?", a: "Longitudinal stiffeners offer vastly superior resistance to compressive panel buckling under severe hull girder bending." },
+          { q: "A stability booklet provides a KN curve. Write the formula to find the actual GZ lever for a given KG.", a: "GZ = KN - (KG x sin theta), where theta is the angle of heel." },
+          { q: "What defines the 'Downflooding Angle' (theta_f) on a statical stability curve?", a: "The angle of heel at which the lowest unprotected, non-watertight opening immerses, allowing water to flood the interior." },
+          { q: "Why do high-speed planing crafts use a 'hard chine' hull form rather than a round bilge?", a: "To force clean flow separation at the chine, generating the dynamic upward hydrodynamic lift required to achieve planing." },
+          { q: "Differentiate between an Inert Gas Generator (IGG) system and a pure Nitrogen (N2) system on a tanker.", a: "IGG burns diesel to create scrubbed exhaust gas for crude/product carriers; N2 systems use membrane separation to generate pure nitrogen for sensitive chemical cargoes." },
+          { q: "Identify the explicit purpose of conducting a Class-witnessed 'Bollard Pull' sea trial.", a: "To measure and certify the maximum sustained, zero-speed towing force of a tug or offshore vessel using a calibrated load cell." }
+        ],
+        level2: [
+          { q: "You are preloading a self-elevating accommodation jack-up. How do you calculate the 'Punch-Through' safety margin?", a: "Ensure the applied preload per leg exceeds the maximum calculated 50-year storm reaction by a mandatory factor of at least 1.15 to 1.20." },
+          { q: "In finite element analysis of a double-bottom floor, what is 'Shear Locking' in 4-node linear shell elements?", a: "An artificial parasitic over-stiffness in thin plates subjected to pure bending, resolved by using reduced integration or 8-node quadratic elements." },
+          { q: "Explain the physical significance of the Added Mass Coefficient (C_A) in ship seakeeping equations.", a: "It represents the volume of surrounding water particles that are forced to accelerate and decelerate alongside the hull during wave-induced motions." },
+          { q: "A vessel's verified CII rating comes back as an 'E'. What is the immediate legal consequence under MARPOL?", a: "The owner must submit a verified Corrective Action Plan (CAP) inside the SEEMP detailing how the ship will achieve a 'C' rating or better." },
+          { q: "Differentiate between EEDI and EEXI.", a: "EEDI applies strictly to newly built ships at the design stage; EEXI is a retroactive, one-time calculated technical index applied to existing vessels." },
+          { q: "In multi-body mooring analysis (e.g., in MOSES), what triggers 'Low-Frequency Drift Oscillations'?", a: "Second-order non-linear wave drift forces occurring at the exact natural resonant horizontal frequency of the moored system." },
+          { q: "What precise wave conditions trigger 'Parametric Roll' in a modern post-Panamax container ship?", a: "Sailing in head or following seas where the wave encounter period is approximately half the ship's natural roll period (T_E = 0.5 T_R)." },
+          { q: "You are engineering the conversion of a river barge to an ocean-going deck cargo barge. What is the primary structural challenge?", a: "Upgrading the longitudinal section modulus of the midship section to survive massive open-ocean wave bending moments." },
+          { q: "Define the 'Ultimate Longitudinal Strength' (M_U) of a ship's hull girder.", a: "The maximum bending moment the total cross-section can sustain right at the point of widespread plastic collapse or global inter-frame buckling." },
+          { q: "When running a CFD simulation of a fast planing hull, which turbulence model is standard practice for capturing the spray root?", a: "The k-omega SST (Shear Stress Transport) model paired with a high-resolution Volume of Fluid (VOF) solver." },
+          { q: "Explain the output of a Response Amplitude Operator (RAO) generated for heave.", a: "It outputs a transfer function showing the ratio of the ship's heave response amplitude to the incoming wave amplitude across a spectrum of wave frequencies." },
+          { q: "Differentiate between 'Spectral Fatigue Analysis' and 'Deterministic Fatigue Analysis'.", a: "Spectral applies a wave scatter diagram and stress transfer functions to compute cumulative stochastic damage; deterministic applies one simplified, idealized cyclic stress range." },
+          { q: "A client wants to retrofit Methanol dual-fuel tanks. What is the major naval architecture penalty?", a: "Methanol possesses roughly half the volumetric energy density of MGO, requiring roughly 2.2 to 2.5 times the physical tank volume for the same vessel range." },
+          { q: "In DP Capability plots, what establishes the 'Limiting Environmental Envelope'?", a: "The maximum coincident wind, wave, and current velocities at which the vessel's thrusters can maintain position while holding a mandatory 20% power reserve." },
+          { q: "What is the primary structural challenge when cutting a 10m x 10m 'Moonpool' into an existing offshore vessel?", a: "Restoring the massive loss of longitudinal cross-sectional area and torsional rigidity in the bottom and main deck plating around the penetration." },
+          { q: "How do you suppress 'Piston-Mode Resonance' occurring inside a drillship's moonpool?", a: "Install bottom recess wedges, horizontal damping plates, or internal perforated bulkheads along the forward and aft moonpool walls." },
+          { q: "Differentiate between Probabilistic damage stability (SOLAS Ch II-1) and Deterministic damage stability.", a: "Probabilistic yields an attained survival index (A >= R) based on historical damage data; deterministic tests survival against one rigid, fixed damage box size." },
+          { q: "When verifying local deck strength under a heavy offshore crane pedestal, why must you calculate the 'Prying Effect'?", a: "Because flange deformation and bolt elongation create a secondary leverage point that severely amplifies the localized tension on the deck insert plate." },
+          { q: "What precise hydrodynamic sequence causes 'Slamming' (impact pressures) on a vessel's forebody?", a: "The bow emerging completely from the water (Draft <= 0 locally) followed by re-entry at a high relative downward velocity exceeding the threshold limit." },
+          { q: "In an inclining experiment report, what causes the Class surveyor to reject the test due to 'Excessive Initial Trim'?", a: "A starting trim exceeding 1% of the LBP, which introduces severe errors into standard level-keel hydrostatic table lookups." },
+          { q: "Why does utilizing Ammonia (NH3) as a fuel require a completely separated 'gas-safe' zoning philosophy compared to LNG?", a: "Ammonia is lethally toxic to humans at extremely low concentrations (~300 ppm), making vapor dispersion and zero-leakage containment the primary design drivers over flammability." },
+          { q: "What inputs are cross-referenced inside an oceanographic 'Wave Scatter Diagram'?", a: "The joint historical probability distribution of Significant Wave Heights (H_s) plotted against Zero-Crossing Wave Periods (T_z)." },
+          { q: "A fast crew boat running at 32 knots experiences violent 'Porpoising'. What dynamic failure is occurring?", a: "A coupled, self-sustaining dynamic pitch-and-heave instability caused by driving a planing hull past its upper stable trim limit." },
+          { q: "Write the kinetic energy formula used when designing a hull or fender to absorb a berthing impact.", a: "E = 0.5 x M_v x V^2 x C_E x C_M, where C_M is the added mass coefficient and C_E is the eccentricity coefficient." },
+          { q: "What is the primary structural requirement for a vessel to achieve a 'Polar Class' (PC) hull notation?", a: "Heavy, closely spaced grillage framing and thick shell plating designed to resist concentrated, non-uniform glancing ice-floe impact loads." },
+          { q: "In seakeeping software, explain the 'Strip Theory' synthesis.", a: "The 3D underwater hull is sliced into a series of 2D transverse strips; the 2D added mass and damping coefficients of each strip are calculated and integrated along the ship's length." },
+          { q: "How does an Air Lubrication System (ALS) reduce a vessel's net fuel consumption?", a: "It injects a continuous carpet of micro-bubbles across the flat bottom shell, dropping the local fluid density and drastically reducing viscous skin friction." },
+          { q: "What is the engineering objective of a 'Rationalized Shaft Alignment' calculation during outfitting?", a: "To determine the exact vertical bearing offsets required to distribute the heavy overhanging propeller mass evenly across the stern tube and intermediate bearings." },
+          { q: "A client requests a 'Lightweight Survey' instead of a full Inclining Test. Under what Class rule is this allowed?", a: "For a sister vessel built to identical drawings where the lightweight survey proves the weight variance is less than 1% (or 0.5% for passenger vessels) of the lead ship." },
+          { q: "In deep-water catenary mooring design, what is the specific function of attaching a 'Clump Weight' to the line?", a: "To increase the catenary restoring force of the line and ensure the anchor shank experiences zero vertical uplift angle at the seabed." }
+        ]
+      };
+
+      // --------------------------------------------------------------
+      //  STATE
+      // --------------------------------------------------------------
+      let currentLevel = 0;
+      let currentQuestions = [];
+      let currentIndex = 0;
+      let levelProgress = { 0: 0, 1: 0, 2: 0 };
+      let levelAnswers = { 0: Array(QUESTIONS_PER_LEVEL).fill(''), 1: Array(QUESTIONS_PER_LEVEL).fill(''), 2: Array(QUESTIONS_PER_LEVEL).fill('') };
+      let levelResults = { 0: null, 1: null, 2: null };
+      let isEvaluating = false;
+
+      // DOM
+      const levelBtns = document.querySelectorAll('.level-btn');
+      const questionText = document.getElementById('questionText');
+      const qCounter = document.getElementById('qCounter');
+      const progressStatus = document.getElementById('progressStatus');
+      const levelDisplay = document.getElementById('levelDisplay');
+      const nextBtn = document.getElementById('nextBtn');
+      const resetLevelBtn = document.getElementById('resetLevelBtn');
+      const answerTextarea = document.getElementById('answerTextarea');
+      const evaluateBtn = document.getElementById('evaluateBtn');
+      const resultsPanel = document.getElementById('resultsPanel');
+      const lockMsg = document.getElementById('lockMsg');
+
+      // --------------------------------------------------------------
+      //  HELPERS
+      // --------------------------------------------------------------
+      function pickRandomQuestions(poolArray) {
+        const shuffled = [...poolArray];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled.slice(0, QUESTIONS_PER_LEVEL);
+      }
+
+      function saveCurrentAnswer() {
+        levelAnswers[currentLevel][currentIndex] = answerTextarea.value;
+      }
+
+      function initLevel(level) {
+        const poolKey = 'level' + level;
+        const pool = QUESTION_BANK[poolKey] || QUESTION_BANK.level0;
+        currentQuestions = pickRandomQuestions(pool);
+        while (currentQuestions.length < QUESTIONS_PER_LEVEL) {
+          currentQuestions.push({ q: '(Sample question) ' + currentQuestions.length, a: 'Sample answer.' });
+        }
+        currentIndex = 0;
+        levelProgress[level] = 0;
+        levelAnswers[level] = Array(QUESTIONS_PER_LEVEL).fill('');
+        levelResults[level] = null;
+        resultsPanel.style.display = 'none';
+        renderQuestion();
+        updateUI();
+        updateLevelLockState();
+      }
+
+      function renderQuestion() {
+        if (!currentQuestions.length) {
+          questionText.textContent = 'No questions loaded.';
+          qCounter.textContent = '—';
+          return;
+        }
+        const idx = currentIndex % currentQuestions.length;
+        const card = currentQuestions[idx] || {};
+        questionText.textContent = card.q || 'Question unavailable';
+        qCounter.textContent = 'Question ' + (idx + 1) + ' / ' + currentQuestions.length;
+        answerTextarea.value = levelAnswers[currentLevel][idx] || '';
+        if (idx + 1 > levelProgress[currentLevel]) {
+          levelProgress[currentLevel] = idx + 1;
+        }
+        updateUI();
+      }
+
+      function updateUI() {
+        const levelNames = ['⚓ Level 1 · Fundamentals & Spatial Orientation', '⛵ Level 2 · Applied Hydrostatics, Resistance & Regulations', '🚢 Level 3 · Advanced Hydrodynamics, FEA & Specialized Vessels'];
+        levelDisplay.textContent = levelNames[currentLevel] || 'Level ' + (currentLevel + 1);
+
+        const seen = levelProgress[currentLevel] || 0;
+        progressStatus.textContent = seen + ' / ' + QUESTIONS_PER_LEVEL;
+
+        levelBtns.forEach((btn, idx) => {
+          btn.classList.toggle('active', idx === currentLevel);
+        });
+
+        if (seen >= QUESTIONS_PER_LEVEL && !levelResults[currentLevel]) {
+          evaluateBtn.style.display = 'inline-flex';
+        } else {
+          evaluateBtn.style.display = 'none';
+        }
+      }
+
+      // --------------------------------------------------------------
+      //  LEVEL LOCKING
+      // --------------------------------------------------------------
+      function isLevelUnlocked(level) {
+        if (level < 2) return true;
+        return levelResults[0] !== null && levelResults[1] !== null;
+      }
+
+      function updateLevelLockState() {
+        levelBtns.forEach(function(btn, idx) {
+          if (idx === 2) {
+            if (isLevelUnlocked(idx)) {
+              btn.classList.remove('locked');
+            } else {
+              btn.classList.add('locked');
+            }
+          }
+        });
+        if (currentLevel === 2 && !isLevelUnlocked(2)) {
+          lockMsg.style.display = 'block';
+        } else {
+          lockMsg.style.display = 'none';
+        }
+      }
+
+      // --------------------------------------------------------------
+      //  NAVIGATION
+      // --------------------------------------------------------------
+      function nextQuestion() {
+        if (!currentQuestions.length) {
+          initLevel(currentLevel);
+          return;
+        }
+        saveCurrentAnswer();
+        currentIndex = (currentIndex + 1) % currentQuestions.length;
+        renderQuestion();
+        if (currentIndex === 0 && levelProgress[currentLevel] < QUESTIONS_PER_LEVEL) {
+          levelProgress[currentLevel] = QUESTIONS_PER_LEVEL;
+        } else {
+          const seen = Math.max(levelProgress[currentLevel] || 0, currentIndex + 1);
+          levelProgress[currentLevel] = Math.min(seen, QUESTIONS_PER_LEVEL);
+        }
+        updateUI();
+      }
+
+      function resetLevel() {
+        levelAnswers[currentLevel] = Array(QUESTIONS_PER_LEVEL).fill('');
+        levelResults[currentLevel] = null;
+        resultsPanel.style.display = 'none';
+        initLevel(currentLevel);
+        updateLevelLockState();
+      }
+
+      function switchLevel(level) {
+        if (level === currentLevel) return;
+        if (!isLevelUnlocked(level)) {
+          lockMsg.style.display = 'block';
+          setTimeout(function() { lockMsg.style.display = 'none'; }, 3000);
+          return;
+        }
+        lockMsg.style.display = 'none';
+        saveCurrentAnswer();
+        currentLevel = level;
+        initLevel(level);
+      }
+
+      // --------------------------------------------------------------
+      //  EVALUATION (Pollinations AI)
+      // --------------------------------------------------------------
+      function buildPrompt() {
+        const levelNames = ['⚓ Level 1 · Fundamentals & Spatial Orientation', '⛵ Level 2 · Applied Hydrostatics, Resistance & Regulations', '🚢 Level 3 · Advanced Hydrodynamics, FEA & Specialized Vessels'];
+        let prompt = 'You are a naval architecture professor evaluating a student\'s answers.\n\n';
+        prompt += 'Level: ' + levelNames[currentLevel] + '\n\n';
+        prompt += '--- Student Report ---\n';
+        for (let i = 0; i < currentQuestions.length; i++) {
+          prompt += '\nQ' + (i + 1) + ': ' + currentQuestions[i].q + '\n';
+          prompt += 'Model Answer: ' + currentQuestions[i].a + '\n';
+          prompt += 'Student Answer: ' + (levelAnswers[currentLevel][i] || '(no answer)') + '\n';
+        }
+        prompt += '\n\n--- Task ---\n';
+        prompt += 'For each question, compare the student\'s answer to the model answer.\n';
+        prompt += 'Score the student out of 5 based on accuracy and completeness relative to the model.\n';
+        prompt += 'Then give a consolidated level score out of 10 for overall performance.\n';
+        prompt += 'Return ONLY valid JSON with this exact structure:\n';
+        prompt += '{\n';
+        prompt += '  "question_scores": [score1, score2, ...],\n';
+        prompt += '  "level_score": 7.5,\n';
+        prompt += '  "feedback": "overall assessment feedback"\n';
+        prompt += '}';
+        return prompt;
+      }
+
+      async function evaluateWithPollinations() {
+        if (isEvaluating) return;
+        saveCurrentAnswer();
+
+        isEvaluating = true;
+        evaluateBtn.className = 'btn eval-btn evaluating';
+        evaluateBtn.innerHTML = '<span class="spinner"></span> Navculus is evaluating…';
+        evaluateBtn.style.display = 'inline-flex';
+        document.getElementById('evalError').style.display = 'none';
+
+        try {
+          const response = await fetch('https://text.pollinations.ai/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              messages: [{ role: 'user', content: buildPrompt() }],
+              model: 'openai'
+            })
+          });
+
+          if (!response.ok) throw new Error('API request failed (status ' + response.status + ')');
+
+          let text = await response.text();
+          if (!text || text.length < 10) throw new Error('Empty response from AI');
+
+          let jsonMatch = text.match(/\{[\s\S]*\}/);
+          if (!jsonMatch) throw new Error('Could not parse JSON from AI response');
+
+          let result = JSON.parse(jsonMatch[0]);
+
+          if (!Array.isArray(result.question_scores) || typeof result.level_score !== 'number') {
+            throw new Error('Invalid response structure from AI');
+          }
+
+          levelResults[currentLevel] = {
+            scores: result.question_scores,
+            levelScore: result.level_score,
+            feedback: result.feedback || ''
+          };
+
+          displayResults(levelResults[currentLevel]);
+        } catch (err) {
+          let errorEl = document.getElementById('evalError');
+          errorEl.innerHTML = 'Error: ' + err.message + '<br><button class="retry-btn" onclick="(function(){ var e=document.getElementById(\'evaluateBtn\'); if(e) e.click(); })()">Retry</button>';
+          errorEl.style.display = 'block';
+          evaluateBtn.className = 'btn eval-btn';
+          evaluateBtn.innerHTML = '<span class="spinner" style="display:none"></span> Evaluate';
+          evaluateBtn.style.display = 'inline-flex';
+        } finally {
+          isEvaluating = false;
+        }
+      }
+
+      function displayResults(results) {
+        let grid = document.getElementById('scoreGrid');
+        grid.innerHTML = '';
+        results.scores.forEach(function(score, i) {
+          let badge = document.createElement('span');
+          badge.className = 'score-badge';
+          if (score >= 4) badge.classList.add('high');
+          else if (score >= 3) badge.classList.add('med');
+          else badge.classList.add('low');
+          badge.textContent = 'Q' + (i + 1) + ' ' + score + '/5';
+          grid.appendChild(badge);
+        });
+
+        document.getElementById('levelScoreValue').textContent = results.levelScore.toFixed(1);
+        document.getElementById('overallFeedback').textContent = results.feedback || '';
+
+        let container = document.getElementById('modelAnswers');
+        container.innerHTML = '<div class="model-answers-title">— Model Answers —</div>';
+        results.scores.forEach(function(score, i) {
+          let item = document.createElement('div');
+          item.className = 'model-answer-item';
+
+          let label = document.createElement('div');
+          label.className = 'q-label';
+          label.textContent = 'Question ' + (i + 1);
+
+          let scoreEl = document.createElement('span');
+          scoreEl.className = 'q-score';
+          if (score >= 4) scoreEl.classList.add('high');
+          else if (score >= 3) scoreEl.classList.add('med');
+          else scoreEl.classList.add('low');
+          scoreEl.textContent = score + '/5';
+          label.appendChild(scoreEl);
+
+          let modelText = document.createElement('div');
+          modelText.className = 'model-text';
+          let card = currentQuestions[i] || {};
+          modelText.textContent = card.a || '(not available)';
+
+          let studentText = document.createElement('div');
+          studentText.className = 'student-text';
+          studentText.textContent = levelAnswers[currentLevel][i] || '(no answer)';
+
+          item.appendChild(label);
+          item.appendChild(modelText);
+          item.appendChild(studentText);
+          container.appendChild(item);
+        });
+
+        resultsPanel.style.display = 'block';
+        evaluateBtn.style.display = 'none';
+        updateLevelLockState();
+      }
+
+      // --------------------------------------------------------------
+      //  EVENT LISTENERS
+      // --------------------------------------------------------------
+      levelBtns.forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+          let level = parseInt(this.dataset.level, 10);
+          switchLevel(level);
+        });
+      });
+
+      document.getElementById('beginBtn').addEventListener('click', function() {
+        document.getElementById('introOverlay').style.display = 'none';
+      });
+
+      nextBtn.addEventListener('click', nextQuestion);
+      resetLevelBtn.addEventListener('click', resetLevel);
+      evaluateBtn.addEventListener('click', evaluateWithPollinations);
+
+      // --------------------------------------------------------------
+      //  BOOTSTRAP
+      // --------------------------------------------------------------
+      (function init() {
+        currentLevel = 0;
+        let pool = QUESTION_BANK.level0;
+        currentQuestions = pickRandomQuestions(pool);
+        while (currentQuestions.length < QUESTIONS_PER_LEVEL) {
+          currentQuestions.push({ q: 'Additional question about naval architecture', a: 'Sample answer.' });
+        }
+        currentIndex = 0;
+        levelProgress[0] = 0;
+        levelAnswers[0] = Array(QUESTIONS_PER_LEVEL).fill('');
+        renderQuestion();
+        updateUI();
+        levelBtns.forEach(function(btn, idx) {
+          btn.classList.toggle('active', idx === 0);
+        });
+        updateLevelLockState();
+      })();
+    })();
+  </script>
+</body>
+</html>
