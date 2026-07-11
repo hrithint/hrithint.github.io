@@ -190,17 +190,6 @@
             background: #000;
             margin-bottom: 1rem;
             box-shadow: 0 12px 25px -8px rgba(0,0,0,0.2);
-        }
-
-        .video-wrapper {
-            position: relative;
-            width: 100%;
-            padding-bottom: 56.25%;
-            border-radius: 1.2rem;
-            overflow: hidden;
-            background: #000;
-            margin-bottom: 1rem;
-            box-shadow: 0 12px 25px -8px rgba(0,0,0,0.2);
             user-select: none;
             -webkit-user-select: none;
             -moz-user-select: none;
@@ -214,41 +203,6 @@
             width: 100%;
             height: 100%;
             border: 0;
-        }
-
-        .video-mask {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 10;
-            cursor: default;
-            pointer-events: auto;
-        }
-
-        .mute-button {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            z-index: 15;
-            background: rgba(0, 0, 0, 0.6);
-            border: none;
-            color: white;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            transition: all 0.2s ease;
-        }
-
-        .mute-button:hover {
-            background: rgba(29, 122, 92, 0.8);
-            transform: scale(1.1);
         }
 
         .custom-play-overlay {
@@ -690,8 +644,6 @@
                 disable-cookies
                 no-volume-panel
                 no-time-display
-                no-progress-bar
-                no-play-button
                 no-poster
                 no-duration
                 no-seek-backward
@@ -701,8 +653,7 @@
                 no-hotkeys
                 no-rate-menu>
             </mux-player>
-            <!-- Permanent transparent overlay to block Mux UI -->
-            <div class="video-mask" id="videoMask"></div>
+
             <!-- Custom Play Button -->
             <div class="custom-play-overlay" id="customPlayOverlay">
                 <div class="play-button-large">
@@ -711,10 +662,7 @@
                 <div class="thumbnail-text">Intro to The Tutor</div>
                 <div class="thumbnail-subtext">Click to play • Powered by Navculus</div>
             </div>
-            <!-- Mute/Unmute Button -->
-            <button class="mute-button" id="muteButton" title="Mute">
-                <i class="fas fa-volume-up"></i>
-            </button>
+
         </div>
     </div>
 
@@ -905,29 +853,11 @@
     // Get DOM elements
     const muxPlayer = document.getElementById('muxPlayer');
     const customPlayOverlay = document.getElementById('customPlayOverlay');
-    const muteButton = document.getElementById('muteButton');
-    let isMuted = false;
 
     // Custom play overlay click handler
     customPlayOverlay.addEventListener('click', function() {
         customPlayOverlay.classList.add('hidden');
         muxPlayer.play();
-    });
-
-    // Mute/Unmute button handler
-    muteButton.addEventListener('click', function() {
-        const icon = muteButton.querySelector('i');
-        
-        if (isMuted) {
-            muxPlayer.muted = false;
-            icon.className = 'fas fa-volume-up';
-            muteButton.title = 'Mute';
-        } else {
-            muxPlayer.muted = true;
-            icon.className = 'fas fa-volume-mute';
-            muteButton.title = 'Unmute';
-        }
-        isMuted = !isMuted;
     });
 
     // Listen for video end to bring back play overlay
