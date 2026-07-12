@@ -73,6 +73,7 @@
             --light-gray: #f0f9fa;
             --white: #ffffff;
             --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
             --border-radius: 12px;
             --transition: all 0.25s ease-out;
             --resource-green: #15803d;
@@ -104,15 +105,16 @@
             padding: 0 20px;
         }
 
-        /* ===== HEADER (NAVY BLUE) ===== */
+        /* ===== HEADER - IMPROVED ===== */
         header {
-            background: var(--primary-blue);
+            background: linear-gradient(135deg, #071c3a 0%, #0a2a5a 50%, #0f3a7a 100%);
             color: var(--white);
-            padding: 0.75rem 0;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 0.5rem 0;
+            box-shadow: 0 4px 20px rgba(10, 42, 90, 0.3);
             position: sticky;
             top: 0;
             z-index: 100;
+            border-bottom: 2px solid rgba(77, 171, 247, 0.15);
         }
 
         .header-content {
@@ -120,21 +122,28 @@
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 10px;
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .logo:hover {
+            transform: scale(1.02);
         }
 
         .logo-img {
             width: auto;
-            height: 48px;
+            height: 50px;
             max-width: 90px;
             display: block;
-            filter: none;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.2));
+            border-radius: 8px;
         }
 
         .logo-text h1 {
@@ -143,6 +152,7 @@
             letter-spacing: -0.01em;
             line-height: 1.2;
             color: var(--white);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
         }
 
         .logo-text h1 span.nav-part {
@@ -151,31 +161,88 @@
 
         .logo-text h1 span.culus-part {
             color: #4dabf7;
+            text-shadow: 0 0 20px rgba(77, 171, 247, 0.3);
         }
 
         .logo-text p {
-            font-size: 0.75rem;
-            color: rgba(255,255,255,0.8);
-            margin-top: 1px;
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 0px;
             font-weight: 400;
-        }
-
-        .tagline-wrapper {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 8px;
-            padding-top: 8px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            flex-wrap: wrap;
-            gap: 12px;
+            letter-spacing: 0.5px;
         }
 
         .tagline-text {
-            color: rgba(255,255,255,0.9);
+            color: rgba(255, 255, 255, 0.8);
             font-weight: 400;
-            font-size: 0.875rem;
+            font-size: 0.8rem;
             font-style: italic;
+            white-space: nowrap;
+            padding: 4px 12px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(4px);
+        }
+
+        .main-nav {
+            margin-top: 6px;
+            padding-top: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-menu {
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            margin: 0;
+            padding: 0;
+            flex-wrap: wrap;
+        }
+
+        .nav-menu li a {
+            display: block;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 0.5rem 1.1rem;
+            border-radius: 10px;
+            transition: var(--transition);
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .nav-menu li a::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: 50%;
+            transform: translateX(-50%) scaleX(0);
+            width: 60%;
+            height: 2px;
+            background: #4dabf7;
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+
+        .nav-menu li a:hover::after {
+            transform: translateX(-50%) scaleX(1);
+        }
+
+        .nav-menu li a:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--white);
+        }
+
+        .nav-menu li a i {
+            margin-right: 6px;
+            font-size: 0.8rem;
         }
 
         .button-group {
@@ -184,28 +251,37 @@
             gap: 10px;
         }
 
-        /* BUTTON STYLES - DARK HEADER COMPATIBLE */
+        /* BUTTON STYLES - IMPROVED */
         .ai-nav-btn, .news-nav-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             color: var(--white);
             font-weight: 600;
-            font-size: 0.875rem;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
+            font-size: 0.85rem;
+            padding: 0.5rem 1.2rem;
+            border-radius: 10px;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 8px;
             transition: var(--transition);
+            backdrop-filter: blur(4px);
         }
 
-        .ai-nav-btn i { color: #4dabf7; }
-        .news-nav-btn i { color: #51cf66; }
+        .ai-nav-btn i { 
+            color: #4dabf7;
+            font-size: 1rem;
+        }
+        .news-nav-btn i { 
+            color: #51cf66;
+            font-size: 1rem;
+        }
 
         .ai-nav-btn:hover, .news-nav-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-1px);
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 255, 255, 0.2);
         }
 
         .ai-tooltip, .news-tooltip {
@@ -216,13 +292,13 @@
             color: var(--primary-blue);
             font-size: 0.75rem;
             padding: 0.4rem 0.8rem;
-            border-radius: 6px;
+            border-radius: 8px;
             white-space: nowrap;
             opacity: 0;
             visibility: hidden;
             transition: var(--transition);
             z-index: 150;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
             font-weight: 600;
         }
 
@@ -230,6 +306,24 @@
         .news-button-container:hover .news-tooltip {
             opacity: 1;
             visibility: visible;
+            transform: translateY(-4px);
+        }
+
+        .hamburger {
+            display: none;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            font-size: 1.3rem;
+            cursor: pointer;
+            padding: 0.5rem 0.9rem;
+            border-radius: 10px;
+            transition: var(--transition);
+        }
+
+        .hamburger:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(1.05);
         }
 
         /* Search Section */
@@ -587,20 +681,67 @@
             color: var(--medium-gray);
         }
 
+        /* ===== NAVIGATION MENU ===== */
+        html { scroll-behavior: smooth; }
+
         @media (max-width: 768px) {
             .footer-content { grid-template-columns: 1fr; gap: 2rem; }
             .hero h2 { font-size: 1.75rem; }
-            .tagline-wrapper { flex-direction: column; align-items: flex-start; }
-            .button-group { width: 100%; justify-content: space-between; margin-top: 1rem; }
+            .tagline-text { display: none; }
+
+            .main-nav {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: linear-gradient(135deg, #071c3a, #0a2a5a);
+                padding: 1rem;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+                z-index: 200;
+                border-top: 1px solid rgba(255,255,255,0.05);
+            }
+            .main-nav.active { display: block; }
+
+            .nav-menu {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 2px;
+            }
+
+            .nav-menu li a {
+                padding: 0.75rem 1rem;
+                border-radius: 8px;
+                border-bottom: 1px solid rgba(255,255,255,0.03);
+            }
+
+            .nav-menu li a::after { display: none; }
+
+            .hamburger { display: block; }
+
+            .ai-nav-btn, .news-nav-btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.75rem;
+            }
+
+            .ai-nav-btn span, .news-nav-btn span { display: none; }
+            .ai-nav-btn i, .news-nav-btn i { margin: 0; }
+
+            .logo-text h1 { font-size: 1.3rem; }
+            .logo-img { height: 40px; }
+        }
+
+        @media (min-width: 769px) {
+            .main-nav { display: flex !important; }
         }
     </style>
 </head>
 <body>
-    <!-- Header: Reduced height, cleaner spacing -->
+    <!-- Header - IMPROVED -->
     <header>
         <div class="container">
             <div class="header-content">
-                <div class="logo">
+                <a href="#" class="logo">
                     <div class="logo-icon">
                         <img src="https://github.com/hrithint/hrithint.github.io/blob/main/favicon.png?raw=true" alt="Navculus Logo" class="logo-img">
                     </div>
@@ -608,28 +749,37 @@
                         <h1><span class="nav-part">Nav</span><span class="culus-part">culus</span></h1>
                         <p>Naval Architecture Calculations</p>
                     </div>
-                </div>
-            </div>
-            <!-- Tagline area with AI button on right -->
-            <div class="tagline-wrapper">
-                <div class="tagline-text">
-                    Precision engineering for marine design and analysis
-                </div>
+                </a>
                 <div class="button-group">
                     <div class="ai-button-container">
                         <button id="navculusAiBtn" class="ai-nav-btn">
-                            <i class="fas fa-robot"></i> Navculus AI
+                            <i class="fas fa-robot"></i> <span>Navculus AI</span>
                         </button>
                         <span class="ai-tooltip">Lets talk about marine rules</span>
                     </div>
                     <div class="news-button-container">
                         <button id="navculusNewsBtn" class="news-nav-btn">
-                            <i class="fas fa-newspaper"></i> NEWS
+                            <i class="fas fa-newspaper"></i> <span>NEWS</span>
                         </button>
                         <span class="news-tooltip">Latest maritime news & updates</span>
                     </div>
+                    <button class="hamburger" id="hamburgerBtn" aria-label="Toggle navigation">
+                        <i class="fas fa-bars"></i>
+                    </button>
                 </div>
             </div>
+            <!-- Navigation Menu -->
+            <nav class="main-nav" id="mainNav">
+                <span class="tagline-text">Precision engineering for marine design and analysis</span>
+                <ul class="nav-menu">
+                    <li><a href="#calculations"><i class="fas fa-calculator"></i>Calculations</a></li>
+                    <li><a href="#tools"><i class="fas fa-wrench"></i>Tools</a></li>
+                    <li><a href="#resources"><i class="fas fa-book"></i>Resources</a></li>
+                    <li><a href="#fun"><i class="fas fa-gamepad"></i>Fun</a></li>
+                    <li><a href="about.html"><i class="fas fa-info-circle"></i>About</a></li>
+                    <li><a href="contact.html"><i class="fas fa-envelope"></i>Contact</a></li>
+                </ul>
+            </nav>
         </div>
     </header>
 
@@ -656,7 +806,7 @@
 
     <main class="container">
         <!-- Calculation Modules Section -->
-        <section class="modules-section">
+        <section class="modules-section" id="calculations">
             <div class="section-title"><h2>Calculation Modules</h2></div>
             <div class="no-results" id="noResults"><i class="fas fa-search" style="font-size: 3rem; margin-bottom: 1rem;"></i><h3>No modules found</h3><p>Try different search terms</p></div>
             <div class="modules-grid" id="modulesGrid"></div>
@@ -664,7 +814,7 @@
         </section>
 
         <!-- Navculus Tools -->
-        <section class="modules-section">
+        <section class="modules-section" id="tools">
             <div class="section-title"><h2>Navculus Tools</h2></div>
             <div class="tools-info">Specialized tools developed by Navculus for advanced naval architecture calculations</div>
             <div class="modules-grid">
@@ -679,7 +829,7 @@
         </section>
 
         <!-- Resource Section -->
-        <section class="modules-section resource-section">
+        <section class="modules-section resource-section" id="resources">
             <div class="section-title"><h2>Resource</h2></div>
             <div class="tools-info">Technical reference materials, standards, and resources for naval architecture</div>
             <div class="modules-grid">
@@ -691,8 +841,8 @@
             </div>
         </section>
 
-        <!-- Navculus Fun Section (UPDATED: Added "Know the Ship?" box) -->
-        <section class="modules-section fun-section">
+        <!-- Navculus Fun Section -->
+        <section class="modules-section fun-section" id="fun">
             <div class="section-title"><h2>Navculus Fun</h2></div>
             <div class="tools-info">Test your naval architecture knowledge with fun quizzes and interactive challenges</div>
             <div class="modules-grid">
@@ -700,7 +850,6 @@
                     <div class="module-header"><div class="module-icon"><i class="fas fa-question-circle"></i></div><h3 class="module-title">Naval Architecture Quiz</h3></div>
                     <div class="module-content"><p class="module-description">Test your knowledge of naval architecture covering ship design, stability, structures, and marine engineering.</p><a href="Fun/Quiz.html" class="quiz-button"><i class="fas fa-play"></i> Start Quiz</a></div>
                 </div>
-                <!-- NEW BOX: Know the Ship? -->
                 <div class="module-card fun-card">
                     <div class="module-header"><div class="module-icon"><i class="fas fa-ship"></i></div><h3 class="module-title">Know the Ship? <span class="coming-soon">3D Challenge</span></h3></div>
                     <div class="module-content"><p class="module-description">Interactive 3D ship model identification. Explore and identify key ship parts, from bow to stern, in an immersive visual quiz.</p><a href="Fun/know_the_ship.html" class="quiz-button"><i class="fas fa-cube"></i> Explore 3D Model</a></div>
@@ -741,7 +890,7 @@
             { title: "Dog Plate Design", file: "calculators/01092025_Cal_Dog plate design.html", description: "Design dog plates for structural connections with load distribution analysis.", icon: "fas fa-link" },
             { title: "Hull Form Tolerance (IACS)", file: "calculators/25042025_Cal_Hull form Acceptable tolerance_IACS.html", description: "Check hull form compliance with IACS tolerance requirements for construction and repair.", icon: "fas fa-ship" },
             { title: "Holtrop and Mennen Power Prediction", file: "calculators/26052024_Cal_Holtrop and Mennen power prediction methods.html", description: "Predict ship power requirements using the Holtrop and Mennen method.", icon: "fas fa-bolt" },
-            { title: "Van Ootemerssen Power Prediction", file: "calculators/27012025_Cal_Van Ootemerssen_Power prediction.html", description: "Calculate power prediction using Van Ootemerssen's method for ship resistance estimation.", icon: "fas fa-chart-line" },
+            { title: "Van Ootemmersen Power Prediction", file: "calculators/27012025_Cal_Van Ootemmersen_Power prediction.html", description: "Calculate power prediction using Van Ootemmersen's method for ship resistance estimation.", icon: "fas fa-chart-line" },
             { title: "Towing Bridle Design Check", file: "calculators/19122025_Cal_Towing Bridle Design Check.html", description: "Design and check towing bridle arrangements for safe towing operations.", icon: "fas fa-link" },
             { title: "Motions and Accelerations (DNVGL-RU-SHIP)", file: "calculators/01092025_Cal_Motions and Accelrations_DNVGL-RU-SHIP.html", description: "Calculate ship motions and accelerations according to DNVGL Rules for Ships.", icon: "fas fa-wave-square" },
             { title: "Berthing Energy Calculator", file: "calculators/20042026_Cal_Berthing energy calculation.html", description: "Calculate berthing energy and auto approach velocity using PIANC WG33 guidelines.", icon: "fas fa-anchor" }
@@ -818,6 +967,24 @@
                     window.location.href = 'navculus_news.html';
                 });
             }
+            // Hamburger menu toggle
+            const hamburgerBtn = document.getElementById('hamburgerBtn');
+            const mainNav = document.getElementById('mainNav');
+            if(hamburgerBtn && mainNav) {
+                hamburgerBtn.addEventListener('click', () => {
+                    mainNav.classList.toggle('active');
+                    const icon = hamburgerBtn.querySelector('i');
+                    icon.className = mainNav.classList.contains('active') ? 'fas fa-times' : 'fas fa-bars';
+                });
+            }
+            // Close mobile menu when a nav link is clicked
+            document.querySelectorAll('.nav-menu li a').forEach(link => {
+                link.addEventListener('click', () => {
+                    if(mainNav) { mainNav.classList.remove('active'); }
+                    const icon = hamburgerBtn ? hamburgerBtn.querySelector('i') : null;
+                    if(icon) { icon.className = 'fas fa-bars'; }
+                });
+            });
             // smooth anchors
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 anchor.addEventListener('click', function(e) {
