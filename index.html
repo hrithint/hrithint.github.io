@@ -3,12 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Navculus | Naval Architecture Calculations</title>
-
+    <title>Navculus · Neumorphic Design</title>
     <meta name="description" content="Navculus is a naval architecture and marine engineering platform providing professional calculation tools, structural design utilities, ship analysis modules, and maritime engineering resources.">
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="canonical" href="https://www.navculus.in/">
-
     <meta property="og:title" content="Navculus | Naval Architecture Calculations">
     <meta property="og:description" content="Professional naval architecture and marine engineering calculation tools and resources.">
     <meta property="og:url" content="https://www.navculus.in/">
@@ -26,7 +24,6 @@
       "founder":{"@type":"Person","name":"Hrithin Thavorath"}
     }
     </script>
-
     <script type="application/ld+json">
     {
       "@context":"https://schema.org",
@@ -35,56 +32,21 @@
       "url":"https://www.navculus.in"
     }
     </script>
-
     <script type="application/ld+json">
     {
       "@context":"https://schema.org",
       "@type":"FAQPage",
       "mainEntity":[
-        {
-          "@type":"Question",
-          "name":"What is Navculus?",
-          "acceptedAnswer":{"@type":"Answer","text":"Navculus is a naval architecture and marine engineering platform providing professional calculation tools and technical resources."}
-        },
-        {
-          "@type":"Question",
-          "name":"Who is Navculus designed for?",
-          "acceptedAnswer":{"@type":"Answer","text":"Navculus is designed for naval architects, marine engineers, shipyards, offshore professionals, and maritime students."}
-        },
-        {
-          "@type":"Question",
-          "name":"What tools are available on Navculus?",
-          "acceptedAnswer":{"@type":"Answer","text":"Available tools include Navculus Beam, Navculus Signals, Navculus Units, and multiple naval architecture calculation modules."}
-        }
+        {"@type":"Question","name":"What is Navculus?","acceptedAnswer":{"@type":"Answer","text":"Navculus is a naval architecture and marine engineering platform providing professional calculation tools and technical resources."}},
+        {"@type":"Question","name":"Who is Navculus designed for?","acceptedAnswer":{"@type":"Answer","text":"Navculus is designed for naval architects, marine engineers, shipyards, offshore professionals, and maritime students."}},
+        {"@type":"Question","name":"What tools are available on Navculus?","acceptedAnswer":{"@type":"Answer","text":"Available tools include Navculus Beam, Navculus Signals, Navculus Units, and multiple naval architecture calculation modules."}}
       ]
     }
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary-blue: #0a2a5a;
-            --secondary-blue: #1a4a8a;
-            --accent-blue: #2a6ac7;
-            --light-blue: #f0f9ff;
-            --highlight-blue: #3b82f6;
-            --dark-gray: #1e293b;
-            --medium-gray: #64748b;
-            --light-gray: #f0f9fa;
-            --white: #ffffff;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-            --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
-            --border-radius: 12px;
-            --transition: all 0.25s ease-out;
-            --resource-green: #15803d;
-            --fun-purple: #7e22ce;
-            --fun-accent: #a855f7;
-            --ai-gradient: linear-gradient(135deg, #0f172a, #1e293b);
-            --ai-glow: 0 0 10px rgba(42, 106, 199, 0.2);
-            --card-bg: #ffffff;
-            --card-border: #e2e8f0;
-        }
 
+    <style>
         * {
             margin: 0;
             padding: 0;
@@ -93,28 +55,77 @@
         }
 
         body {
-            background-color: var(--light-gray);
-            color: var(--dark-gray);
-            line-height: 1.6;
+            background: #e0e5ec;
             min-height: 100vh;
+            color: #2d4059;
+            padding: 0;
+            line-height: 1.6;
         }
 
+        /* NEUMORPHISM GLOBAL */
+        .neu-card {
+            background: #e0e5ec;
+            border-radius: 32px;
+            box-shadow:  9px 9px 18px #b8bec6, -9px -9px 18px #ffffff;
+            transition: all 0.25s ease;
+        }
+
+        .neu-card-inset {
+            background: #e0e5ec;
+            border-radius: 32px;
+            box-shadow: inset 6px 6px 12px #b8bec6, inset -6px -6px 12px #ffffff;
+        }
+
+        .neu-card:hover {
+            box-shadow:  12px 12px 24px #b0b6be, -12px -12px 24px #ffffff;
+            transform: scale(1.01);
+        }
+
+        .neu-btn {
+            background: #e0e5ec;
+            border: none;
+            border-radius: 60px;
+            padding: 0.65rem 1.8rem;
+            font-weight: 600;
+            color: #2d4059;
+            box-shadow: 6px 6px 12px #b8bec6, -6px -6px 12px #ffffff;
+            transition: all 0.15s ease;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .neu-btn:active {
+            box-shadow: inset 6px 6px 12px #b8bec6, inset -6px -6px 12px #ffffff;
+            transform: scale(0.97);
+        }
+
+        .neu-btn-primary {
+            background: #2d4059;
+            color: #eef2f7;
+            box-shadow: 6px 6px 12px #b8bec6, -6px -6px 12px #ffffff;
+        }
+
+        .neu-btn-primary:active {
+            box-shadow: inset 4px 4px 8px #1a2a3a, inset -4px -4px 8px #405a78;
+        }
+
+        /* container */
         .container {
-            max-width: 1200px;
+            max-width: 1240px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 24px;
         }
 
-        /* ===== HEADER - IMPROVED ===== */
+        /* HEADER — neumorphism */
         header {
-            background: linear-gradient(135deg, #071c3a 0%, #0a2a5a 50%, #0f3a7a 100%);
-            color: var(--white);
-            padding: 0.5rem 0;
-            box-shadow: 0 4px 20px rgba(10, 42, 90, 0.3);
+            background: #e0e5ec;
+            padding: 0.6rem 0;
             position: sticky;
             top: 0;
             z-index: 100;
-            border-bottom: 2px solid rgba(77, 171, 247, 0.15);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.02);
         }
 
         .header-content {
@@ -130,175 +141,98 @@
             align-items: center;
             gap: 14px;
             text-decoration: none;
-            transition: var(--transition);
+            background: #1d2b3f;
+            padding: 0.2rem 1.2rem 0.2rem 0.8rem;
+            border-radius: 60px;
+            box-shadow: 6px 6px 12px #b8bec6, -6px -6px 12px #ffffff;
+            transition: all 0.2s;
         }
 
         .logo:hover {
             transform: scale(1.02);
+            box-shadow: 9px 9px 18px #b0b6be, -9px -9px 18px #ffffff;
         }
 
         .logo-img {
+            height: 48px;
             width: auto;
-            height: 50px;
-            max-width: 90px;
-            display: block;
-            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.2));
-            border-radius: 8px;
+            max-width: 80px;
+            filter: drop-shadow(2px 2px 6px rgba(0,0,0,0.08));
+            border-radius: 30px;
         }
 
         .logo-text h1 {
-            font-size: 1.6rem;
+            font-size: 1.7rem;
             font-weight: 700;
-            letter-spacing: -0.01em;
+            letter-spacing: -0.02em;
             line-height: 1.2;
-            color: var(--white);
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+            color: #1d2b3f;
         }
 
-        .logo-text h1 span.nav-part {
-            color: var(--white);
-        }
-
-        .logo-text h1 span.culus-part {
-            color: #4dabf7;
-            text-shadow: 0 0 20px rgba(77, 171, 247, 0.3);
-        }
+        .logo-text h1 .nav-part { color: #ffffff; }
+        .logo-text h1 .culus-part { color: #7fb3e0; }
 
         .logo-text p {
             font-size: 0.7rem;
-            color: rgba(255, 255, 255, 0.7);
-            margin-top: 0px;
-            font-weight: 400;
-            letter-spacing: 0.5px;
+            color: #b8c9dd;
+            font-weight: 500;
+            letter-spacing: 0.4px;
         }
 
         .tagline-text {
-            color: rgba(255, 255, 255, 0.8);
-            font-weight: 400;
+            color: #3e5670;
+            font-weight: 500;
             font-size: 0.8rem;
-            font-style: italic;
+            padding: 0.2rem 1.2rem;
+            border-radius: 40px;
+            background: #e0e5ec;
+            box-shadow: inset 3px 3px 6px #b8bec6, inset -3px -3px 6px #ffffff;
             white-space: nowrap;
-            padding: 4px 12px;
-            background: rgba(255, 255, 255, 0.06);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            backdrop-filter: blur(4px);
-        }
-
-        .main-nav {
-            margin-top: 6px;
-            padding-top: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .nav-menu {
-            list-style: none;
-            display: flex;
-            align-items: center;
-            gap: 2px;
-            margin: 0;
-            padding: 0;
-            flex-wrap: wrap;
-        }
-
-        .nav-menu li a {
-            display: block;
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 600;
-            padding: 0.5rem 1.1rem;
-            border-radius: 10px;
-            transition: var(--transition);
-            white-space: nowrap;
-            position: relative;
-        }
-
-        .nav-menu li a::after {
-            content: '';
-            position: absolute;
-            bottom: 2px;
-            left: 50%;
-            transform: translateX(-50%) scaleX(0);
-            width: 60%;
-            height: 2px;
-            background: #4dabf7;
-            border-radius: 2px;
-            transition: var(--transition);
-        }
-
-        .nav-menu li a:hover::after {
-            transform: translateX(-50%) scaleX(1);
-        }
-
-        .nav-menu li a:hover {
-            background: rgba(255, 255, 255, 0.08);
-            color: var(--white);
-        }
-
-        .nav-menu li a i {
-            margin-right: 6px;
-            font-size: 0.8rem;
         }
 
         .button-group {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
-        /* BUTTON STYLES - IMPROVED */
         .ai-nav-btn, .news-nav-btn {
-            background: rgba(255, 255, 255, 0.07);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            color: var(--white);
+            background: #e0e5ec;
+            border: none;
+            border-radius: 60px;
+            padding: 0.55rem 1.4rem;
             font-weight: 600;
-            font-size: 0.85rem;
-            padding: 0.5rem 1.2rem;
-            border-radius: 10px;
+            color: #1d2b3f;
+            box-shadow: 6px 6px 12px #b8bec6, -6px -6px 12px #ffffff;
+            transition: all 0.15s;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 8px;
-            transition: var(--transition);
-            backdrop-filter: blur(4px);
+            font-size: 0.9rem;
         }
 
-        .ai-nav-btn i { 
-            color: #4dabf7;
-            font-size: 1rem;
-        }
-        .news-nav-btn i { 
-            color: #51cf66;
-            font-size: 1rem;
+        .ai-nav-btn:active, .news-nav-btn:active {
+            box-shadow: inset 6px 6px 12px #b8bec6, inset -6px -6px 12px #ffffff;
         }
 
-        .ai-nav-btn:hover, .news-nav-btn:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            border-color: rgba(255, 255, 255, 0.2);
-        }
+        .ai-nav-btn i { color: #2d6a9f; }
+        .news-nav-btn i { color: #2d8f5e; }
 
         .ai-tooltip, .news-tooltip {
             position: absolute;
             bottom: 125%;
             right: 0;
-            background: var(--white);
-            color: var(--primary-blue);
-            font-size: 0.75rem;
-            padding: 0.4rem 0.8rem;
-            border-radius: 8px;
+            background: #e0e5ec;
+            color: #1d2b3f;
+            font-size: 0.7rem;
+            padding: 0.35rem 0.9rem;
+            border-radius: 40px;
             white-space: nowrap;
             opacity: 0;
             visibility: hidden;
-            transition: var(--transition);
-            z-index: 150;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            transition: 0.2s;
+            box-shadow: 6px 6px 12px #b8bec6, -6px -6px 12px #ffffff;
             font-weight: 600;
         }
 
@@ -306,199 +240,212 @@
         .news-button-container:hover .news-tooltip {
             opacity: 1;
             visibility: visible;
-            transform: translateY(-4px);
+            transform: translateY(-6px);
         }
 
         .hamburger {
-            display: none;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: var(--white);
-            font-size: 1.3rem;
+            background: #e0e5ec;
+            border: none;
+            border-radius: 40px;
+            padding: 0.5rem 1rem;
+            box-shadow: 6px 6px 12px #b8bec6, -6px -6px 12px #ffffff;
+            font-size: 1.2rem;
+            color: #1d2b3f;
+            transition: 0.15s;
             cursor: pointer;
-            padding: 0.5rem 0.9rem;
-            border-radius: 10px;
-            transition: var(--transition);
+            display: none;
         }
 
-        .hamburger:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: scale(1.05);
+        .hamburger:active {
+            box-shadow: inset 6px 6px 12px #b8bec6, inset -6px -6px 12px #ffffff;
         }
 
-        /* Search Section */
-        .search-section {
-            padding: 1.5rem 0;
-            margin-bottom: 2rem;
+        /* Navigation */
+        .main-nav {
+            margin-top: 8px;
+            padding-top: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            border-top: 1px solid rgba(0,0,0,0.03);
         }
 
-        .search-container {
-            max-width: 800px;
+        .nav-menu {
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            flex-wrap: wrap;
+        }
+
+        .nav-menu li a {
+            display: block;
+            color: #2d4059;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 0.5rem 1.2rem;
+            border-radius: 60px;
+            transition: all 0.15s;
+            background: transparent;
+        }
+
+        .nav-menu li a:hover {
+            background: #e0e5ec;
+            box-shadow: inset 4px 4px 8px #b8bec6, inset -4px -4px 8px #ffffff;
+        }
+
+        .nav-menu li a i {
+            margin-right: 8px;
+            color: #3a6b9b;
+        }
+
+        /* HERO */
+        .hero {
+            background: #e0e5ec;
+            padding: 3rem 0;
+            text-align: center;
+            margin: 1.5rem 0 2rem;
+            border-radius: 60px;
+            box-shadow: 9px 9px 18px #b8bec6, -9px -9px 18px #ffffff;
+        }
+
+        .hero h2 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #1d2b3f;
+            margin-bottom: 0.8rem;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            max-width: 700px;
             margin: 0 auto;
+            color: #3e5670;
+        }
+
+        /* SEARCH */
+        .search-section {
+            padding: 0.5rem 0 1.8rem;
         }
 
         .search-box {
             display: flex;
             gap: 8px;
-            background: white;
-            padding: 6px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-            border: 1px solid #eef2f6;
+            background: #e0e5ec;
+            padding: 8px 8px 8px 20px;
+            border-radius: 60px;
+            box-shadow: inset 6px 6px 12px #b8bec6, inset -6px -6px 12px #ffffff;
         }
 
         .search-input {
             flex: 1;
-            padding: 0.75rem 1rem;
             border: none;
+            background: transparent;
+            padding: 0.7rem 0.2rem;
             font-size: 0.95rem;
             outline: none;
-            color: var(--dark-gray);
-            background: transparent;
+            color: #1d2b3f;
+            font-weight: 500;
+        }
+
+        .search-input::placeholder {
+            color: #6b7f99;
+            font-weight: 400;
         }
 
         .search-button {
-            background: var(--primary-blue);
-            color: white;
+            background: #2d4059;
             border: none;
-            border-radius: 8px;
-            padding: 0 1.5rem;
-            cursor: pointer;
+            border-radius: 60px;
+            padding: 0 2rem;
+            color: white;
             font-weight: 600;
-            transition: var(--transition);
+            box-shadow: 6px 6px 12px #b8bec6, -6px -6px 12px #ffffff;
+            transition: 0.15s;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .search-button:hover {
-            background: var(--secondary-blue);
+        .search-button:active {
+            box-shadow: inset 4px 4px 8px #1a2a3a, inset -4px -4px 8px #405a78;
         }
 
         .search-info {
             text-align: center;
             margin-top: 1rem;
-            color: var(--medium-gray);
-            font-size: 0.875rem;
+            color: #4a617b;
             font-weight: 500;
+            font-size: 0.85rem;
         }
 
         .no-results {
             text-align: center;
-            padding: 4rem 2rem;
-            color: var(--medium-gray);
-            background: white;
-            border-radius: 12px;
-            border: 1px solid #f1f5f9;
+            padding: 4rem 1rem;
+            background: #e0e5ec;
+            border-radius: 60px;
+            box-shadow: inset 6px 6px 12px #b8bec6, inset -6px -6px 12px #ffffff;
             display: none;
-            margin-bottom: 3rem;
-        }
-
-        .no-results i {
-            color: #cbd5e1;
-            display: block;
-            margin-bottom: 1rem;
-            font-size: 2.5rem;
-        }
-
-        .no-results h3 {
-            color: var(--primary-blue);
-            margin-bottom: 0.5rem;
-            font-size: 1.25rem;
-        }
-
-        /* Hero Section */
-        .hero {
-            background: var(--white);
-            color: var(--dark-gray);
-            padding: 3.5rem 0;
-            text-align: center;
             margin-bottom: 2rem;
-            border-bottom: 1px solid #f1f5f9;
         }
 
-        .hero h2 {
-            font-size: 2.25rem;
-            font-weight: 800;
-            color: var(--primary-blue);
-            margin-bottom: 1rem;
-            letter-spacing: -0.025em;
-        }
+        .no-results i { color: #7b8fa8; font-size: 2.8rem; margin-bottom: 0.5rem; }
+        .no-results h3 { color: #1d2b3f; }
 
-        .hero p {
-            font-size: 1.125rem;
-            max-width: 720px;
-            margin: 0 auto;
-            color: var(--medium-gray);
-        }
-
-        /* Section Title */
+        /* section titles */
         .section-title {
             text-align: center;
-            margin-bottom: 2.5rem;
+            margin: 2.8rem 0 2rem;
         }
 
         .section-title h2 {
-            font-size: 1.875rem;
-            font-weight: 700;
-            color: var(--primary-blue);
-            position: relative;
             display: inline-block;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1d2b3f;
+            background: #e0e5ec;
+            padding: 0.3rem 2.5rem;
+            border-radius: 60px;
+            box-shadow: 6px 6px 12px #b8bec6, -6px -6px 12px #ffffff;
         }
 
-        .section-title h2::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 48px;
-            height: 4px;
-            background: var(--accent-blue);
-            border-radius: 2px;
+        .tools-info {
+            text-align: center;
+            color: #3e5670;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            background: #e0e5ec;
+            padding: 0.6rem 1.5rem;
+            border-radius: 60px;
+            display: inline-block;
+            box-shadow: inset 4px 4px 8px #b8bec6, inset -4px -4px 8px #ffffff;
         }
 
-        /* Modules Grid */
         .modules-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 24px;
-            margin-bottom: 3rem;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 28px;
+            margin-bottom: 2.5rem;
         }
 
-        /* CARD ANIMATION & STYLE */
+        /* MODULE CARD — neumorphism */
         .module-card {
-            background: var(--white);
-            border-radius: 16px;
-            padding: 1.5rem;
-            border: 1px solid var(--card-border);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: #e0e5ec;
+            border-radius: 40px;
+            padding: 1.8rem 1.8rem 1.5rem;
+            box-shadow: 9px 9px 18px #b8bec6, -9px -9px 18px #ffffff;
+            transition: all 0.25s ease;
             display: flex;
             flex-direction: column;
-            gap: 1.25rem;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+            gap: 1rem;
         }
 
         .module-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            border-color: var(--accent-blue);
-        }
-
-        .module-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: var(--accent-blue);
-            transform: scaleX(0);
-            transition: transform 0.4s ease;
-            transform-origin: left;
-        }
-
-        .module-card:hover::before {
-            transform: scaleX(1);
+            transform: translateY(-6px);
+            box-shadow: 12px 12px 24px #b0b6be, -12px -12px 24px #ffffff;
         }
 
         .module-header {
@@ -508,282 +455,224 @@
         }
 
         .module-icon {
-            width: 48px;
-            height: 48px;
-            background: #f1f5f9;
-            color: var(--accent-blue);
-            border-radius: 12px;
+            width: 54px;
+            height: 54px;
+            background: #e0e5ec;
+            border-radius: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.25rem;
-            transition: var(--transition);
-        }
-
-        .module-card:hover .module-icon {
-            background: #f0f7ff;
+            font-size: 1.4rem;
+            color: #2d6a9f;
+            box-shadow: inset 4px 4px 8px #b8bec6, inset -4px -4px 8px #ffffff;
         }
 
         .module-title {
-            font-size: 1.125rem;
+            font-size: 1.1rem;
             font-weight: 700;
-            color: var(--primary-blue);
-            line-height: 1.4;
+            color: #1d2b3f;
         }
 
         .module-description {
-            color: var(--medium-gray);
-            font-size: 0.9375rem;
-            line-height: 1.6;
-            flex-grow: 1;
+            color: #3e5670;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            flex: 1;
         }
 
         .module-link, .download-button, .quiz-button {
-            display: flex;
+            background: #e0e5ec;
+            border: none;
+            border-radius: 60px;
+            padding: 0.7rem 1.2rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #1d2b3f;
+            text-decoration: none;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            padding: 0.75rem 1rem;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.875rem;
-            text-decoration: none;
-            transition: var(--transition);
+            gap: 10px;
+            box-shadow: 6px 6px 12px #b8bec6, -6px -6px 12px #ffffff;
+            transition: 0.15s;
+            cursor: pointer;
         }
 
-        .module-link {
-            background: #f1f5f9;
-            color: var(--primary-blue);
-        }
-
-        .module-link:hover {
-            background: var(--primary-blue);
-            color: white;
+        .module-link:active, .download-button:active, .quiz-button:active {
+            box-shadow: inset 6px 6px 12px #b8bec6, inset -6px -6px 12px #ffffff;
         }
 
         .under-development {
-            background: #f8fafc !important;
-            color: #94a3b8 !important;
-            cursor: not-allowed;
-            border: 1px dashed #cbd5e1 !important;
+            opacity: 0.65;
+            pointer-events: none;
+            box-shadow: inset 4px 4px 8px #b8bec6, inset -4px -4px 8px #ffffff;
         }
 
-        .resource-card .module-icon { color: var(--resource-green); }
-        .resource-card:hover .module-icon { background: var(--resource-green); color: white; }
-        .resource-card:hover::before { background: var(--resource-green); }
-        .download-button { background: #f0fdf4; color: var(--resource-green); }
-        .download-button:hover { background: var(--resource-green); color: white; }
-
-        .fun-card .module-icon { color: var(--fun-purple); }
-        .fun-card:hover .module-icon { background: var(--fun-purple); color: white; }
-        .fun-card:hover::before { background: var(--fun-purple); }
-        .quiz-button { background: #f5f3ff; color: var(--fun-purple); }
-        .quiz-button:hover { background: var(--fun-purple); color: white; }
+        .resource-card .module-icon { color: #1f8b4c; }
+        .fun-card .module-icon { color: #7c3aed; }
 
         .coming-soon {
-            font-size: 0.75rem;
-            background: #fef3c7;
-            color: #92400e;
-            padding: 0.125rem 0.5rem;
-            border-radius: 9999px;
+            font-size: 0.7rem;
+            background: #e0e5ec;
+            padding: 0.1rem 0.8rem;
+            border-radius: 60px;
+            color: #3e5670;
             font-weight: 600;
             margin-left: 0.5rem;
+            box-shadow: inset 2px 2px 5px #b8bec6, inset -2px -2px 5px #ffffff;
         }
 
         .show-more-container {
             text-align: center;
-            margin-bottom: 4rem;
+            margin: 1.5rem 0 3rem;
         }
 
         .show-more-button {
-            background: white;
-            color: var(--primary-blue);
-            border: 1px solid var(--card-border);
-            padding: 0.75rem 2rem;
-            border-radius: 8px;
-            font-weight: 600;
+            background: #e0e5ec;
+            border: none;
+            border-radius: 60px;
+            padding: 0.8rem 2.6rem;
+            font-weight: 700;
+            font-size: 1rem;
+            color: #1d2b3f;
+            box-shadow: 6px 6px 12px #b8bec6, -6px -6px 12px #ffffff;
+            transition: 0.15s;
             cursor: pointer;
-            transition: var(--transition);
-            box-shadow: var(--shadow);
         }
 
-        .show-more-button:hover {
-            border-color: var(--accent-blue);
-            color: var(--accent-blue);
-            transform: translateY(-1px);
+        .show-more-button:active {
+            box-shadow: inset 6px 6px 12px #b8bec6, inset -6px -6px 12px #ffffff;
         }
 
-        .tools-info {
-            text-align: center;
-            color: var(--medium-gray);
-            margin-bottom: 2rem;
-            font-weight: 500;
-        }
-
-        /* Footer */
+        /* FOOTER */
         footer {
-            background: var(--white);
-            color: var(--dark-gray);
-            padding: 4rem 0 2rem;
-            border-top: 1px solid var(--card-border);
+            background: #e0e5ec;
+            padding: 3rem 0 1.5rem;
+            margin-top: 3rem;
+            border-radius: 60px 60px 0 0;
+            box-shadow: inset 0 8px 12px rgba(0,0,0,0.02);
         }
 
         .footer-content {
             display: grid;
             grid-template-columns: 2fr 1fr 1fr;
-            gap: 4rem;
+            gap: 3rem;
         }
 
         .footer-logo h3 {
-            font-size: 1.5rem;
-            color: var(--primary-blue);
-            margin-bottom: 1rem;
+            font-size: 1.7rem;
+            color: #1d2b3f;
         }
 
         .footer-logo p {
-            color: var(--medium-gray);
-            max-width: 320px;
+            color: #3e5670;
+            max-width: 300px;
         }
 
         .footer-links h4 {
-            font-size: 1rem;
-            color: var(--dark-gray);
-            margin-bottom: 1.5rem;
-            font-weight: 700;
+            color: #1d2b3f;
+            margin-bottom: 1.2rem;
         }
 
         .footer-links ul { list-style: none; }
-        .footer-links li { margin-bottom: 0.75rem; }
+        .footer-links li { margin-bottom: 0.7rem; }
         .footer-links a {
-            color: var(--medium-gray);
+            color: #3e5670;
             text-decoration: none;
-            transition: var(--transition);
+            transition: 0.15s;
+            font-weight: 500;
         }
 
-        .footer-links a:hover {
-            color: var(--accent-blue);
-            padding-left: 4px;
-        }
+        .footer-links a:hover { color: #1d2b3f; padding-left: 6px; }
 
-        .footer-developer {
-            text-align: center;
-            margin-top: 4rem;
-            padding-top: 2rem;
-            border-top: 1px solid var(--card-border);
-            color: var(--medium-gray);
-            font-weight: 600;
-        }
+        .footer-developer { text-align: center; margin: 2.5rem 0 0.5rem; color: #3e5670; font-weight: 500; }
+        .copyright { text-align: center; font-size: 0.85rem; color: #5b6f87; }
 
-        .copyright {
-            text-align: center;
-            margin-top: 1rem;
-            font-size: 0.875rem;
-            color: var(--medium-gray);
-        }
-
-        /* ===== NAVIGATION MENU ===== */
-        html { scroll-behavior: smooth; }
-
+        /* RESPONSIVE */
         @media (max-width: 768px) {
             .footer-content { grid-template-columns: 1fr; gap: 2rem; }
-            .hero h2 { font-size: 1.75rem; }
+            .hero h2 { font-size: 1.7rem; }
             .tagline-text { display: none; }
-
             .main-nav {
                 display: none;
                 position: absolute;
                 top: 100%;
                 left: 0;
                 right: 0;
-                background: linear-gradient(135deg, #071c3a, #0a2a5a);
-                padding: 1rem;
-                box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+                background: #e0e5ec;
+                padding: 1.2rem 1.5rem;
+                box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+                border-radius: 0 0 40px 40px;
                 z-index: 200;
-                border-top: 1px solid rgba(255,255,255,0.05);
             }
             .main-nav.active { display: block; }
-
-            .nav-menu {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 2px;
-            }
-
-            .nav-menu li a {
-                padding: 0.75rem 1rem;
-                border-radius: 8px;
-                border-bottom: 1px solid rgba(255,255,255,0.03);
-            }
-
-            .nav-menu li a::after { display: none; }
-
+            .nav-menu { flex-direction: column; align-items: stretch; gap: 2px; }
+            .nav-menu li a { padding: 0.7rem 1.2rem; }
             .hamburger { display: block; }
-
-            .ai-nav-btn, .news-nav-btn {
-                padding: 0.4rem 0.8rem;
-                font-size: 0.75rem;
-            }
 
             .ai-nav-btn span, .news-nav-btn span { display: none; }
             .ai-nav-btn i, .news-nav-btn i { margin: 0; }
-
-            .logo-text h1 { font-size: 1.3rem; }
+            .logo-text h1 { font-size: 1.4rem; }
             .logo-img { height: 40px; }
         }
 
         @media (min-width: 769px) {
             .main-nav { display: flex !important; }
         }
+
+        /* small tweaks */
+        .module-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .module-link i, .quiz-button i, .download-button i { color: #3a6b9b; }
+        .resource-card .download-button i { color: #1f8b4c; }
+        .fun-card .quiz-button i { color: #7c3aed; }
     </style>
 </head>
 <body>
-    <!-- Header - IMPROVED -->
-    <header>
-        <div class="container">
-            <div class="header-content">
-                <a href="#" class="logo">
-                    <div class="logo-icon">
-                        <img src="https://github.com/hrithint/hrithint.github.io/blob/main/favicon.png?raw=true" alt="Navculus Logo" class="logo-img">
-                    </div>
-                    <div class="logo-text">
-                        <h1><span class="nav-part">Nav</span><span class="culus-part">culus</span></h1>
-                        <p>Naval Architecture Calculations</p>
-                    </div>
-                </a>
-                <div class="button-group">
-                    <div class="ai-button-container">
-                        <button id="navculusAiBtn" class="ai-nav-btn">
-                            <i class="fas fa-robot"></i> <span>Navculus AI</span>
-                        </button>
-                        <span class="ai-tooltip">Lets talk about marine rules</span>
-                    </div>
-                    <div class="news-button-container">
-                        <button id="navculusNewsBtn" class="news-nav-btn">
-                            <i class="fas fa-newspaper"></i> <span>NEWS</span>
-                        </button>
-                        <span class="news-tooltip">Latest maritime news & updates</span>
-                    </div>
-                    <button class="hamburger" id="hamburgerBtn" aria-label="Toggle navigation">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                </div>
-            </div>
-            <!-- Navigation Menu -->
-            <nav class="main-nav" id="mainNav">
-                <span class="tagline-text">Precision engineering for marine design and analysis</span>
-                <ul class="nav-menu">
-                    <li><a href="#calculations"><i class="fas fa-calculator"></i>Calculations</a></li>
-                    <li><a href="#tools"><i class="fas fa-wrench"></i>Tools</a></li>
-                    <li><a href="#resources"><i class="fas fa-book"></i>Resources</a></li>
-                    <li><a href="#fun"><i class="fas fa-gamepad"></i>Fun</a></li>
-                    <li><a href="about.html"><i class="fas fa-info-circle"></i>About</a></li>
-                    <li><a href="contact.html"><i class="fas fa-envelope"></i>Contact</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
 
-    <!-- Hero Section -->
+<header>
+    <div class="container">
+        <div class="header-content">
+            <a href="#" class="logo">
+                <img src="https://github.com/hrithint/hrithint.github.io/blob/main/favicon.png?raw=true" alt="Navculus Logo" class="logo-img">
+                <div class="logo-text">
+                    <h1><span class="nav-part">Nav</span><span class="culus-part">culus</span></h1>
+                    <p>Naval Architecture Calculations</p>
+                </div>
+            </a>
+            <div class="button-group">
+                <div class="ai-button-container" style="position:relative;">
+                    <button id="navculusAiBtn" class="ai-nav-btn"><i class="fas fa-robot"></i> <span>Navculus AI</span></button>
+                    <span class="ai-tooltip">Lets talk about marine rules</span>
+                </div>
+                <div class="news-button-container" style="position:relative;">
+                    <button id="navculusNewsBtn" class="news-nav-btn"><i class="fas fa-newspaper"></i> <span>NEWS</span></button>
+                    <span class="news-tooltip">Latest maritime news & updates</span>
+                </div>
+                <button class="hamburger" id="hamburgerBtn" aria-label="Toggle navigation"><i class="fas fa-bars"></i></button>
+            </div>
+        </div>
+
+        <nav class="main-nav" id="mainNav">
+            <span class="tagline-text">Precision engineering for marine design</span>
+            <ul class="nav-menu">
+                <li><a href="#calculations"><i class="fas fa-calculator"></i>Calculations</a></li>
+                <li><a href="#tools"><i class="fas fa-wrench"></i>Tools</a></li>
+                <li><a href="#resources"><i class="fas fa-book"></i>Resources</a></li>
+                <li><a href="#fun"><i class="fas fa-gamepad"></i>Fun</a></li>
+                <li><a href="about.html"><i class="fas fa-info-circle"></i>About</a></li>
+                <li><a href="contact.html"><i class="fas fa-envelope"></i>Contact</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+    <!-- Hero -->
     <section class="hero">
         <div class="container">
             <h2>Specialized Naval Architecture Calculations</h2>
@@ -791,7 +680,7 @@
         </div>
     </section>
 
-    <!-- Search Section -->
+    <!-- Search -->
     <section class="search-section">
         <div class="container">
             <div class="search-container">
@@ -804,197 +693,158 @@
         </div>
     </section>
 
-    <main class="container">
-        <!-- Calculation Modules Section -->
-        <section class="modules-section" id="calculations">
-            <div class="section-title"><h2>Calculation Modules</h2></div>
-            <div class="no-results" id="noResults"><i class="fas fa-search" style="font-size: 3rem; margin-bottom: 1rem;"></i><h3>No modules found</h3><p>Try different search terms</p></div>
-            <div class="modules-grid" id="modulesGrid"></div>
-            <div class="show-more-container" id="showMoreContainer"><button class="show-more-button" id="showMoreButton"><i class="fas fa-chevron-down"></i> Show More Modules</button></div>
-        </section>
+    <!-- Modules -->
+    <section class="modules-section" id="calculations">
+        <div class="section-title"><h2>Calculation Modules</h2></div>
+        <div class="no-results" id="noResults"><i class="fas fa-search"></i><h3>No modules found</h3><p>Try different search terms</p></div>
+        <div class="modules-grid" id="modulesGrid"></div>
+        <div class="show-more-container" id="showMoreContainer"><button class="show-more-button" id="showMoreButton"><i class="fas fa-chevron-down"></i> Show More Modules</button></div>
+    </section>
 
-        <!-- Navculus Tools -->
-        <section class="modules-section" id="tools">
-            <div class="section-title"><h2>Navculus Tools</h2></div>
-            <div class="tools-info">Specialized tools developed by Navculus for advanced naval architecture calculations</div>
-            <div class="modules-grid">
-                <div class="module-card">
-                    <div class="module-header"><div class="module-icon"><i class="fas fa-ruler-combined"></i></div><h3 class="module-title">Navculus Beam <span class="coming-soon">Available</span></h3></div>
-                    <div class="module-content"><p class="module-description">Advanced beam calculation tool for ship structural analysis with comprehensive load distribution.</p><a href="tools/navculus_beam.html" class="module-link">Open Tool <i class="fas fa-arrow-right"></i></a></div>
-                </div>
-                <div class="module-card"><div class="module-header"><div class="module-icon"><i class="fas fa-satellite-dish"></i></div><h3 class="module-title">Navculus Signals <span class="coming-soon">Available</span></h3></div><div class="module-content"><p class="module-description">Precision navigation signal monitoring and verification tool for high-integrity positioning.</p><a href="tools/signals.html" class="module-link">Open Tool <i class="fas fa-arrow-right"></i></a></div></div>
-                <div class="module-card"><div class="module-header"><div class="module-icon"><i class="fas fa-anchor"></i></div><h3 class="module-title">Navculus Stability <span class="coming-soon">Coming Soon</span></h3></div><div class="module-content"><p class="module-description">Advanced stability analysis tool for ships and offshore structures.</p><a href="#" class="module-link under-development">Under Development <i class="fas fa-hourglass-half"></i></a></div></div>
-                <div class="module-card"><div class="module-header"><div class="module-icon"><i class="fas fa-ruler"></i></div><h3 class="module-title">Navculus Units <span class="coming-soon">Available</span></h3></div><div class="module-content"><p class="module-description">Convert between different unit systems commonly used in naval architecture and marine engineering.</p><a href="tools/Unit.html" class="module-link">Open Tool <i class="fas fa-arrow-right"></i></a></div></div>
-            </div>
-        </section>
-
-        <!-- Resource Section -->
-        <section class="modules-section resource-section" id="resources">
-            <div class="section-title"><h2>Resource</h2></div>
-            <div class="tools-info">Technical reference materials, standards, and resources for naval architecture</div>
-            <div class="modules-grid">
-                <div class="module-card resource-card">
-                    <div class="module-header"><div class="module-icon"><i class="fas fa-fire-extinguisher"></i></div><h3 class="module-title">Fire and Safety Symbols</h3></div>
-                    <div class="module-content"><p class="module-description">Complete set of LSA and FFA symbols in DWG format for ship design and safety plan drawings.</p><button class="download-button" onclick="downloadFile()"><i class="fas fa-download"></i> Download DWG</button></div>
-                </div>
-                <div class="module-card resource-card"><div class="module-header"><div class="module-icon"><i class="fas fa-file-pdf"></i></div><h3 class="module-title">More Resources <span class="coming-soon">Coming Soon</span></h3></div><div class="module-content"><p class="module-description">Additional resource materials including classification society rules, standards, and guides.</p><button class="download-button under-development" disabled><i class="fas fa-hourglass-half"></i> Under Development</button></div></div>
-            </div>
-        </section>
-
-        <!-- Navculus Fun Section -->
-        <section class="modules-section fun-section" id="fun">
-            <div class="section-title"><h2>Navculus Fun</h2></div>
-            <div class="tools-info">Test your naval architecture knowledge with fun quizzes and interactive challenges</div>
-            <div class="modules-grid">
-                <div class="module-card fun-card">
-                    <div class="module-header"><div class="module-icon"><i class="fas fa-question-circle"></i></div><h3 class="module-title">Naval Architecture Quiz</h3></div>
-                    <div class="module-content"><p class="module-description">Test your knowledge of naval architecture covering ship design, stability, structures, and marine engineering.</p><a href="Fun/Quiz.html" class="quiz-button"><i class="fas fa-play"></i> Start Quiz</a></div>
-                </div>
-                <div class="module-card fun-card">
-                    <div class="module-header"><div class="module-icon"><i class="fas fa-ship"></i></div><h3 class="module-title">Know the Ship? <span class="coming-soon">3D Challenge</span></h3></div>
-                    <div class="module-content"><p class="module-description">Interactive 3D ship model identification. Explore and identify key ship parts, from bow to stern, in an immersive visual quiz.</p><a href="Fun/know_the_ship.html" class="quiz-button"><i class="fas fa-cube"></i> Explore 3D Model</a></div>
-                </div>
-                <div class="module-card fun-card">
-                    <div class="module-header"><div class="module-icon"><i class="fas fa-bolt"></i></div><h3 class="module-title">Flash Fleet</h3></div>
-                    <div class="module-content"><p class="module-description">Sharpen your technical edge. Test your knowledge of ship design and industry standards to prepare for your next big interview.</p><a href="Fun/flash_fleet.html" class="quiz-button"><i class="fas fa-play"></i> Attend Interview</a></div>
-                </div>
-                <div class="module-card fun-card">
-                    <div class="module-header"><div class="module-icon"><i class="fas fa-puzzle-piece"></i></div><h3 class="module-title">More Fun Activities <span class="coming-soon">Coming Soon</span></h3></div>
-                    <div class="module-content"><p class="module-description">Additional interactive games, puzzles, and learning activities related to naval architecture.</p><button class="quiz-button under-development" disabled><i class="fas fa-hourglass-half"></i> Under Development</button></div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-logo"><h3>Navculus</h3><p>Professional naval architecture calculation tools for marine engineers, ship designers, and naval architects.</p></div>
-                <div class="footer-links"><h4>Quick Links</h4><ul><li><a href="#"><i class="fas fa-chevron-right"></i> Home</a></li><li><a href="about.html"><i class="fas fa-chevron-right"></i> About Us</a></li><li><a href="contact.html"><i class="fas fa-chevron-right"></i> Contact</a></li></ul></div>
-                <div class="footer-links"><h4>Resources</h4><ul><li><a href="#"><i class="fas fa-chevron-right"></i> Industry Standards</a></li><li><a href="#"><i class="fas fa-chevron-right"></i> Technical Support</a></li></ul></div>
-            </div>
-            <div class="footer-developer">.</div>
-            <div class="copyright"><p>&copy; 2025 Navculus Naval Architecture Calculations. All rights reserved.</p></div>
+    <!-- Tools -->
+    <section class="modules-section" id="tools">
+        <div class="section-title"><h2>Navculus Tools</h2></div>
+        <div style="text-align:center;"><span class="tools-info">Specialized tools developed by Navculus for advanced naval architecture</span></div>
+        <div class="modules-grid">
+            <div class="module-card"><div class="module-header"><div class="module-icon"><i class="fas fa-ruler-combined"></i></div><h3 class="module-title">Navculus Beam <span class="coming-soon">Available</span></h3></div><div class="module-content"><p class="module-description">Advanced beam calculation tool for ship structural analysis with comprehensive load distribution.</p><a href="tools/navculus_beam.html" class="module-link">Open Tool <i class="fas fa-arrow-right"></i></a></div></div>
+            <div class="module-card"><div class="module-header"><div class="module-icon"><i class="fas fa-satellite-dish"></i></div><h3 class="module-title">Navculus Signals <span class="coming-soon">Available</span></h3></div><div class="module-content"><p class="module-description">Precision navigation signal monitoring and verification tool for high-integrity positioning.</p><a href="tools/signals.html" class="module-link">Open Tool <i class="fas fa-arrow-right"></i></a></div></div>
+            <div class="module-card"><div class="module-header"><div class="module-icon"><i class="fas fa-anchor"></i></div><h3 class="module-title">Navculus Stability <span class="coming-soon">Coming Soon</span></h3></div><div class="module-content"><p class="module-description">Advanced stability analysis tool for ships and offshore structures.</p><a href="#" class="module-link under-development">Under Development <i class="fas fa-hourglass-half"></i></a></div></div>
+            <div class="module-card"><div class="module-header"><div class="module-icon"><i class="fas fa-ruler"></i></div><h3 class="module-title">Navculus Units <span class="coming-soon">Available</span></h3></div><div class="module-content"><p class="module-description">Convert between different unit systems commonly used in naval architecture.</p><a href="tools/Unit.html" class="module-link">Open Tool <i class="fas fa-arrow-right"></i></a></div></div>
         </div>
-    </footer>
+    </section>
 
-    <script>
-        // Full module list (unchanged)
-        const modules = [
-            { title: "Smit Bracket Design", file: "calculators/29012025_Cal_Smit bracket design.html", description: "Calculate and design Smit brackets for structural connections in shipbuilding with safety factor evaluation.", icon: "fas fa-bracket-curly" },
-            { title: "Required Bollard Pull for Barges", file: "calculators/26082023_Cal_Required bollard pull calculation for barges.html", description: "Determine the required bollard pull for barge operations based on environmental conditions.", icon: "fas fa-tugrik-sign" },
-            { title: "Bollard Strength Check", file: "calculators/22112024_Cal_Bollard Strength Check.html", description: "Verify bollard structural integrity under load conditions as per classification society requirements.", icon: "fas fa-weight-hanging" },
-            { title: "Padeye Design", file: "calculators/18122024_Cal_Padeye design.html", description: "Design and analyze padeyes for lifting operations with stress distribution calculations.", icon: "fas fa-eye" },
-            { title: "Delta Plate Design", file: "calculators/08112025_Cal_Delta plate design.html", description: "Calculate dimensions and strength of delta plates used in ship structural connections.", icon: "fas fa-shapes" },
-            { title: "Ship Squat Calculation", file: "calculators/04072025_Cal_Ship Squat Calculation.html", description: "Estimate ship squat in shallow water conditions using established empirical formulas.", icon: "fas fa-water" },
-            { title: "Dog Plate Design", file: "calculators/01092025_Cal_Dog plate design.html", description: "Design dog plates for structural connections with load distribution analysis.", icon: "fas fa-link" },
-            { title: "Hull Form Tolerance (IACS)", file: "calculators/25042025_Cal_Hull form Acceptable tolerance_IACS.html", description: "Check hull form compliance with IACS tolerance requirements for construction and repair.", icon: "fas fa-ship" },
-            { title: "Holtrop and Mennen Power Prediction", file: "calculators/26052024_Cal_Holtrop and Mennen power prediction methods.html", description: "Predict ship power requirements using the Holtrop and Mennen method.", icon: "fas fa-bolt" },
-            { title: "Van Ootemmersen Power Prediction", file: "calculators/27012025_Cal_Van Ootemmersen_Power prediction.html", description: "Calculate power prediction using Van Ootemmersen's method for ship resistance estimation.", icon: "fas fa-chart-line" },
-            { title: "Towing Bridle Design Check", file: "calculators/19122025_Cal_Towing Bridle Design Check.html", description: "Design and check towing bridle arrangements for safe towing operations.", icon: "fas fa-link" },
-            { title: "Motions and Accelerations (DNVGL-RU-SHIP)", file: "calculators/01092025_Cal_Motions and Accelrations_DNVGL-RU-SHIP.html", description: "Calculate ship motions and accelerations according to DNVGL Rules for Ships.", icon: "fas fa-wave-square" },
-            { title: "Berthing Energy Calculator", file: "calculators/20042026_Cal_Berthing energy calculation.html", description: "Calculate berthing energy and auto approach velocity using PIANC WG33 guidelines.", icon: "fas fa-anchor" }
-        ];
+    <!-- Resources -->
+    <section class="modules-section resource-section" id="resources">
+        <div class="section-title"><h2>Resource</h2></div>
+        <div style="text-align:center;"><span class="tools-info">Technical reference materials, standards, and resources</span></div>
+        <div class="modules-grid">
+            <div class="module-card resource-card"><div class="module-header"><div class="module-icon"><i class="fas fa-fire-extinguisher"></i></div><h3 class="module-title">Fire and Safety Symbols</h3></div><div class="module-content"><p class="module-description">Complete set of LSA and FFA symbols in DWG format for ship design and safety plan drawings.</p><button class="download-button" onclick="downloadFile()"><i class="fas fa-download"></i> Download DWG</button></div></div>
+            <div class="module-card resource-card"><div class="module-header"><div class="module-icon"><i class="fas fa-file-pdf"></i></div><h3 class="module-title">More Resources <span class="coming-soon">Coming Soon</span></h3></div><div class="module-content"><p class="module-description">Additional resource materials including classification society rules, standards, and guides.</p><button class="download-button under-development" disabled><i class="fas fa-hourglass-half"></i> Under Development</button></div></div>
+        </div>
+    </section>
 
-        let showAllModules = false;
-        let filteredModules = null;
+    <!-- Fun -->
+    <section class="modules-section fun-section" id="fun">
+        <div class="section-title"><h2>Navculus Fun</h2></div>
+        <div style="text-align:center;"><span class="tools-info">Test your naval architecture knowledge with fun quizzes</span></div>
+        <div class="modules-grid">
+            <div class="module-card fun-card"><div class="module-header"><div class="module-icon"><i class="fas fa-question-circle"></i></div><h3 class="module-title">Naval Architecture Quiz</h3></div><div class="module-content"><p class="module-description">Test your knowledge of naval architecture covering ship design, stability, structures.</p><a href="Fun/Quiz.html" class="quiz-button"><i class="fas fa-play"></i> Start Quiz</a></div></div>
+            <div class="module-card fun-card"><div class="module-header"><div class="module-icon"><i class="fas fa-ship"></i></div><h3 class="module-title">Know the Ship? <span class="coming-soon">3D Challenge</span></h3></div><div class="module-content"><p class="module-description">Interactive 3D ship model identification. Explore key ship parts in an immersive quiz.</p><a href="Fun/know_the_ship.html" class="quiz-button"><i class="fas fa-cube"></i> Explore 3D</a></div></div>
+            <div class="module-card fun-card"><div class="module-header"><div class="module-icon"><i class="fas fa-bolt"></i></div><h3 class="module-title">Flash Fleet</h3></div><div class="module-content"><p class="module-description">Sharpen your technical edge. Test your knowledge of ship design and industry standards.</p><a href="Fun/flash_fleet.html" class="quiz-button"><i class="fas fa-play"></i> Attend Interview</a></div></div>
+            <div class="module-card fun-card"><div class="module-header"><div class="module-icon"><i class="fas fa-puzzle-piece"></i></div><h3 class="module-title">More Fun <span class="coming-soon">Coming Soon</span></h3></div><div class="module-content"><p class="module-description">Additional interactive games, puzzles, and learning activities.</p><button class="quiz-button under-development" disabled><i class="fas fa-hourglass-half"></i> Under Development</button></div></div>
+        </div>
+    </section>
+</main>
 
-        function createModuleCards() {
-            const modulesGrid = document.getElementById('modulesGrid');
-            const noResultsDiv = document.getElementById('noResults');
-            const showMoreContainer = document.getElementById('showMoreContainer');
-            modulesGrid.innerHTML = '';
-            const modulesToDisplay = filteredModules || modules;
-            if (modulesToDisplay.length === 0) {
-                noResultsDiv.style.display = 'block';
-                showMoreContainer.style.display = 'none';
-                return;
-            }
-            noResultsDiv.style.display = 'none';
-            const modulesToShow = (showAllModules || filteredModules) ? modulesToDisplay : modulesToDisplay.slice(0, 6);
-            if (filteredModules) showMoreContainer.style.display = 'none';
-            else {
-                showMoreContainer.style.display = modulesToDisplay.length > 6 ? 'block' : 'none';
-                const btn = document.getElementById('showMoreButton');
-                if (showAllModules) btn.innerHTML = '<i class="fas fa-chevron-up"></i> Show Less';
-                else btn.innerHTML = '<i class="fas fa-chevron-down"></i> Show More Modules';
-            }
-            modulesToShow.forEach(module => {
-                const card = document.createElement('div');
-                card.className = 'module-card';
-                card.innerHTML = `
-                    <div class="module-header"><div class="module-icon"><i class="${module.icon}"></i></div><h3 class="module-title">${module.title}</h3></div>
-                    <div class="module-content"><p class="module-description">${module.description}</p><a href="${module.file}" class="module-link">Open Calculator <i class="fas fa-arrow-right"></i></a></div>
-                `;
-                modulesGrid.appendChild(card);
-            });
+<footer>
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-logo"><h3>Navculus</h3><p>Professional naval architecture calculation tools for marine engineers, ship designers, and naval architects.</p></div>
+            <div class="footer-links"><h4>Quick Links</h4><ul><li><a href="#"><i class="fas fa-chevron-right"></i> Home</a></li><li><a href="about.html"><i class="fas fa-chevron-right"></i> About Us</a></li><li><a href="contact.html"><i class="fas fa-chevron-right"></i> Contact</a></li></ul></div>
+            <div class="footer-links"><h4>Resources</h4><ul><li><a href="#"><i class="fas fa-chevron-right"></i> Industry Standards</a></li><li><a href="#"><i class="fas fa-chevron-right"></i> Technical Support</a></li></ul></div>
+        </div>
+        <div class="footer-developer">.</div>
+        <div class="copyright"><p>&copy; 2025 Navculus Naval Architecture Calculations. All rights reserved.</p></div>
+    </div>
+</footer>
+
+<script>
+    const modules = [
+        { title: "Smit Bracket Design", file: "calculators/29012025_Cal_Smit bracket design.html", description: "Calculate and design Smit brackets for structural connections in shipbuilding with safety factor evaluation.", icon: "fas fa-bracket-curly" },
+        { title: "Required Bollard Pull for Barges", file: "calculators/26082023_Cal_Required bollard pull calculation for barges.html", description: "Determine the required bollard pull for barge operations based on environmental conditions.", icon: "fas fa-tugrik-sign" },
+        { title: "Bollard Strength Check", file: "calculators/22112024_Cal_Bollard Strength Check.html", description: "Verify bollard structural integrity under load conditions as per classification society requirements.", icon: "fas fa-weight-hanging" },
+        { title: "Padeye Design", file: "calculators/18122024_Cal_Padeye design.html", description: "Design and analyze padeyes for lifting operations with stress distribution calculations.", icon: "fas fa-eye" },
+        { title: "Delta Plate Design", file: "calculators/08112025_Cal_Delta plate design.html", description: "Calculate dimensions and strength of delta plates used in ship structural connections.", icon: "fas fa-shapes" },
+        { title: "Ship Squat Calculation", file: "calculators/04072025_Cal_Ship Squat Calculation.html", description: "Estimate ship squat in shallow water conditions using established empirical formulas.", icon: "fas fa-water" },
+        { title: "Dog Plate Design", file: "calculators/01092025_Cal_Dog plate design.html", description: "Design dog plates for structural connections with load distribution analysis.", icon: "fas fa-link" },
+        { title: "Hull Form Tolerance (IACS)", file: "calculators/25042025_Cal_Hull form Acceptable tolerance_IACS.html", description: "Check hull form compliance with IACS tolerance requirements for construction and repair.", icon: "fas fa-ship" },
+        { title: "Holtrop and Mennen Power Prediction", file: "calculators/26052024_Cal_Holtrop and Mennen power prediction methods.html", description: "Predict ship power requirements using the Holtrop and Mennen method.", icon: "fas fa-bolt" },
+        { title: "Van Ootemmersen Power Prediction", file: "calculators/27012025_Cal_Van Ootemmersen_Power prediction.html", description: "Calculate power prediction using Van Ootemmersen's method for ship resistance estimation.", icon: "fas fa-chart-line" },
+        { title: "Towing Bridle Design Check", file: "calculators/19122025_Cal_Towing Bridle Design Check.html", description: "Design and check towing bridle arrangements for safe towing operations.", icon: "fas fa-link" },
+        { title: "Motions and Accelerations (DNVGL-RU-SHIP)", file: "calculators/01092025_Cal_Motions and Accelrations_DNVGL-RU-SHIP.html", description: "Calculate ship motions and accelerations according to DNVGL Rules for Ships.", icon: "fas fa-wave-square" },
+        { title: "Berthing Energy Calculator", file: "calculators/20042026_Cal_Berthing energy calculation.html", description: "Calculate berthing energy and auto approach velocity using PIANC WG33 guidelines.", icon: "fas fa-anchor" }
+    ];
+
+    let showAllModules = false;
+    let filteredModules = null;
+
+    function createModuleCards() {
+        const grid = document.getElementById('modulesGrid');
+        const noResults = document.getElementById('noResults');
+        const showMoreContainer = document.getElementById('showMoreContainer');
+        grid.innerHTML = '';
+        const list = filteredModules || modules;
+        if (list.length === 0) {
+            noResults.style.display = 'block';
+            showMoreContainer.style.display = 'none';
+            return;
         }
-
-        function searchModules() {
-            const term = document.getElementById('searchInput').value.toLowerCase().trim();
-            if (term === '') { filteredModules = null; showAllModules = false; createModuleCards(); return; }
-            filteredModules = modules.filter(m => m.title.toLowerCase().includes(term) || m.description.toLowerCase().includes(term));
-            createModuleCards();
+        noResults.style.display = 'none';
+        const toShow = (showAllModules || filteredModules) ? list : list.slice(0, 6);
+        if (filteredModules) showMoreContainer.style.display = 'none';
+        else {
+            showMoreContainer.style.display = list.length > 6 ? 'block' : 'none';
+            document.getElementById('showMoreButton').innerHTML = showAllModules ? '<i class="fas fa-chevron-up"></i> Show Less' : '<i class="fas fa-chevron-down"></i> Show More Modules';
         }
+        toShow.forEach(m => {
+            const card = document.createElement('div');
+            card.className = 'module-card';
+            card.innerHTML = `
+                <div class="module-header"><div class="module-icon"><i class="${m.icon}"></i></div><h3 class="module-title">${m.title}</h3></div>
+                <div class="module-content"><p class="module-description">${m.description}</p><a href="${m.file}" class="module-link">Open Calculator <i class="fas fa-arrow-right"></i></a></div>
+            `;
+            grid.appendChild(card);
+        });
+    }
 
-        function toggleShowMore() { showAllModules = !showAllModules; createModuleCards(); }
+    function searchModules() {
+        const term = document.getElementById('searchInput').value.toLowerCase().trim();
+        if (term === '') { filteredModules = null; showAllModules = false; createModuleCards(); return; }
+        filteredModules = modules.filter(m => m.title.toLowerCase().includes(term) || m.description.toLowerCase().includes(term));
+        createModuleCards();
+    }
 
-        function downloadFile() {
-            const link = document.createElement('a');
-            link.href = 'resource/LSA_FFA_SYMBOLS.dwg';
-            link.download = 'LSA_FFA_SYMBOLS.dwg';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
+    function toggleShowMore() { showAllModules = !showAllModules; createModuleCards(); }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            createModuleCards();
-            document.getElementById('searchButton').addEventListener('click', searchModules);
-            document.getElementById('searchInput').addEventListener('keyup', e => { if(e.key === 'Enter') searchModules(); });
-            document.getElementById('showMoreButton').addEventListener('click', toggleShowMore);
-            // Navculus AI button click: open tools/Rulefinder/navculus_rulefinder.html
-            const aiBtn = document.getElementById('navculusAiBtn');
-            if(aiBtn) {
-                aiBtn.addEventListener('click', () => {
-                    window.location.href = 'tools/Rulefinder/navculus_rulefinder.html';
-                });
-            }
-            // Navculus NEWS button click: open navculus_news.html
-            const newsBtn = document.getElementById('navculusNewsBtn');
-            if(newsBtn) {
-                newsBtn.addEventListener('click', () => {
-                    window.location.href = 'navculus_news.html';
-                });
-            }
-            // Hamburger menu toggle
-            const hamburgerBtn = document.getElementById('hamburgerBtn');
-            const mainNav = document.getElementById('mainNav');
-            if(hamburgerBtn && mainNav) {
-                hamburgerBtn.addEventListener('click', () => {
-                    mainNav.classList.toggle('active');
-                    const icon = hamburgerBtn.querySelector('i');
-                    icon.className = mainNav.classList.contains('active') ? 'fas fa-times' : 'fas fa-bars';
-                });
-            }
-            // Close mobile menu when a nav link is clicked
-            document.querySelectorAll('.nav-menu li a').forEach(link => {
-                link.addEventListener('click', () => {
-                    if(mainNav) { mainNav.classList.remove('active'); }
-                    const icon = hamburgerBtn ? hamburgerBtn.querySelector('i') : null;
-                    if(icon) { icon.className = 'fas fa-bars'; }
-                });
-            });
-            // smooth anchors
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function(e) {
-                    const target = this.getAttribute('href');
-                    if(target === '#') return;
-                    const el = document.querySelector(target);
-                    if(el) { e.preventDefault(); window.scrollTo({ top: el.offsetTop - 100, behavior: 'smooth' }); }
-                });
+    function downloadFile() {
+        const link = document.createElement('a');
+        link.href = 'resource/LSA_FFA_SYMBOLS.dwg';
+        link.download = 'LSA_FFA_SYMBOLS.dwg';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        createModuleCards();
+        document.getElementById('searchButton').addEventListener('click', searchModules);
+        document.getElementById('searchInput').addEventListener('keyup', e => { if(e.key === 'Enter') searchModules(); });
+        document.getElementById('showMoreButton').addEventListener('click', toggleShowMore);
+
+        document.getElementById('navculusAiBtn').addEventListener('click', () => window.location.href = 'tools/Rulefinder/navculus_rulefinder.html');
+        document.getElementById('navculusNewsBtn').addEventListener('click', () => window.location.href = 'navculus_news.html');
+
+        const hamburger = document.getElementById('hamburgerBtn');
+        const mainNav = document.getElementById('mainNav');
+        hamburger.addEventListener('click', () => {
+            mainNav.classList.toggle('active');
+            hamburger.querySelector('i').className = mainNav.classList.contains('active') ? 'fas fa-times' : 'fas fa-bars';
+        });
+        document.querySelectorAll('.nav-menu li a').forEach(link => {
+            link.addEventListener('click', () => {
+                mainNav.classList.remove('active');
+                hamburger.querySelector('i').className = 'fas fa-bars';
             });
         });
-    </script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const target = this.getAttribute('href');
+                if(target === '#') return;
+                const el = document.querySelector(target);
+                if(el) { e.preventDefault(); window.scrollTo({ top: el.offsetTop - 100, behavior: 'smooth' }); }
+            });
+        });
+    });
+</script>
 </body>
 </html>
