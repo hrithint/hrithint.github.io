@@ -279,19 +279,19 @@
       max-width: 1440px;
       flex: 1;
       display: grid;
-      grid-template-columns: 240px 1fr 240px;
+      grid-template-columns: 290px 1fr 290px;
       align-items: center;
-      gap: 2rem;
+      gap: 1.75rem;
       margin: 0.5rem 0;
     }
 
     .symbol-column {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.75rem;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.65rem;
       background: rgba(255, 255, 255, 0.75);
       backdrop-filter: blur(8px);
-      padding: 1rem;
+      padding: 0.9rem;
       border-radius: 24px;
       border: 1px solid #e2e8f0;
       box-shadow: 0 12px 30px -8px rgba(15, 61, 104, 0.07);
@@ -299,8 +299,8 @@
 
     .symbol-card {
       background: #ffffff;
-      border-radius: 16px;
-      padding: 8px;
+      border-radius: 14px;
+      padding: 6px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -312,8 +312,8 @@
     }
 
     .symbol-card img {
-      width: 68px;
-      height: 68px;
+      width: 58px;
+      height: 58px;
       object-fit: contain;
       transition: transform 0.18s ease;
     }
@@ -508,7 +508,7 @@
     }
 
     /* ---------- RESPONSIVE BREAKPOINTS ---------- */
-    @media (max-width: 1050px) {
+    @media (max-width: 1120px) {
       .drill-workspace {
         grid-template-columns: 1fr;
         gap: 1.5rem;
@@ -517,8 +517,8 @@
         order: -1;
       }
       .symbol-column {
-        grid-template-columns: repeat(5, 1fr);
-        max-width: 600px;
+        grid-template-columns: repeat(7, 1fr);
+        max-width: 680px;
         margin: 0 auto;
         width: 100%;
       }
@@ -546,8 +546,8 @@
         padding: 0.65rem;
       }
       .symbol-card img {
-        width: 48px;
-        height: 48px;
+        width: 46px;
+        height: 46px;
       }
       .image-frame {
         height: 220px;
@@ -599,7 +599,7 @@
         <i class="fas fa-info"></i>
       </button>
       <div class="score-pill">
-        Round <span class="round-pill" id="roundDisplay">1/20</span>
+        Round <span class="round-pill" id="roundDisplay">1/28</span>
       </div>
       <div class="score-pill">
         SCORE <span class="score-val" id="scoreDisplay">0</span>
@@ -617,7 +617,7 @@
 
   <!-- MAIN WORKSPACE -->
   <main class="drill-workspace" id="drillArea">
-    <!-- Left 10 IMO Symbols -->
+    <!-- Left 14 IMO Symbols -->
     <div class="symbol-column" id="leftSymbols"></div>
 
     <!-- Center Equipment Photo & Prompt Card -->
@@ -631,7 +631,7 @@
 
       <!-- Floating Bottom Card -->
       <div class="prompt-card">
-        <div class="prompt-eyebrow" id="itemCounter">IDENTIFY THE IMO SYMBOL · 1 OF 20</div>
+        <div class="prompt-eyebrow" id="itemCounter">IDENTIFY THE IMO SYMBOL · 1 OF 28</div>
         <div class="prompt-title" id="imageCaption"></div>
         <div class="prompt-subtitle" id="feedbackMsg">
           🔎 Tap/click on the matching IMO symbol!
@@ -643,7 +643,7 @@
       </div>
     </div>
 
-    <!-- Right 10 IMO Symbols -->
+    <!-- Right 14 IMO Symbols -->
     <div class="symbol-column" id="rightSymbols"></div>
   </main>
 
@@ -734,6 +734,38 @@
         liferaft: {
           title: "Inflatable Liferaft",
           brief: "Packed inside a fiberglass canister on deck cradles with a Hydrostatic Release Unit (HRU); inflates automatically via CO₂ gas when thrown overboard or when the ship sinks."
+        },
+        bellfirealarm: {
+          title: "Fire Alarm Bell",
+          brief: "An audible general/fire alarm sounder mounted throughout accommodation and working spaces to alert the crew to muster stations or fire emergencies under SOLAS Chapter II-2."
+        },
+        embarkationladder: {
+          title: "Embarkation Ladder",
+          brief: "A heavy-duty manila rope ladder with non-slip hardwood steps (SOLAS Ch. III) rigged along the ship's side to provide safe access into waterborne survival craft during abandonment."
+        },
+        evacuationchute: {
+          title: "Marine Evacuation Chute (MEC)",
+          brief: "A vertical fabric escape tube (LSA Code) allowing rapid, controlled descent of personnel and passengers directly from high embarkation decks into floating inflatable liferafts."
+        },
+        evacuationslide: {
+          title: "Marine Evacuation Slide (MES)",
+          brief: "An inflatable inclined evacuation slide system deployed from the vessel's side to transfer passengers and crew swiftly onto high-capacity survival craft in an emergency."
+        },
+        hornfirealarm: {
+          title: "Fire Alarm Horn / Siren",
+          brief: "High-decibel audible alarm horn installed in high-ambient-noise areas like engine rooms, machinery spaces, and open decks to ensure fire and general emergency signals are heard."
+        },
+        musterstation: {
+          title: "Muster Station",
+          brief: "Designated emergency assembly area where crew and passengers gather upon hearing the general alarm for headcount, safety briefing, lifejacket checks, and orderly evacuation."
+        },
+        signallamp: {
+          title: "Daylight Signalling Lamp (Aldis Lamp)",
+          brief: "A portable, battery-backed directional light (SOLAS Chapter V) carried on the navigation bridge for visual Morse code communication with ships or shore stations during day or night."
+        },
+        watermonitor: {
+          title: "Fixed Water / Foam Fire Monitor",
+          brief: "High-capacity directional cannon mounted on tanker decks, helidecks, or tugboats to project long-range jets of water or foam onto cargo manifolds and exposed deck fires."
         }
       };
 
@@ -783,11 +815,12 @@
         introModal.classList.remove('hidden');
       });
       
-      // ---------- Render symbols (10 Left, 10 Right) ----------
+      // ---------- Render symbols (14 Left, 14 Right) ----------
       function renderSymbolsForItem() {
         const allSymbols = Object.keys(equipmentCatalog);
-        const leftNames = allSymbols.slice(0, 10);
-        const rightNames = allSymbols.slice(10);
+        const half = Math.ceil(allSymbols.length / 2);
+        const leftNames = allSymbols.slice(0, half);
+        const rightNames = allSymbols.slice(half);
         
         leftSymbolsDiv.innerHTML = '';
         rightSymbolsDiv.innerHTML = '';
